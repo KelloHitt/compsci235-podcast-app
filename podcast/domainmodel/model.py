@@ -339,21 +339,47 @@ class Episode:
     def title(self) -> str:
         return self._title
 
+    @title.setter
+    def title(self, new_title: str):
+        validate_non_empty_string(new_title, "Episode title")
+        self._title = new_title.strip()
+
     @property
     def url(self) -> str:
         return self.url
+
+    @url.setter
+    def url(self, new_url: str):
+        validate_non_empty_string(new_url, "Link to audio")
+        self._url = new_url
 
     @property
     def description(self) -> str:
         return self._description
 
+    @description.setter
+    def description(self, new_description: str):
+        if not isinstance(new_description, str):
+            validate_non_empty_string(new_description, "Episode description")
+        self._description = new_description
+
     @property
     def length(self) -> int:
         return self._length
 
+    @length.setter
+    def length(self, new_length: int):
+        validate_non_negative_int(new_length)
+        self._length = new_length
+
     @property
     def date(self) -> str:
         return self._date
+
+    @date.setter
+    def date(self, new_date: str):
+        validate_non_empty_string(new_date, "Episode published date")
+        self._date = new_date.strip()
 
 
 class Review:
