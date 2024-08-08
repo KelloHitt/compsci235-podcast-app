@@ -327,6 +327,34 @@ class Episode:
         self._length = length
         self._date = date
 
+    @property
+    def id(self) -> int:
+        return self._id
+
+    @property
+    def podcast(self) -> Podcast:
+        return self._podcast
+
+    @property
+    def title(self) -> str:
+        return self._title
+
+    @property
+    def url(self) -> str:
+        return self.url
+
+    @property
+    def description(self) -> str:
+        return self._description
+
+    @property
+    def length(self) -> int:
+        return self._length
+
+    @property
+    def date(self) -> str:
+        return self._date
+
 
 class Review:
     # TODO: Complete the implementation of the Review class.
