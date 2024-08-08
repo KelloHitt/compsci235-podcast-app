@@ -381,6 +381,22 @@ class Episode:
         validate_non_empty_string(new_date, "Episode published date")
         self._date = new_date.strip()
 
+    def __repr__(self):
+        return f"<Episode {self.id}: '{self.title}' in Podcast: {self.podcast}>"
+
+    def __eq__(self, other):
+        if not isinstance(other, Episode):
+            return False
+        return self.id == other.id
+
+    def __lt__(self, other):
+        if not isinstance(other, Episode):
+            return False
+        return self.date < other.date
+
+    def __hash__(self):
+        return hash(self.id)
+
 
 class Review:
     # TODO: Complete the implementation of the Review class.
