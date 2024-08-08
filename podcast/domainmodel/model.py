@@ -315,8 +315,17 @@ class PodcastSubscription:
 
 
 class Episode:
-    # TODO: Complete the implementation of the Episode class.
-    pass
+    def __init__(self, episode_id: int, podcast: Podcast, title: str = "Untitled", url: str = "",
+                 description: str = "", length: int = None, date: str = "Unspecified"):
+        validate_non_negative_int(episode_id)
+        self._id = episode_id
+        self._podcast = podcast
+        validate_non_empty_string(title, "Episode title")
+        self._title = title.strip()
+        self._url = url
+        self._description = description
+        self._length = length
+        self._date = date
 
 
 class Review:
