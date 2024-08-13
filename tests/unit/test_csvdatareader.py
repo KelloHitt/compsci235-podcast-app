@@ -1,0 +1,2 @@
+import pytest
+from podcast.adapters.datareader.csvdatareader import CSVDataReader
