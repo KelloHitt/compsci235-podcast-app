@@ -7,7 +7,7 @@ from podcast.adapters.memory_repository import MemoryRepository
 @pytest.fixture
 def in_memory_repo() -> MemoryRepository:
     repository = MemoryRepository()
-    data_path = Path("../data/")
+    data_path = Path("./tests/data/")
     csv_data_reader = CSVDataReader()
     csv_data_reader.populate_data(data_path, repository)
     return repository
