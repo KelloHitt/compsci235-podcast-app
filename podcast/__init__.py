@@ -1,6 +1,9 @@
 """Initialize Flask app."""
-
+from pathlib import Path
 from flask import Flask, render_template
+import podcast.adapters.repository as repo
+from podcast.adapters.memory_repository import MemoryRepository
+from podcast.adapters.datareader.csvdatareader import CSVDataReader
 
 # TODO: Access to the podcast should be implemented via the repository pattern and using blueprints, so this can not
 #  stay here!
@@ -17,11 +20,26 @@ def create_some_podcast():
     return some_podcast
 
 
-def create_app():
+def create_app(test_config=None):
     """Construct the core application."""
 
     # Create the Flask app object.
     app = Flask(__name__)
+
+    # Configure the app from configuration-file settings.
+    app.config.from_object('config.Config')
+    data_path = Path('podcast') / 'adapters' / 'data'
+
+    if test_config is not None:
+        # Load test configuration, and override any configuration settings.
+        app.config.from_mapping(test_config)
+        data_path = app.config['TEST_DATA_PATH']
+
+    # Create the MemoryRepository implementation for a memory-based repository.
+    repo.repo_instance = MemoryRepository()
+    # fill the content of the repository from the provided csv files
+    csv_data_reader = CSVDataReader()
+    csv_data_reader.populate_data(data_path, repo.repo_instance)
 
     @app.route('/')
     def home():
