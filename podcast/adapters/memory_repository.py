@@ -26,8 +26,8 @@ class MemoryRepository(AbstractRepository):
         if podcast not in self.__podcasts:
             self.__podcasts.append(podcast)
 
-    def get_podcast(self, id: int) -> Podcast:
-        return self.__podcasts[id-1]
+    def get_podcast(self, podcast_id: int) -> Podcast:
+        return self.__podcasts[podcast_id-1]
 
     def get_podcasts_by_page(self, page: int, page_size: int) -> list[Podcast]:
         pass
@@ -35,11 +35,15 @@ class MemoryRepository(AbstractRepository):
     def get_number_of_podcasts(self) -> int:
         return len(self.__podcasts)
 
-    def get_podcasts_by_id(self, id_list):
-        pass
+    def get_podcasts_by_id(self, id_list) -> List[Podcast]:
+        return [self.get_podcast(podcast_id) for podcast_id in id_list]
 
-    def get_podcasts_ids_for_category(self, category_name: str):
-        pass
+    def get_podcasts_ids_for_category(self, category_name: str) -> List[int]:
+        matching_podcast_ids = []
+        for podcast in self.__podcasts:
+            if any(category.name == category_name for category in podcast.categories):
+                matching_podcast_ids.append(podcast.id)
+        return matching_podcast_ids
 
     def has_next_page(self, current_page: int, page_size: int) -> bool:
         total_podcasts = self.get_number_of_podcasts()
