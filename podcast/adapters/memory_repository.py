@@ -65,7 +65,9 @@ class MemoryRepository(AbstractRepository):
         return current_page
 
     def get_categories(self) -> List[Category]:
-        return list(self.__categories.values())
+        categories = list(self.__categories.values())
+        sorted_categories = sorted(categories, key=lambda category: category.name)  # Sort the categories by names
+        return sorted_categories
 
     def add_or_get_category(self, category_name: str) -> Category:
         if category_name not in self.__categories:
