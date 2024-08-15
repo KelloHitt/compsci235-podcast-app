@@ -1,5 +1,6 @@
 import abc
-from podcast.domainmodel.model import Author, Podcast, Category, User, PodcastSubscription
+from typing import List
+from podcast.domainmodel.model import Author, Podcast, Category, Review, PodcastSubscription
 
 repo_instance = None
 
@@ -12,4 +13,82 @@ class RepositoryException(Exception):
 class AbstractRepository(abc.ABC):
     # TODO: implement the abstract methods
 
-    pass
+    def add_or_get_author(self, author_name) -> Author:
+        """ Adds an Author if the author not in the repository
+        Returns the Author named author_name from the repository.
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_podcast(self, podcast: Podcast):
+        """ Adds a Podcast to the repository. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_podcast(self, id: int) -> Podcast:
+        """ Returns Podcast with id from the repository.
+        If there is no Podcast with the given id, this method returns None.
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_podcasts_by_page(self, page: int, page_size: int) -> list[Podcast]:
+        """ Returns a list of Podcasts for the specified page.
+        The list should contain up to page_size podcasts. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_number_of_podcasts(self) -> int:
+        """ Returns the total number of Podcasts in the repository. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_podcasts_by_id(self, id_list):
+        """ Returns a list of Podcasts, whose ids match those in id_list, from the repository.
+        If there are no matches, this method returns an empty list.
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_podcasts_ids_for_category(self, category_name: str):
+        """ Returns a list of ids representing Podcasts that are in the category: category_name.
+        If there are Podcasts that are in the category_name, this method returns an empty list.
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def has_next_page(self, current_page: int, page_size: int) -> bool:
+        """ Returns True if there is a next page, otherwise False. """
+        total_podcasts = self.get_total_podcast_count()
+        return current_page * page_size < total_podcasts
+
+    @abc.abstractmethod
+    def has_previous_page(self, current_page: int) -> bool:
+        """ Returns True if there is a previous page, otherwise False. """
+        return current_page > 1
+
+    @abc.abstractmethod
+    def get_next_page(self, current_page: int, page_size: int) -> int:
+        """ Returns the page number of the next page.
+        If there is no next page, returns the current page number. """
+        if self.has_next_page(current_page, page_size):
+            return current_page + 1
+        return current_page
+
+    @abc.abstractmethod
+    def get_previous_page(self, current_page: int) -> int:
+        """ Returns the page number of the previous page.
+        If there is no previous page, returns the current page number. """
+        if self.has_previous_page(current_page):
+            return current_page - 1
+        return current_page
+
+    @abc.abstractmethod
+    def get_categories(self) -> List[Category]:
+        """ Returns the Categories stored in the repository. """
+        raise NotImplementedError
+
+    def add_or_get_category(self, category_name: str) -> Category:
+        """ Adds the Category if the category not in the repository.
+        Returns the Category named category_name from the repository. """
+        raise NotImplementedError
