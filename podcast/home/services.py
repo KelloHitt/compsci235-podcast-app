@@ -1,10 +1,9 @@
 import random
-from typing import List
 
 from podcast.adapters.repository import AbstractRepository
 
 
-def get_random_podcasts_info(repository: AbstractRepository, number_of_podcasts: int = 12) -> List:
+def get_random_podcasts_info(repository: AbstractRepository, number_of_podcasts: int = 12):
     """ Randomly choose 12 podcasts to display on the home page """
     total_podcasts = repository.get_number_of_podcasts()
 

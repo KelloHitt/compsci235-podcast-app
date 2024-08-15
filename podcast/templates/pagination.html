@@ -1,0 +1,35 @@
+<div class="pagination">
+    {% if has_previous %}
+        <a href="{{ url_for('browse_bp.show_podcasts', page_number=previous_page, category=category) if category
+        else url_for('browse_bp.show_podcasts', page_number=previous_page) }}">&laquo;</a>
+    {% endif %}
+
+    {% if current_page > 2 %}
+        <a href="{{ url_for('browse_bp.show_podcasts', page_number=1, category=category) if category
+        else url_for('browse_bp.show_podcasts', page_number=1) }}">1</a>
+        <span>...</span>
+    {% endif %}
+
+    {% if has_previous %}
+        <a href="{{ url_for('browse_bp.show_podcasts', page_number=previous_page, category=category) if category
+        else url_for('browse_bp.show_podcasts', page_number=previous_page) }}">{{ previous_page }}</a>
+    {% endif %}
+
+    <a href="#" class="active">{{ current_page }}</a>
+
+    {% if has_next %}
+        <a href="{{ url_for('browse_bp.show_podcasts', page_number=next_page, category=category) if category
+        else url_for('browse_bp.show_podcasts', page_number=next_page) }}">{{ next_page }}</a>
+    {% endif %}
+
+    {% if current_page < last_page - 1 %}
+        <span>...</span>
+        <a href="{{ url_for('browse_bp.show_podcasts', page_number=last_page, category=category) if category
+        else url_for('browse_bp.show_podcasts', page_number=last_page) }}">{{ last_page }}</a>
+    {% endif %}
+
+    {% if has_next %}
+        <a href="{{ url_for('browse_bp.show_podcasts', page_number=next_page, category=category) if category
+        else url_for('browse_bp.show_podcasts', page_number=next_page) }}">&raquo;</a>
+    {% endif %}
+</div>

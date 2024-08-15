@@ -33,6 +33,7 @@ nav {
     background-color: #a34b86;
     text-align: center;
     color: white;
+     overflow-y: auto; /* Enable vertical scrolling */
 }
 
 nav .heading {
@@ -63,10 +64,13 @@ nav ul li a:hover {
 
 #nav-footer {
     font-size: 0.8em;
-    position: absolute;
-    bottom: 0;
+
     margin-bottom: 20px;
     word-wrap: break-word;
+}
+
+nav .sub-navbar ul a {
+    font-size: 0.8em;
 }
 
 /* Header Styles */
@@ -262,7 +266,7 @@ nav ul li a:hover {
 }
 
 .navigation-buttons {
-display: flex;
+    display: flex;
     justify-content: center;
     gap: 50px;
     margin-top: 20px;
@@ -278,4 +282,35 @@ display: flex;
 
 .navigation-button:hover {
     background-color: #8b3a70;
+}
+
+/* Pagination styles in Catalogue */
+.pagination {
+    display: inline-block;
+    margin-top: 20px
+}
+
+.pagination a, .pagination span {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background-color: #a34b86;
+    color: white;
+    border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #dbb1cd;
+    border-radius: 5px;
+}
+
+.pagination span {
+    padding: 8px 16px;
+    text-decoration: none;
+    background-color: transparent;
+    cursor: default;
 }

@@ -10,7 +10,7 @@ class MemoryRepository(AbstractRepository):
         self.__episodes = list()
         self.__authors = dict()
         self.__categories = dict()
-        #maybe we can create a list of podcast with a key value pair where each podcast's value is an episode with their id??
+        # TODO: discuss: maybe we can create a list of podcast with a key value pair where each podcast's value is an episode with their id??
 
     def add_or_get_author(self, author_name) -> Author:
         if not author_name:
@@ -28,10 +28,12 @@ class MemoryRepository(AbstractRepository):
             self.__podcasts.append(podcast)
 
     def get_podcast(self, podcast_id: int) -> Podcast:
-        return self.__podcasts[podcast_id-1]
+        return self.__podcasts[podcast_id - 1]
 
-    def get_podcasts_by_page(self, page: int, page_size: int) -> list[Podcast]:
-        pass
+    def get_podcasts_by_page(self, page_number: int, page_size: int) -> List[Podcast]:
+        start_index = (page_number - 1) * page_size
+        end_index = start_index + page_size
+        return self.__podcasts[start_index:end_index]
 
     def get_number_of_podcasts(self) -> int:
         return len(self.__podcasts)
@@ -64,7 +66,9 @@ class MemoryRepository(AbstractRepository):
         return current_page
 
     def get_categories(self) -> List[Category]:
-        return list(self.__categories.values())
+        categories = list(self.__categories.values())
+        sorted_categories = sorted(categories, key=lambda category: category.name)  # Sort the categories by names
+        return sorted_categories
 
     def add_or_get_category(self, category_name: str) -> Category:
         if category_name not in self.__categories:
@@ -78,15 +82,13 @@ class MemoryRepository(AbstractRepository):
     def add_episode(self, episode: Episode):
         if episode not in self.__episodes:
             self.__episodes.append(episode)
-            self.__episodes.sort(key=lambda episode: episode._date, reverse=False) #sorting episodes list in ascending order based on publish date. It might take up too much time though so not 100% sure of this implemmentaiton
+            self.__episodes.sort(key=lambda episode: episode.date)
+
     def get_number_of_episodes(self) -> int:
         return len(self.__episodes)
 
+    # TODO: Review this method, if the episode.id the list index then no need to compare
     def get_episode(self, episode_id: int) -> Episode:
         for episode1 in self.__episodes:
             if episode1._id == episode_id:
                 return episode1
-
-
-
-
