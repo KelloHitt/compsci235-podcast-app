@@ -12,41 +12,13 @@
 
 <body>
 <div id="body">
+    <!-- Navigation -->
     {% include'navbar.html' %}
     <div id="content-2">
         {% include 'header.html' %}
-
         <!-- Pagination -->
-        <div class="pagination">
-            {% if has_previous %}
-                <a href="{{ url_for('browse_bp.show_podcasts', category=category, page_number=previous_page) }}">&laquo;</a>
-            {% endif %}
-
-            {% if current_page > 2 %}
-                <a href="{{ url_for('browse_bp.show_podcasts', category=category, page_number=1) }}">1</a>
-                <span>...</span>
-            {% endif %}
-
-            {% if has_previous %}
-                <a href="{{ url_for('browse_bp.show_podcasts', category=category, page_number=previous_page) }}">{{ previous_page }}</a>
-            {% endif %}
-
-            <a href="#" class="active">{{ current_page }}</a>
-
-            {% if has_next %}
-                <a href="{{ url_for('browse_bp.show_podcasts', category=category, page_number=next_page) }}">{{ next_page }}</a>
-            {% endif %}
-
-            {% if current_page < last_page - 1 %}
-                <span>...</span>
-                <a href="{{ url_for('browse_bp.show_podcasts', category=category, page_number=last_page) }}">{{ last_page }}</a>
-            {% endif %}
-
-            {% if has_next %}
-                <a href="{{ url_for('browse_bp.show_podcasts', category=category, page_number=next_page) }}">&raquo;</a>
-            {% endif %}
-        </div>
-
+        {% include 'pagination.html' %}
+        <!-- Content -->
         <main id="main">
             <div id="podcast">
                 <ul>
