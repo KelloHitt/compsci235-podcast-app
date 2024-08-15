@@ -13,7 +13,10 @@
     {% include'navbar.html' %}
     <div id="content-2">
         {% include 'header.html' %}
+        <!-- Navigation Buttons for Pagination -->
         <div class="navigation-buttons">
+            <a href="{{ url_for('description_bp.show_description', podcast_id=1) }}"
+               class="navigation-button">First Podcast</a>
             {% if podcast.id > 1 %}
                 <a href="{{ url_for('description_bp.show_description', podcast_id=(podcast.id - 1)) }}"
                    class="navigation-button">Previous Podcast</a>
@@ -22,6 +25,8 @@
                 <a href="{{ url_for('description_bp.show_description', podcast_id=(podcast.id + 1)) }}"
                    class="navigation-button">Next Podcast</a>
             {% endif %}
+            <a href="{{ url_for('description_bp.show_description', podcast_id=1000) }}"
+               class="navigation-button">Last Podcast</a>
         </div>
         <div id="container">
             <main id="main">
@@ -30,10 +35,14 @@
                     <h2>{{ podcast.title }}</h2>
                     <p><img src="{{ podcast.image }}" alt="podcast image"></p>
                     <p><i>Author:</i> {{ podcast.author.name }} </p>
-                    <p><i>Category:</i></p>
+                    <p><i>Category:</i>
+                        {% for category in podcast.categories %}
+                            {{ category.name }}{% if not loop.last %} | {% endif %}
+                        {% endfor %}
+                    </p>
                     <p><i>Description:</i> {{ podcast.description }} </p>
-                    <p><i>Language:</i></p>
-                    <p><i>Website:</i></p>
+                    <p><i>Language:</i> {{ podcast.language }}</p>
+                    <p><i>Website:</i>{{ podcast.website }}</p>
                     <p><i>Episodes:</i></p>
                 </div>
             </main>
