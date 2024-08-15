@@ -27,10 +27,12 @@ class MemoryRepository(AbstractRepository):
             self.__podcasts.append(podcast)
 
     def get_podcast(self, podcast_id: int) -> Podcast:
-        return self.__podcasts[podcast_id-1]
+        return self.__podcasts[podcast_id - 1]
 
-    def get_podcasts_by_page(self, page: int, page_size: int) -> list[Podcast]:
-        pass
+    def get_podcasts_by_page(self, page_number: int, page_size: int) -> List[Podcast]:
+        start_index = (page_number - 1) * page_size
+        end_index = start_index + page_size
+        return self.__podcasts[start_index:end_index]
 
     def get_number_of_podcasts(self) -> int:
         return len(self.__podcasts)
@@ -73,4 +75,3 @@ class MemoryRepository(AbstractRepository):
         else:
             category = self.__categories[category_name]
         return category
-
