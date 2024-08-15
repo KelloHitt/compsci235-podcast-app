@@ -1,5 +1,5 @@
 from typing import List
-from podcast import Author, Podcast
+from podcast.domainmodel.model import Author, Podcast
 from podcast.adapters.repository import AbstractRepository
 from podcast.domainmodel.model import Category
 
