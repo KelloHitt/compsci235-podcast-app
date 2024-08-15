@@ -5,7 +5,7 @@
     <title>Podcast Catalogue</title>
     <link
             rel="stylesheet"
-            href="../static/css/main.css"
+            href="{{ url_for('static', filename='css/main.css') }}"
     />
     <script src="https://kit.fontawesome.com/b18330247f.js" crossorigin="anonymous"></script>
 </head>
@@ -19,31 +19,31 @@
         <!-- Pagination -->
         <div class="pagination">
             {% if has_previous %}
-                <a href="{{ url_for('browse_bp.show_podcasts', page_number=previous_page) }}">&laquo;</a>
+                <a href="{{ url_for('browse_bp.show_podcasts', category=category, page_number=previous_page) }}">&laquo;</a>
             {% endif %}
 
             {% if current_page > 2 %}
-                <a href="{{ url_for('browse_bp.show_podcasts', page_number=1) }}">1</a>
+                <a href="{{ url_for('browse_bp.show_podcasts', category=category, page_number=1) }}">1</a>
                 <span>...</span>
             {% endif %}
 
             {% if has_previous %}
-                <a href="{{ url_for('browse_bp.show_podcasts', page_number=previous_page) }}">{{ previous_page }}</a>
+                <a href="{{ url_for('browse_bp.show_podcasts', category=category, page_number=previous_page) }}">{{ previous_page }}</a>
             {% endif %}
 
             <a href="#" class="active">{{ current_page }}</a>
 
             {% if has_next %}
-                <a href="{{ url_for('browse_bp.show_podcasts', page_number=next_page) }}">{{ next_page }}</a>
+                <a href="{{ url_for('browse_bp.show_podcasts', category=category, page_number=next_page) }}">{{ next_page }}</a>
             {% endif %}
 
             {% if current_page < last_page - 1 %}
                 <span>...</span>
-                <a href="{{ url_for('browse_bp.show_podcasts', page_number=last_page) }}">{{ last_page }}</a>
+                <a href="{{ url_for('browse_bp.show_podcasts', category=category, page_number=last_page) }}">{{ last_page }}</a>
             {% endif %}
 
             {% if has_next %}
-                <a href="{{ url_for('browse_bp.show_podcasts', page_number=next_page) }}">&raquo;</a>
+                <a href="{{ url_for('browse_bp.show_podcasts', category=category, page_number=next_page) }}">&raquo;</a>
             {% endif %}
         </div>
 
@@ -52,7 +52,7 @@
                 <ul>
                     {% for podcast in podcasts %}
                         <li>
-                            <a href="">
+                            <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id) }}">
                                 <div class="podcast-list">
                                     <img src="{{ podcast.image }}"
                                          alt="podcast image">
