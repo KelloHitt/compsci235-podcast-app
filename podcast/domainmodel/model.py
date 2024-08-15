@@ -5,7 +5,6 @@ def validate_non_negative_int(value):
     if not isinstance(value, int) or value < 0:
         raise ValueError("ID must be a non-negative integer.")
 
-
 def validate_non_empty_string(value, field_name="value"):
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{field_name} must be a non-empty string.")
@@ -400,7 +399,70 @@ class Episode:
 
 class Review:
     # TODO: Complete the implementation of the Review class.
-    pass
+    #pass
+    def __init__(self, review_id: int, podcast_reviewed: Podcast, reviewer: User, rating: int, description: str):
+        validate_non_negative_int(review_id)
+        self._id = review_id
+        self._podcast = podcast_reviewed
+        self._reviewer = reviewer
+        self._rating = rating
+        self._content = description
+
+    @property
+    def id(self) -> int:
+        return self._id
+    @property
+    def podcast(self) -> Podcast:
+        return self._podcast
+
+    @property
+    def reviewer(self) -> User:
+        return self._reviewer
+    @property
+    def rating(self) -> int:
+        return self._rating
+    @property
+    def content(self) -> str:
+        return self._content
+    @rating.setter
+    def rating(self, new_rating: int):
+        if not isinstance(new_rating, int):
+            validate_non_negative_int(new_rating)
+        self._rating = new_rating
+
+    @content.setter
+    def content(self, new_review: str):
+        if not isinstance(new_review, str):
+            validate_non_empty_string(new_review)
+        self._content = new_review
+
+    # def delete_review(self, review_to_delete: Review):
+    # def add_review(self, review_to_add: Review):
+
+    def __repr_(self):
+        return f"<Review {self._id} made by {self._reviewer} for podcast {self._podcast} with a rating of {self._rating} and a description of {self._content}>"
+    def __eq__(self, other):
+        if not isinstance(other, Review):
+            return False
+        return self._id == other._id
+
+    def __lt__(self, other):
+        if not isinstance(other, Review):
+            return False
+        return self._rating < other._id
+
+    def __hash__(self):
+        return hash(self.id)
+
+
+
+
+
+
+
+
+
+
 
 
 class Playlist:
