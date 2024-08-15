@@ -2,6 +2,7 @@ import csv
 from pathlib import Path
 from podcast.domainmodel.model import Podcast, Episode
 from podcast.adapters.memory_repository import MemoryRepository
+from bisect import bisect, bisect_left, insort_left
 
 
 class CSVDataReader:
@@ -44,8 +45,22 @@ class CSVDataReader:
             repository.add_podcast(new_podcast)
 
     # TODO: implement method to load episodes.csv
+    #id, podcast_id, title, audio, audio_length, description, pub_date
     def load_episodes(self, data_path: Path, repository: MemoryRepository):
-        pass
+        episodes_filename = str(data_path / "episodes.csv")
+        for data_row in self.read_csv_file(episodes_filename):
+            episode_id = data_row[0]
+            podcast_id = data_row[1]
+            title = data_row[2]
+            audio = data_row[3]
+            audio_length = data_row[4]
+            description = data_row[5]
+            pub_date = data_row[6]
+            pub_date_sliced = pub_date[0:-3]
+            podcast = repository.get_podcast(podcast_id)
+            new_episode = Episode(episode_id, podcast, title, audio, audio_length, description, pub_date_sliced)
+            podcast.add_episode(new_episode)
+
 
     def populate_data(self, data_path: Path, repository: MemoryRepository):
         # Load podcasts, authors, and categories into the repository.
