@@ -262,7 +262,7 @@ nav ul li a:hover {
 }
 
 .navigation-buttons {
-display: flex;
+    display: flex;
     justify-content: center;
     gap: 50px;
     margin-top: 20px;
