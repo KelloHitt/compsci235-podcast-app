@@ -20,20 +20,14 @@ def create_app():
     csv_data_reader.populate_data(data_path, repo.repo_instance)
 
     with app.app_context():
-        # Register blueprints.
+        # Register blueprints
         from .home import home
         app.register_blueprint(home.home_blueprint)
 
         from .description import description
         app.register_blueprint(description.description_blueprint)
 
-    #@app.route('/podcasts')
-    #def show_podcasts():
-     #   return render_template('catalogue.html', list_of_podcasts=list_of_podcasts)
-
-    #@app.route('/description/<int:podcast_id>')
-    #def show_description(podcast_id):
-        #podcast = list_of_podcasts[podcast_id]
-        #return render_template('podcastDescription.html', podcast=podcast)
+        from .browse import browse
+        app.register_blueprint(browse.browse_blueprint)
 
     return app
