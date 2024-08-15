@@ -49,17 +49,18 @@ class CSVDataReader:
     def load_episodes(self, data_path: Path, repository: MemoryRepository):
         episodes_filename = str(data_path / "episodes.csv")
         for data_row in self.read_csv_file(episodes_filename):
-            episode_id = data_row[0]
-            podcast_id = data_row[1]
+            episode_id = int(data_row[0])
+            podcast_id = int(data_row[1])
             title = data_row[2]
             audio = data_row[3]
-            audio_length = data_row[4]
+            audio_length = int(data_row[4])
             description = data_row[5]
             pub_date = data_row[6]
             pub_date_sliced = pub_date[0:-3]
             podcast = repository.get_podcast(podcast_id)
-            new_episode = Episode(episode_id, podcast, title, audio, audio_length, description, pub_date_sliced)
+            new_episode = Episode(episode_id, podcast, title, audio, description, audio_length, pub_date_sliced)
             podcast.add_episode(new_episode)
+            repository.add_episode(new_episode)
 
 
     def populate_data(self, data_path: Path, repository: MemoryRepository):

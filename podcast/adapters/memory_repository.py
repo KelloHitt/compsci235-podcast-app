@@ -1,5 +1,5 @@
 from typing import List
-from podcast.domainmodel.model import Author, Podcast
+from podcast.domainmodel.model import Author, Podcast, Episode
 from podcast.adapters.repository import AbstractRepository
 from podcast.domainmodel.model import Category
 
@@ -10,6 +10,7 @@ class MemoryRepository(AbstractRepository):
         self.__episodes = list()
         self.__authors = dict()
         self.__categories = dict()
+        #maybe we can create a list of podcast with a key value pair where each podcast's value is an episode with their id??
 
     def add_or_get_author(self, author_name) -> Author:
         if not author_name:
@@ -73,4 +74,19 @@ class MemoryRepository(AbstractRepository):
         else:
             category = self.__categories[category_name]
         return category
+
+    def add_episode(self, episode: Episode):
+        if episode not in self.__episodes:
+            self.__episodes.append(episode)
+            self.__episodes.sort(key=lambda episode: episode._date, reverse=False) #sorting episodes list in ascending order based on publish date. It might take up too much time though so not 100% sure of this implemmentaiton
+    def get_number_of_episodes(self) -> int:
+        return len(self.__episodes)
+
+    def get_episode(self, episode_id: int) -> Episode:
+        for episode1 in self.__episodes:
+            if episode1._id == episode_id:
+                return episode1
+
+
+
 
