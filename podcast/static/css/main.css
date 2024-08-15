@@ -279,3 +279,34 @@ nav ul li a:hover {
 .navigation-button:hover {
     background-color: #8b3a70;
 }
+
+/* Pagination styles in Catalogue */
+.pagination {
+    display: inline-block;
+    margin-top: 20px
+}
+
+.pagination a, .pagination span {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background-color: #a34b86;
+    color: white;
+    border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #dbb1cd;
+    border-radius: 5px;
+}
+
+.pagination span {
+    padding: 8px 16px;
+    text-decoration: none;
+    background-color: transparent;
+    cursor: default;
+}
