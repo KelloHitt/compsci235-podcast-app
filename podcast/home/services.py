@@ -17,6 +17,7 @@ def get_random_podcasts_info(repository: AbstractRepository, number_of_podcasts:
     for podcast_id in podcast_ids:
         podcast = repository.get_podcast(podcast_id)
         podcast_dict = {
+            "id": podcast_id,
             "title": podcast.title,
             "image_url": podcast.image,
             "author_name": podcast.author.name
