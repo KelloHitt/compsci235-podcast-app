@@ -381,7 +381,7 @@ class Episode:
         self._date = new_date.strip()
 
     def __repr__(self):
-        return f"<Episode {self.id}: '{self.title}' in Podcast: {self.podcast}>"
+        return f"<Episode {self.id}: '{self.title}' in Podcast: {self.podcast.title}>"
 
     def __eq__(self, other):
         if not isinstance(other, Episode):
@@ -426,8 +426,7 @@ class Review:
         return self._content
     @rating.setter
     def rating(self, new_rating: int):
-        if not isinstance(new_rating, int):
-            validate_non_negative_int(new_rating)
+        validate_non_negative_int(new_rating)
         self._rating = new_rating
 
     @content.setter
@@ -453,13 +452,6 @@ class Review:
 
     def __hash__(self):
         return hash(self.id)
-
-
-
-
-
-
-
 
 
 
