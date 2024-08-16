@@ -1,42 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Podcast Catalogue</title>
-    <link
-            rel="stylesheet"
-            href="{{ url_for('static', filename='css/main.css') }}"
-    />
-    <script src="https://kit.fontawesome.com/b18330247f.js" crossorigin="anonymous"></script>
-</head>
+{% extends 'layout.html' %}
 
-<body>
-<div id="body">
-    <!-- Navigation -->
-    {% include'navbar.html' %}
-    <div id="content-2">
-        {% include 'header.html' %}
-        <!-- Pagination -->
-        {% include 'pagination.html' %}
-        <!-- Content -->
-        <main id="main">
-            <div id="podcast">
-                <ul>
-                    {% for podcast in podcasts %}
-                        <li>
-                            <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id) }}">
-                                <div class="podcast-list">
-                                    <img src="{{ podcast.image }}"
-                                         alt="podcast image">
-                                    <span>{{ podcast.title }}</span>
-                                </div>
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </main>
-    </div>
-</div>
-</body>
-</html>
+{% block content %}
+    <!-- Pagination -->
+    {% include 'pagination.html' %}
+    <main id="main">
+        <div id="podcast">
+            <ul>
+                {% for podcast in podcasts %}
+                    <li>
+                        <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id) }}">
+                            <div class="podcast-list">
+                                <img src="{{ podcast.image }}"
+                                     alt="podcast image">
+                                <span>{{ podcast.title }}</span>
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </main>
+{% endblock %}
