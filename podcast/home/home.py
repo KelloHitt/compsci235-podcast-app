@@ -11,4 +11,4 @@ home_blueprint = Blueprint(
 def home():
     list_of_podcasts = services.get_random_podcasts_info(repository.repo_instance)
     categories = utilities.get_categories()['categories']
-    return render_template('layout.html', list_of_podcasts=list_of_podcasts, categories=categories)
+    return render_template('index.html', list_of_podcasts=list_of_podcasts, categories=categories)

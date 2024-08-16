@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    {% include 'search.html' %}
+    <hr style="border: none; border-top: 1px solid #a34b86; width: 80%; margin: 20px auto;">
+    <div class=""><h2>Editor's Pick: </h2></div>
+    <div id="podcast-grid">
+        {% for podcast in list_of_podcasts %}
+            <div class="podcast-item">
+                <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id) }}">
+                    <img src="{{ podcast.image_url }}"
+                         alt="podcast image">
+                    <div class="podcast-info">
+                        <h3>{{ podcast.title }}</h3>
+                        <p>{{ podcast.author_name }}</p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
