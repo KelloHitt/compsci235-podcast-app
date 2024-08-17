@@ -3,7 +3,7 @@ from __future__ import annotations
 
 def validate_non_negative_int(value):
     if not isinstance(value, int) or value < 0:
-        raise ValueError("ID must be a non-negative integer.")
+        raise ValueError("Value must be a non-negative integer.")
 
 def validate_non_empty_string(value, field_name="value"):
     if not isinstance(value, str) or not value.strip():
@@ -317,6 +317,7 @@ class Episode:
     def __init__(self, episode_id: int, podcast: Podcast, title: str = "Untitled", url: str = "",
                  description: str = "", length: int = None, date: str = "Unspecified"):
         validate_non_negative_int(episode_id)
+        validate_non_negative_int(length)
         self._id = episode_id
         self._podcast = podcast
         validate_non_empty_string(title, "Episode title")
@@ -345,7 +346,7 @@ class Episode:
 
     @property
     def url(self) -> str:
-        return self.url
+        return self._url
 
     @url.setter
     def url(self, new_url: str):
