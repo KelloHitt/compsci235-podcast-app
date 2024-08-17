@@ -1,4 +1,5 @@
 import csv
+import os
 from pathlib import Path
 from podcast.domainmodel.model import Podcast, Episode
 from podcast.adapters.memory_repository import MemoryRepository
@@ -7,6 +8,7 @@ from bisect import bisect, bisect_left, insort_left
 
 class CSVDataReader:
     def read_csv_file(self, filename: str):
+
         with open(filename, 'r', newline='') as csv_file:
             reader = csv.reader(csv_file)
 
@@ -57,10 +59,12 @@ class CSVDataReader:
             description = data_row[5]
             pub_date = data_row[6]
             pub_date_sliced = pub_date[0:-3]
-            podcast = repository.get_podcast(podcast_id)
+            podcast = repository.get_podcast_by_id(podcast_id)
             new_episode = Episode(episode_id, podcast, title, audio, description, audio_length, pub_date_sliced)
-            podcast.add_episode(new_episode)
+            if podcast != None:
+                podcast.add_episode(new_episode)
             repository.add_episode(new_episode)
+
 
 
     def populate_data(self, data_path: Path, repository: MemoryRepository):

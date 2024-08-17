@@ -27,8 +27,15 @@ class MemoryRepository(AbstractRepository):
         if podcast not in self.__podcasts:
             self.__podcasts.append(podcast)
 
-    def get_podcast(self, podcast_id: int) -> Podcast:
-        return self.__podcasts[podcast_id - 1]
+    def get_podcast(self, podcast_int: int) -> Podcast:
+        return self.__podcasts[podcast_int - 1]
+
+    def get_podcast_by_id(self, podcast_id: int) -> Podcast:
+        for podcast1 in self.__podcasts:
+            if podcast1.id == podcast_id:
+                return podcast1
+            return None
+
 
     def get_podcasts_by_page(self, page_number: int, page_size: int) -> List[Podcast]:
         start_index = (page_number - 1) * page_size
