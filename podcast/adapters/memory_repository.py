@@ -14,10 +14,11 @@ class MemoryRepository(AbstractRepository):
         self.__categories = dict()
 
     def add_podcast(self, podcast: Podcast):
-        self.__podcasts.append(podcast)
+        if podcast not in self.__podcasts:
+            self.__podcasts.append(podcast)
 
     def get_podcast(self, podcast_id: int) -> Podcast:
-        return self.__podcasts[podcast_id - 1] if podcast_id < len(self.__podcasts) else None
+        return self.__podcasts[podcast_id - 1] if podcast_id <= len(self.__podcasts) else None
 
     def get_podcasts_by_id(self, id_list: list) -> List[Podcast]:
         return [self.get_podcast(podcast_id) for podcast_id in id_list]
@@ -60,24 +61,24 @@ class MemoryRepository(AbstractRepository):
         return sorted_categories
 
     def add_episode(self, episode: Episode):
-        self.__episodes.append(episode)
+        if episode not in self.__episodes:
+            self.__episodes.append(episode)
 
     def get_number_of_episodes(self) -> int:
         return len(self.__episodes)
 
     def get_episode(self, episode_id: int) -> Episode:
-        return self.__episodes[episode_id - 1] if episode_id < len(self.__episodes) else None
+        return self.__episodes[episode_id - 1] if episode_id <= len(self.__episodes) else None
 
     def add_author(self, author: Author):
-        self.__authors[author.id] = author
+        self.__authors[author.name] = author
 
     def add_category(self, category: Category):
-        self.__categories[category.id] = category
+        self.__categories[category.name] = category
 
 
 # Populate the data into memory repository
-def populate_data(repo: AbstractRepository):
-    data_path = Path(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
+def populate_data(repo: AbstractRepository, data_path: Path):
     reader = CSVDataReader()
     reader.load_podcasts_authors_categories(data_path)
     reader.load_episodes(data_path)
@@ -87,13 +88,13 @@ def populate_data(repo: AbstractRepository):
     categories = reader.dataset_of_categories
     episodes = reader.dataset_of_episodes
 
-    for author in authors:
+    for author in authors.values():
         repo.add_author(author)
 
     for podcast in podcasts:
         repo.add_podcast(podcast)
 
-    for category in categories:
+    for category in categories.values():
         repo.add_category(category)
 
     for episode in episodes:
