@@ -348,7 +348,7 @@ def test_podcast_subscription_hash(my_user, my_podcast):
     sub_set = {sub1, sub2}  # Should only contain one element since hash should be the same
     assert len(sub_set) == 1
 
-# TODO : Write Unit Tests for CSVDataReader, Episode, Review, Playlist classes
+
 def test_episode_initialisation():
     author1 = Author(2, "Venus")
     podcast1 = Podcast(1, author1, "Test1", "None", "Testing episode initialisation", "xyz.com", 5, "English")
@@ -367,7 +367,7 @@ def test_episode_initialisation():
     with pytest.raises(ValueError, match="Episode title must be a non-empty string."):
         episode1 = Episode(1, podcast1, 250, "hello.com", "description", 5, "2017-12-27 00:50:29+00")
 
-    episode3 =  Episode(3, podcast1, "Venus' first episode", "hello.com", "description", 5, "2017-12-27 00:50:29+00")
+    episode3 = Episode(3, podcast1, "Venus' first episode", "hello.com", "description", 5, "2017-12-27 00:50:29+00")
     assert episode3.id == 3
     episode3.title = "Ha - I have changed!"
     assert episode3.title == "Ha - I have changed!"
@@ -387,6 +387,7 @@ def test_episode_eq():
     assert episode3 == episode4
     assert episode2 != episode9
 
+
 def test_episode_lt():
     author1 = Author(1, "Michelle")
     author2 = Author(2, "Venus")
@@ -400,7 +401,8 @@ def test_episode_lt():
     assert episode1 < episode3
     assert episode3 < episode9
     assert episode2 < episode3
-    assert episode9 > episode1 #Will this work wit episode's lt() function??
+    assert episode9 > episode1
+
 
 def test_episode_hash():
     author1 = Author(1, "Michelle")
@@ -418,7 +420,8 @@ def test_episode_hash():
     episodes.discard(episode3)
     episodes.discard(episode2)
     assert len(episodes) == 1
-#DO repre for Podcast as podcast.title isntead of the podcast class
+
+
 def test_episode_title_setter():
     author1 = Author(1, "Andy")
     author2 = Author(2, "Venus")
@@ -439,6 +442,7 @@ def test_episode_url_setter():
     episode1 = Episode(1, podcast1, "Andy the Cowboy", "toystory.com", "Toystory2", 9, "2015-01-12 00:22:29+00)")
     episode1.url = "https://www.disneyplus.com/en-nz"
     assert episode1.url == "https://www.disneyplus.com/en-nz"
+
 
 def test_episode_description_setter():
     author1 = Author(1, "Andy")
@@ -465,6 +469,7 @@ def test_episode_length_setter():
     with pytest.raises(ValueError, match="Value must be a non-negative integer."):
         episode1.length = "5"
 
+
 def test_episode_date_setter():
     author1 = Author(1, "Andy")
     podcast1 = Podcast(1, author1, "TOY Story",
@@ -474,3 +479,9 @@ def test_episode_date_setter():
     episode1 = Episode(1, podcast1, "Andy the Cowboy", "toystory.com", "Toystory2", 9, "2015-01-12 00:22:29+00)")
     episode1.date = "2020-01-12 00:22:29+00"
     assert episode1.date == "2020-01-12 00:22:29+00"
+
+
+# TODO : Write Unit Tests for Review class
+
+
+# TODO: Write Unit Tests for Playlist class
