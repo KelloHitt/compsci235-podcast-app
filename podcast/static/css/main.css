@@ -25,7 +25,7 @@ h1 {
 
 /* Navigation Styles */
 nav {
-    width: 250px;
+    width: 260px;
     height: 100%;
     position: fixed;
     right: 0;
@@ -33,7 +33,7 @@ nav {
     background-color: #a34b86;
     text-align: center;
     color: white;
-     overflow-y: auto; /* Enable vertical scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
 nav .heading {
@@ -93,7 +93,7 @@ nav .sub-navbar ul a {
 /* Main Content Styles */
 #content-2 {
     height: 100vh;
-    margin-right: 250px; /* Assuming the navbar's width is 250px */
+    margin-right: 260px; /* Assuming the navbar's width is 260px */
     display: flex;
     flex-direction: column;
     align-items: center; /* Center content horizontally */
@@ -263,6 +263,23 @@ nav .sub-navbar ul a {
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+.description table {
+    color: black;
+    border-collapse: collapse;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.description th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.description tr:nth-child(even) {
+    background-color: #f2f2f2;
 }
 
 .navigation-buttons {
