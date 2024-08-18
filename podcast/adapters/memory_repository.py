@@ -1,9 +1,10 @@
-import os.path
-from typing import List
+import bisect
 from pathlib import Path
-from podcast.domainmodel.model import Author, Podcast, Episode, Category
-from podcast.adapters.repository import AbstractRepository
+from typing import List
+
 from podcast.adapters.datareader.csvdatareader import CSVDataReader
+from podcast.adapters.repository import AbstractRepository
+from podcast.domainmodel.model import Author, Podcast, Episode, Category
 
 
 class MemoryRepository(AbstractRepository):
@@ -12,16 +13,19 @@ class MemoryRepository(AbstractRepository):
         self.__episodes = list()
         self.__authors = dict()
         self.__categories = dict()
+        self.__podcasts_by_id = dict()
 
     def add_podcast(self, podcast: Podcast):
         if podcast not in self.__podcasts:
-            self.__podcasts.append(podcast)
+            self.__podcasts_by_id[podcast.id] = podcast
+            bisect.insort(self.__podcasts, podcast, key=lambda p: p.title.lower())
 
     def get_podcast(self, podcast_id: int) -> Podcast:
-        return self.__podcasts[podcast_id - 1] if podcast_id <= len(self.__podcasts) else None
+        return self.__podcasts_by_id.get(podcast_id) if podcast_id <= len(self.__podcasts) else None
 
     def get_podcasts_by_id(self, id_list: list) -> List[Podcast]:
-        return [self.get_podcast(podcast_id) for podcast_id in id_list]
+        podcasts = [self.get_podcast(podcast_id) for podcast_id in id_list]
+        return sorted(podcasts, key=lambda p: p.title.lower())
 
     def get_podcasts_by_page(self, page_number: int, page_size: int) -> List[Podcast]:
         start_index = (page_number - 1) * page_size

@@ -17,8 +17,10 @@
                 </p>
                 <p><i>Description:</i> {{ podcast.description }} </p>
                 <p><i>Language:</i> {{ podcast.language }}</p>
-                <p><i>Website:</i> {{ podcast.website }}</p>
+                <p><i>Website:</i> <a href="{{ podcast.website }}" target="_blank">{{ podcast.website }}</a></p>
                 <p><i>Episodes:</i></p>
+                <!-- Episodes List  -->
+                {% include 'episodesList.html' %}
             </div>
         </main>
     </div>
