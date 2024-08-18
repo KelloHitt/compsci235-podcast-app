@@ -1,7 +1,9 @@
+import os.path
 from typing import List
-from podcast.domainmodel.model import Author, Podcast, Episode
+from pathlib import Path
+from podcast.domainmodel.model import Author, Podcast, Episode, Category
 from podcast.adapters.repository import AbstractRepository
-from podcast.domainmodel.model import Category
+from podcast.adapters.datareader.csvdatareader import CSVDataReader
 
 
 class MemoryRepository(AbstractRepository):
@@ -10,32 +12,15 @@ class MemoryRepository(AbstractRepository):
         self.__episodes = list()
         self.__authors = dict()
         self.__categories = dict()
-        # TODO: discuss: maybe we can create a list of podcast with a key value pair where each podcast's value is an episode with their id??
-
-    def add_or_get_author(self, author_name) -> Author:
-        if not author_name:
-            author_name = "Unknown"
-        if author_name not in self.__authors:
-            author_id = len(self.__authors) + 1
-            author = Author(author_id, author_name)
-            self.__authors[author_name] = author
-        else:
-            author = self.__authors[author_name]
-        return author
 
     def add_podcast(self, podcast: Podcast):
-        if podcast not in self.__podcasts:
-            self.__podcasts.append(podcast)
+        self.__podcasts.append(podcast)
 
-    def get_podcast(self, podcast_int: int) -> Podcast:
-        return self.__podcasts[podcast_int - 1]
+    def get_podcast(self, podcast_id: int) -> Podcast:
+        return self.__podcasts[podcast_id - 1] if Podcast in self.__podcasts else None
 
-    def get_podcast_by_id(self, podcast_id: int) -> Podcast:
-        for podcast1 in self.__podcasts:
-            if podcast1.id == podcast_id:
-                return podcast1
-            return None
-
+    def get_podcasts_by_id(self, id_list: list) -> List[Podcast]:
+        return [self.get_podcast(podcast_id) for podcast_id in id_list]
 
     def get_podcasts_by_page(self, page_number: int, page_size: int) -> List[Podcast]:
         start_index = (page_number - 1) * page_size
@@ -44,9 +29,6 @@ class MemoryRepository(AbstractRepository):
 
     def get_number_of_podcasts(self) -> int:
         return len(self.__podcasts)
-
-    def get_podcasts_by_id(self, id_list) -> List[Podcast]:
-        return [self.get_podcast(podcast_id) for podcast_id in id_list]
 
     def get_podcasts_ids_for_category(self, category_name: str) -> List[int]:
         matching_podcast_ids = []
@@ -77,25 +59,42 @@ class MemoryRepository(AbstractRepository):
         sorted_categories = sorted(categories, key=lambda category: category.name)  # Sort the categories by names
         return sorted_categories
 
-    def add_or_get_category(self, category_name: str) -> Category:
-        if category_name not in self.__categories:
-            category_id = len(self.__categories) + 1
-            category = Category(category_id, category_name)
-            self.__categories[category_name] = category
-        else:
-            category = self.__categories[category_name]
-        return category
-
     def add_episode(self, episode: Episode):
-        if episode not in self.__episodes:
-            self.__episodes.append(episode)
-            self.__episodes.sort(key=lambda episode: episode.date)
+        self.__episodes.append(episode)
 
     def get_number_of_episodes(self) -> int:
         return len(self.__episodes)
 
-    # TODO: Review this method, if the episode.id the list index then no need to compare
     def get_episode(self, episode_id: int) -> Episode:
-        for episode1 in self.__episodes:
-            if episode1._id == episode_id:
-                return episode1
+        return self.__episodes[episode_id - 1] if Episode in self.__episodes else None
+
+    def add_author(self, author: Author):
+        self.__authors[author.id] = author
+
+    def add_category(self, category: Category):
+        self.__categories[category.id] = category
+
+
+# Populate the data into memory repository
+def populate_data(repo: AbstractRepository):
+    data_path = Path(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
+    reader = CSVDataReader()
+    reader.load_podcasts_authors_categories(data_path)
+    reader.load_episodes(data_path)
+
+    podcasts = reader.dataset_of_podcasts
+    authors = reader.dataset_of_authors
+    categories = reader.dataset_of_categories
+    episodes = reader.dataset_of_episodes
+
+    for author in authors:
+        repo.add_author(author)
+
+    for podcast in podcasts:
+        repo.add_podcast(podcast)
+
+    for category in categories:
+        repo.add_category(category)
+
+    for episode in episodes:
+        repo.add_episode(episode)
