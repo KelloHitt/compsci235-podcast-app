@@ -71,7 +71,7 @@ class CSVDataReader:
         if author_name not in self.__dataset_of_authors:
             author_id = len(self.__dataset_of_authors) + 1
             author = Author(author_id, author_name)
-
+            self.__dataset_of_authors[author_name] = author
         else:
             author = self.__dataset_of_authors[author_name]
         return author
@@ -86,10 +86,7 @@ class CSVDataReader:
         return category
 
     def get_podcast_by_id(self, podcast_id: int) -> Podcast:
-        if podcast_id not in self.__dataset_of_podcasts:
-            raise ValueError("Podcast with id {} does not exist".format(podcast_id))
-        else:
-            return self.__dataset_of_podcasts[podcast_id - 1]
+        return self.__dataset_of_podcasts[podcast_id - 1] if podcast_id < len(self.__dataset_of_podcasts) else None
 
     @property
     def dataset_of_podcasts(self):
