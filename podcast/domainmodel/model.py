@@ -5,6 +5,7 @@ def validate_non_negative_int(value):
     if not isinstance(value, int) or value < 0:
         raise ValueError("Value must be a non-negative integer.")
 
+
 def validate_non_empty_string(value, field_name="value"):
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{field_name} must be a non-empty string.")
@@ -382,7 +383,7 @@ class Episode:
         self._date = new_date.strip()
 
     def __repr__(self):
-        return f"<Episode {self.id}: '{self.title}' in Podcast: {self.podcast.title}>"
+        return f"<Episode {self.id}: '{self.title}' in Podcast: {self.podcast}>"
 
     def __eq__(self, other):
         if not isinstance(other, Episode):
@@ -399,8 +400,6 @@ class Episode:
 
 
 class Review:
-    # TODO: Complete the implementation of the Review class.
-    #pass
     def __init__(self, review_id: int, podcast_reviewed: Podcast, reviewer: User, rating: int, description: str):
         validate_non_negative_int(review_id)
         self._id = review_id
@@ -412,6 +411,7 @@ class Review:
     @property
     def id(self) -> int:
         return self._id
+
     @property
     def podcast(self) -> Podcast:
         return self._podcast
@@ -419,12 +419,15 @@ class Review:
     @property
     def reviewer(self) -> User:
         return self._reviewer
+
     @property
     def rating(self) -> int:
         return self._rating
+
     @property
     def content(self) -> str:
         return self._content
+
     @rating.setter
     def rating(self, new_rating: int):
         validate_non_negative_int(new_rating)
@@ -436,11 +439,9 @@ class Review:
             validate_non_empty_string(new_review)
         self._content = new_review
 
-    # def delete_review(self, review_to_delete: Review):
-    # def add_review(self, review_to_add: Review):
-
     def __repr_(self):
-        return f"<Review {self._id} made by {self._reviewer} for podcast {self._podcast} with a rating of {self._rating} and a description of {self._content}>"
+        return f"<Review {self._id} made by {self._reviewer} for podcast {self._podcast.title} with a rating of {self._rating} and a description of {self._content}>"
+
     def __eq__(self, other):
         if not isinstance(other, Review):
             return False
@@ -453,9 +454,6 @@ class Review:
 
     def __hash__(self):
         return hash(self.id)
-
-
-
 
 
 class Playlist:
