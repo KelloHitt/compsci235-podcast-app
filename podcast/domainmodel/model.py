@@ -383,7 +383,7 @@ class Episode:
         self._date = new_date.strip()
 
     def __repr__(self):
-        return f"<Episode {self.id}: '{self.title}' in Podcast: {self.podcast}>"
+        return f"<Episode {self.id}: '{self.title}' in Podcast: {self.podcast.title}>"
 
     def __eq__(self, other):
         if not isinstance(other, Episode):
