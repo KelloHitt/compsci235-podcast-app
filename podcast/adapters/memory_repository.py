@@ -17,7 +17,7 @@ class MemoryRepository(AbstractRepository):
         self.__podcasts.append(podcast)
 
     def get_podcast(self, podcast_id: int) -> Podcast:
-        return self.__podcasts[podcast_id - 1] if Podcast in self.__podcasts else None
+        return self.__podcasts[podcast_id - 1] if podcast_id < len(self.__podcasts) else None
 
     def get_podcasts_by_id(self, id_list: list) -> List[Podcast]:
         return [self.get_podcast(podcast_id) for podcast_id in id_list]
@@ -66,7 +66,7 @@ class MemoryRepository(AbstractRepository):
         return len(self.__episodes)
 
     def get_episode(self, episode_id: int) -> Episode:
-        return self.__episodes[episode_id - 1] if Episode in self.__episodes else None
+        return self.__episodes[episode_id - 1] if episode_id < len(self.__episodes) else None
 
     def add_author(self, author: Author):
         self.__authors[author.id] = author
