@@ -134,6 +134,10 @@ class Podcast:
         validate_non_empty_string(new_website, "Podcast website")
         self._website = new_website
 
+    @property
+    def episodes(self) -> list:
+        return sorted(self.episodes, key=lambda episode: episode.date)
+
     def add_category(self, category: Category):
         if not isinstance(category, Category):
             raise TypeError("Expected a Category instance.")
