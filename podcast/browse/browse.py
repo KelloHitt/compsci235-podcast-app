@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+
 import podcast.adapters.repository as repository
 import podcast.browse.services as services
 import podcast.utilities.utilities as utilities
@@ -9,6 +10,10 @@ browse_blueprint = Blueprint('browse_bp', __name__)
 @browse_blueprint.route('/browse/<int:page_number>', methods=['GET'])
 @browse_blueprint.route('/browse/category/<string:category>/<int:page_number>', methods=['GET'])
 def show_podcasts(page_number, category=None):
+    if page_number > 100:
+        page_number = 100
+    if page_number < 1:
+        page_number = 1
     if category:
         pagination_data = services.get_podcasts_by_category(repository.repo_instance, category, page_number)
     else:
