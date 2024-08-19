@@ -349,6 +349,8 @@ def test_podcast_subscription_hash(my_user, my_podcast):
     assert len(sub_set) == 1
 
 
+=======
+
 def test_episode_initialisation():
     author1 = Author(2, "Venus")
     podcast1 = Podcast(1, author1, "Test1", "None", "Testing episode initialisation", "xyz.com", 5, "English")
@@ -483,5 +485,108 @@ def test_episode_date_setter():
 
 # TODO : Write Unit Tests for Review class
 
+def test_review_initialisation():
+    review1 = Review(1, "The Podcast",  "The Reviewer",  5,  "Hello World")
+    assert repr(review1) == "<Review 1 made by The Reviewer for podcast The Podcast with rating of 5 and a description of Hello World>"
+    assert review1.id == 1
+    assert review1.reviewer == "The Reviewer"
+    assert review1.rating == 5
+    assert review1.podcast == "The Podcast"
+    assert review1.content == "Hello World"
+
+
+def test_review_eq():
+    review1 = Review(
+         1, "The Podcast", "A B", 5, "Great")
+    review2 = Review(
+         1, "The Podcast","A B", 5,  "Great")
+    review3 = Review(
+         2, "The Podcast 2", "C D", 2, "Bad")
+
+    assert review1 == review2
+    assert review1 != review3
+    assert review3 == review3
+    assert review2 != review3
+
+def test_review_lt():
+    review1 = Review(
+     1, "The Podcast", "A B", 5, "Great")
+    review2 = Review(
+     2, "The Podcast", "A B", 5, "Great")
+    review3 = Review(
+     3, "The Podcast 2", "C D", 2, "Bad")
+
+    assert review1 < review2
+    assert review3 > review1
+    assert review2 < review3
+    review_list = [review3, review1, review2]
+    assert sorted(review_list) == [review1, review2, review3]
+
+    def test_review_hash():
+        reviews = set()
+        review1 = Review(
+            1, "The Podcast", "A B", 5, "Great")
+        review2 = Review(
+            2, "The Podcast 2", "C D", 3, "Good")
+        review3 = Review(
+            3, "The Podcast 3", "E F", 2, "Bad")
+
+        reviews.add(review1)
+        reviews.add(review2)
+        reviews.add(review3)
+
+        assert len(reviews) == 3
+        assert repr(sorted(reviews)) == "[<Review 1 made by A B for podcast The Podcast with a rating of 5 and a description of Great>,<Review 2 made by C D for podcast The Podcast 2 with a rating of 3 and a description of Good>,<Review 3 made by E F for podcast The Podcast 3 with a rating of 2 and a description of Bad>]"
+        reviews.discard(review1)
+        assert repr(sorted(reviews)) == "[<Review 2 made by C D for podcast The Podcast 2 with a rating of 3 and a description of Good>,<Review 3 made by E F for podcast The Podcast 3 with a rating of 2 and a description of Bad>]"
+
+    def test_review_podcast_setter():
+        old_podcast = Podcast(1, "A", "123", "123", "123")
+        new_podcast = Podcast(1, "A", "123", "123", "123")
+        review1 = Review(
+            1, old_podcast, "A B", 5, "Great")
+        review1.podcast = new_podcast
+        assert repr(review1) == "<Review 1 made by A B for podcast new_podcast with a rating of 5 and a description of Great>"
+
+        with pytest.raises(ValueError):
+            review1.podcast = "Podcast"
+
+        with pytest.raises(ValueError):
+            review1.podcast = 1
+
+
+    def test_review_owner_setter():
+        old_user = User(1, "A", "123")
+        new_user = User(1, "A", "123")
+        review1 = Review(
+            1, "New Podcast", old_user, 5, "Great")
+        review1.reviewer = new_user
+        assert repr(review1) == "<Review 1 made by new_user for podcast New Podcast with a rating of 5 and a description of Great>"
+
+        with pytest.raises(ValueError):
+            review1.reviewer = "reviewer"
+
+        with pytest.raises(ValueError):
+            review1.reviewer = 123
+
+    def test_review_rating_setter():
+        review1 = Review(
+            1, "New Podcast", "A B", 5, "Great")
+        review1.rating = 1
+        assert repr(review1) == "<Review 1 made by A B for podcast New Podcast with a rating of 1 and a description of Great>"
+
+        with pytest.raises(ValueError):
+            review1.rating = "abc"
+
+    def test_review_description_setter():
+        review1 = Review(
+            1, "New Podcast", "A B", 5, "Great")
+        review1.description = "Bad"
+        assert repr(
+            review1) == "<Review 1 made by A B for podcast New Podcast with a rating of 1 and a description of Bad>"
+
+        with pytest.raises(ValueError):
+            review1.description = 123
 
 # TODO: Write Unit Tests for Playlist class
+

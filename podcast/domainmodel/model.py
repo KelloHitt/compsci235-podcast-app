@@ -457,5 +457,71 @@ class Review:
 
 
 class Playlist:
-    # TODO: Complete the implementation of the Playlist class.
-    pass
+    class Playlist:
+        def __init__(self, playlist_id: int, playlist_owner: User, playlist_name: str):
+            validate_non_negative_int(playlist_id)
+            if not isinstance(playlist_owner, User):
+                raise TypeError("Playlist owner must be a User object.")
+            if not isinstance(playlist_name, str):
+                raise TypeError("Playlist name must be a string object.")
+            self._id = playlist_id
+            self._owner = playlist_owner
+            self._name = playlist_name
+            self._episodes = []
+
+        @property
+        def id(self) -> int:
+            return self._id
+
+        @property
+        def owner(self) -> User:
+            return self._owner
+
+        @owner.setter
+        def owner(self, new_owner: User):
+            if not isinstance(new_owner, User):
+                raise TypeError("Owner must be a User object.")
+            self._owner = new_owner
+
+        @property
+        def name(self) -> str:
+            return self._name
+
+        @name.setter
+        def name(self, new_name: str):
+            if not isinstance(new_name, str):
+                raise TypeError("Name must be a string object.")
+            self._name = new_name
+
+        def __repr__(self):
+            return f"<Playlist {self.id}: Owned by: {self.owner.username}>"
+
+        def __eq__(self, other):
+            if not isinstance(other, Playlist):
+                return False
+            return self.id == other.id and self.owner == other.owner and self.name == other.name
+
+        def __lt__(self, other):
+            if not isinstance(other, Playlist):
+                return False
+            return self.id < other.id
+
+        def __hash__(self):
+            return ((self.id, self.owner, self.name))
+
+        @property
+        def episodes(self):
+            return self._episodes
+
+        def add_episode(self, new_episode: Episode):
+            if not isinstance(new_episode, Episode):
+                raise TypeError("Episode must be an episode object.")
+            if new_episode not in self._episodes:
+                self._episodes.append(new_episode)
+
+        def delete_episode(self, to_delete: Episode):
+            if not isinstance(to_delete, Episode):
+                raise TypeError("Episode to delete must be an Episode object")
+            if to_delete in self._episodes:
+                self._episodes.remove(to_delete)
+
