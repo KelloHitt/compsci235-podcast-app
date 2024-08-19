@@ -1,6 +1,6 @@
 import pytest
-from podcast.domainmodel.model import Author, Podcast, Category, User, PodcastSubscription, Episode
-from podcast.adapters.datareader.csvdatareader import CSVDataReader
+
+from podcast.domainmodel.model import Author, Podcast, Category, User, PodcastSubscription, Episode, Review, Playlist
 
 
 def test_author_initialization():
@@ -151,6 +151,11 @@ def my_user():
 @pytest.fixture
 def my_subscription(my_user, my_podcast):
     return PodcastSubscription(1, my_user, my_podcast)
+
+
+@pytest.fixture
+def my_playlist(my_user):
+    return Playlist(100, my_user, "My favourite playlist")
 
 
 def test_podcast_initialization():
@@ -349,8 +354,6 @@ def test_podcast_subscription_hash(my_user, my_podcast):
     assert len(sub_set) == 1
 
 
-=======
-
 def test_episode_initialisation():
     author1 = Author(2, "Venus")
     podcast1 = Podcast(1, author1, "Test1", "None", "Testing episode initialisation", "xyz.com", 5, "English")
@@ -361,10 +364,12 @@ def test_episode_initialisation():
     assert episode1.length == 5
 
     with pytest.raises(ValueError, match="Value must be a non-negative integer."):
-        episode1 = Episode(1, podcast1, "Venus' first episode", "hello.com", "description", "hi", "2017-12-27 00:50:29+00")
+        episode1 = Episode(1, podcast1, "Venus' first episode", "hello.com", "description", "hi",
+                           "2017-12-27 00:50:29+00")
 
     with pytest.raises(ValueError, match="Value must be a non-negative integer."):
-        episode1 = Episode(-5, podcast1, "Venus' first episode", "hello.com", "description", 5, "2017-12-27 00:50:29+00")
+        episode1 = Episode(-5, podcast1, "Venus' first episode", "hello.com", "description", 5,
+                           "2017-12-27 00:50:29+00")
 
     with pytest.raises(ValueError, match="Episode title must be a non-empty string."):
         episode1 = Episode(1, podcast1, 250, "hello.com", "description", 5, "2017-12-27 00:50:29+00")
@@ -397,7 +402,7 @@ def test_episode_lt():
     podcast2 = Podcast(4, author2, "Test1", "None", "Testing episode initialisation", "xyz.com", 5, "English")
     episode1 = Episode(1, podcast1, "Venus' first episode", "hello.com", "description", 5, "2016-12-27 00:50:29+00")
     episode2 = Episode(1, podcast2, "Episode uno", "hello.com", "description", 5, "2017-12-27 00:48:29+00")
-    episode3  =  Episode(1, podcast2, "Episode uno", "hello.com", "description", 5, "2021-12-27 00:50:27+00")
+    episode3 = Episode(1, podcast2, "Episode uno", "hello.com", "description", 5, "2021-12-27 00:50:27+00")
     episode9 = Episode(1, podcast1, "Venus' first episode", "hello.com", "description", 5, "2021-12-27 00:50:29+00")
     assert episode1 < episode2
     assert episode1 < episode3
@@ -414,7 +419,8 @@ def test_episode_hash():
     episodes = set()
     episode1 = Episode(1, podcast2, "Episode uno", "hello.com", "description", 5, "2017-12-27 00:48:29+00")
     episode2 = Episode(2, podcast2, "Episode dos", "bye.com", "description-not", 2, "2007-03-24 00:22:29+00")
-    episode3 = Episode(3, podcast1, "Episode tres", "something.com", "The number 3 is a very interesting number", 1, "2021-12-27 00:48:29+00")
+    episode3 = Episode(3, podcast1, "Episode tres", "something.com", "The number 3 is a very interesting number", 1,
+                       "2021-12-27 00:48:29+00")
     episodes.add(episode1)
     episodes.add(episode2)
     episodes.add(episode3)
@@ -427,7 +433,10 @@ def test_episode_hash():
 def test_episode_title_setter():
     author1 = Author(1, "Andy")
     author2 = Author(2, "Venus")
-    podcast1 = Podcast(1, author1, "TOY Story", "data:image/jpeg;base64,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", "The Toy story saga continues...", "https://www.pixar.com/feature-films/toy-story", 12, "English")
+    podcast1 = Podcast(1, author1, "TOY Story",
+                       "data:image/jpeg;base64,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",
+                       "The Toy story saga continues...", "https://www.pixar.com/feature-films/toy-story", 12,
+                       "English")
     episode1 = Episode(1, podcast1, "Andy the Cowboy", "toystory.com", "Toystory2", 9, "2015-01-12 00:22:29+00)")
     episode1.title = "Buzz the Buzzer"
     assert repr(episode1) == "<Episode 1: 'Buzz the Buzzer' in Podcast: TOY Story>"
@@ -483,110 +492,225 @@ def test_episode_date_setter():
     assert episode1.date == "2020-01-12 00:22:29+00"
 
 
-# TODO : Write Unit Tests for Review class
-
-def test_review_initialisation():
-    review1 = Review(1, "The Podcast",  "The Reviewer",  5,  "Hello World")
-    assert repr(review1) == "<Review 1 made by The Reviewer for podcast The Podcast with rating of 5 and a description of Hello World>"
+def test_review_initialisation(my_podcast, my_user):
+    review1 = Review(1, my_podcast, my_user, 5, "Hello World")
+    assert repr(
+        review1) == "<Review 1 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 5 and a description of Hello World>"
     assert review1.id == 1
-    assert review1.reviewer == "The Reviewer"
+    assert review1.reviewer == my_user
     assert review1.rating == 5
-    assert review1.podcast == "The Podcast"
+    assert review1.podcast == my_podcast
     assert review1.content == "Hello World"
 
 
-def test_review_eq():
+def test_review_eq(my_podcast, my_user):
     review1 = Review(
-         1, "The Podcast", "A B", 5, "Great")
+        1, my_podcast, my_user, 5, "Great")
     review2 = Review(
-         1, "The Podcast","A B", 5,  "Great")
+        1, my_podcast, my_user, 5, "Great")
     review3 = Review(
-         2, "The Podcast 2", "C D", 2, "Bad")
+        2, my_podcast, my_user, 2, "Bad")
 
     assert review1 == review2
     assert review1 != review3
     assert review3 == review3
     assert review2 != review3
 
-def test_review_lt():
+
+def test_review_lt(my_podcast, my_user):
     review1 = Review(
-     1, "The Podcast", "A B", 5, "Great")
+        1, my_podcast, my_user, 5, "Great")
     review2 = Review(
-     2, "The Podcast", "A B", 5, "Great")
+        2, my_podcast, my_user, 4, "Great")
     review3 = Review(
-     3, "The Podcast 2", "C D", 2, "Bad")
+        3, my_podcast, my_user, 2, "Bad")
 
-    assert review1 < review2
-    assert review3 > review1
-    assert review2 < review3
+    assert review1 > review2
+    assert review3 < review1
+    assert review2 > review3
     review_list = [review3, review1, review2]
-    assert sorted(review_list) == [review1, review2, review3]
-
-    def test_review_hash():
-        reviews = set()
-        review1 = Review(
-            1, "The Podcast", "A B", 5, "Great")
-        review2 = Review(
-            2, "The Podcast 2", "C D", 3, "Good")
-        review3 = Review(
-            3, "The Podcast 3", "E F", 2, "Bad")
-
-        reviews.add(review1)
-        reviews.add(review2)
-        reviews.add(review3)
-
-        assert len(reviews) == 3
-        assert repr(sorted(reviews)) == "[<Review 1 made by A B for podcast The Podcast with a rating of 5 and a description of Great>,<Review 2 made by C D for podcast The Podcast 2 with a rating of 3 and a description of Good>,<Review 3 made by E F for podcast The Podcast 3 with a rating of 2 and a description of Bad>]"
-        reviews.discard(review1)
-        assert repr(sorted(reviews)) == "[<Review 2 made by C D for podcast The Podcast 2 with a rating of 3 and a description of Good>,<Review 3 made by E F for podcast The Podcast 3 with a rating of 2 and a description of Bad>]"
-
-    def test_review_podcast_setter():
-        old_podcast = Podcast(1, "A", "123", "123", "123")
-        new_podcast = Podcast(1, "A", "123", "123", "123")
-        review1 = Review(
-            1, old_podcast, "A B", 5, "Great")
-        review1.podcast = new_podcast
-        assert repr(review1) == "<Review 1 made by A B for podcast new_podcast with a rating of 5 and a description of Great>"
-
-        with pytest.raises(ValueError):
-            review1.podcast = "Podcast"
-
-        with pytest.raises(ValueError):
-            review1.podcast = 1
+    assert sorted(review_list) == [review3, review2, review1]
 
 
-    def test_review_owner_setter():
-        old_user = User(1, "A", "123")
-        new_user = User(1, "A", "123")
-        review1 = Review(
-            1, "New Podcast", old_user, 5, "Great")
-        review1.reviewer = new_user
-        assert repr(review1) == "<Review 1 made by new_user for podcast New Podcast with a rating of 5 and a description of Great>"
+def test_review_hash(my_podcast, my_user):
+    reviews = set()
+    review1 = Review(
+        1, my_podcast, my_user, 5, "Great")
+    review2 = Review(
+        2, my_podcast, my_user, 3, "Good")
+    review3 = Review(
+        3, my_podcast, my_user, 2, "Bad")
 
-        with pytest.raises(ValueError):
-            review1.reviewer = "reviewer"
+    reviews.add(review1)
+    reviews.add(review2)
+    reviews.add(review3)
 
-        with pytest.raises(ValueError):
-            review1.reviewer = 123
+    assert len(reviews) == 3
+    assert repr(sorted(reviews)) == (
+        "[<Review 3 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 2 and a description of Bad>, "
+        "<Review 2 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 3 and a description of Good>, "
+        "<Review 1 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 5 and a description of Great>]")
+    reviews.discard(review1)
+    assert repr(sorted(reviews)) == (
+        "[<Review 3 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 2 and a description of Bad>, "
+        "<Review 2 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 3 and a description of Good>]")
 
-    def test_review_rating_setter():
-        review1 = Review(
-            1, "New Podcast", "A B", 5, "Great")
-        review1.rating = 1
-        assert repr(review1) == "<Review 1 made by A B for podcast New Podcast with a rating of 1 and a description of Great>"
 
-        with pytest.raises(ValueError):
-            review1.rating = "abc"
+def test_review_podcast_setter(my_podcast, my_author, my_user):
+    new_podcast = Podcast(1, my_author, "New Podcast", "123", "123")
+    review1 = Review(
+        1, my_podcast, my_user, 5, "Great")
+    review1.podcast = new_podcast
+    assert repr(
+        review1) == "<Review 1 made by shyamli for podcast 'New Podcast' with a rating of 5 and a description of Great>"
 
-    def test_review_description_setter():
-        review1 = Review(
-            1, "New Podcast", "A B", 5, "Great")
-        review1.description = "Bad"
-        assert repr(
-            review1) == "<Review 1 made by A B for podcast New Podcast with a rating of 1 and a description of Bad>"
+    with pytest.raises(TypeError):
+        review1.podcast = "Podcast"
 
-        with pytest.raises(ValueError):
-            review1.description = 123
+    with pytest.raises(TypeError):
+        review1.podcast = 1
 
-# TODO: Write Unit Tests for Playlist class
 
+def test_review_owner_setter(my_podcast, my_user):
+    new_user = User(2, "testing", "123")
+    review1 = Review(1, my_podcast, my_user, 5, "Great")
+    review1.reviewer = new_user
+    assert repr(
+        review1) == "<Review 1 made by testing for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 5 and a description of Great>"
+
+    with pytest.raises(TypeError):
+        review1.reviewer = "reviewer"
+
+    with pytest.raises(TypeError):
+        review1.reviewer = 123
+
+
+def test_review_rating_setter(my_podcast, my_user):
+    review1 = Review(1, my_podcast, my_user, 5, "Great")
+    review1.rating = 1
+    assert repr(
+        review1) == "<Review 1 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 1 and a description of Great>"
+
+    with pytest.raises(ValueError):
+        review1.rating = "abc"
+
+    with pytest.raises(ValueError):
+        review1.rating = -2
+
+
+def test_review_description_setter(my_podcast, my_user):
+    review1 = Review(1, my_podcast, my_user, 5, "Great")
+    review1.content = "Bad"
+    assert repr(
+        review1) == "<Review 1 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 5 and a description of Bad>"
+
+    with pytest.raises(ValueError):
+        review1.content = 123
+
+
+def test_playlist_initialization(my_user, my_author):
+    playlist1 = Playlist(1, my_user, "My First Playlist")
+    assert playlist1.id == 1
+    assert playlist1.owner == my_user
+    assert playlist1.name == "My First Playlist"
+    assert playlist1.episodes == []
+
+    assert repr(playlist1) == "<Playlist 1 'My First Playlist': Owned by shyamli>"
+
+    with pytest.raises(ValueError):
+        playlist2 = Playlist(-123, my_user, "My Second Playlist")
+
+    with pytest.raises(TypeError):
+        playlist3 = Playlist(1, my_author, "My Third Playlist")
+
+    with pytest.raises(TypeError):
+        playlist4 = Playlist(1, my_user, 123)
+
+
+def test_playlist_equality(my_user):
+    new_user = User(2, "testing", "123")
+    playlist1 = Playlist(1, my_user, "My First Playlist")
+    playlist2 = Playlist(2, my_user, "My Second Playlist")
+    playlist3 = Playlist(3, my_user, "My Second Playlist")
+    playlist4 = Playlist(1, new_user, "My First Playlist")
+    playlist5 = Playlist(1, new_user, "My First Playlist")
+    assert playlist1 != playlist4
+    assert playlist2 != playlist3
+    assert playlist3 != playlist4
+    assert playlist4 == playlist5
+
+
+def test_playlist_hash(my_user):
+    playlist1 = Playlist(1, my_user, "My First Playlist")
+    playlist2 = Playlist(2, my_user, "My Second Playlist")
+    playlist3 = Playlist(2, my_user, "My Third Playlist")
+    playlist1.episodes.append("Episode 1")
+    playlist_dict = {playlist1: playlist1.episodes, playlist2: playlist2.episodes, playlist3: playlist3.episodes}
+    assert playlist_dict[playlist1] == ["Episode 1"]  # test the playlist instance can be used as dictionary key
+    assert playlist_dict[playlist2] == []
+    assert playlist_dict[playlist2] == playlist_dict[playlist3]
+    playlist_dict.popitem()
+    assert len(playlist_dict.keys()) == 2
+
+
+def test_playlist_lt(my_user):
+    playlist1 = Playlist(100, my_user, "My First Playlist")
+    playlist2 = Playlist(2, my_user, "My Second Playlist")
+    playlist3 = Playlist(103, my_user, "My Third Playlist")
+    assert playlist1 > playlist2
+    assert playlist2 < playlist3
+    assert playlist3 > playlist1
+    playlists = [playlist1, playlist2, playlist3]
+    assert sorted(playlists) == [playlist2, playlist1, playlist3]
+
+
+def test_playlist_name_setter(my_user):
+    playlist1 = Playlist(100, my_user, "Untitled")
+    playlist1.name = "My First Playlist"
+    assert playlist1.name == "My First Playlist"
+
+    with pytest.raises(ValueError):
+        playlist1.name = ""
+
+    with pytest.raises(ValueError):
+        playlist1.name = 123
+
+
+def test_playlist_owner_setter(my_playlist, my_user, my_author):
+    assert my_playlist.owner == my_user
+    new_user = User(2, "testing", "123")
+    my_playlist.owner = new_user
+    assert my_playlist.owner == new_user
+
+    with pytest.raises(TypeError):
+        my_playlist.owner = my_author
+
+    with pytest.raises(TypeError):
+        my_playlist.owner = 123
+
+
+def test_playlist_add_remove_episode(my_playlist, my_podcast):
+    episode1 = Episode(1, my_podcast, "Episode 1", "https", "Frist", 20, "2022")
+    episode2 = Episode(2, my_podcast, "Episode 2", "https", "Second", 30, "2023")
+    my_playlist.add_episode(episode1)
+    assert episode1 in my_playlist.episodes
+    assert len(my_playlist.episodes) == 1
+
+    my_playlist.add_episode(episode1)  # same episode
+    assert len(my_playlist.episodes) == 1
+
+    with pytest.raises(TypeError):
+        my_playlist.add_episode("This is a string not an Episode")
+
+    my_playlist.add_episode(episode2)
+    assert len(my_playlist.episodes) == 2
+
+    my_playlist.delete_episode(episode1)
+    assert episode1 not in my_playlist.episodes
+    assert len(my_playlist.episodes) == 1  # since episode 1 has been removed
+
+    with pytest.raises(ValueError):
+        my_playlist.delete_episode(episode1)
+
+    with pytest.raises(TypeError):
+        my_playlist.delete_episode("This is a string not an Episode")
