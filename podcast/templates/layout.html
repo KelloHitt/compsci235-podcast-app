@@ -1,28 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Podcasts</title>
-    <link
-      rel="stylesheet" href="../static/css/main.css"
-    />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Podcast Library</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}" type="text/css">
+    <script src="https://kit.fontawesome.com/b18330247f.js" crossorigin="anonymous"></script>
 </head>
-<body style=" background-image: linear-gradient(to right, #9176d6, #2c2cd3);">
-<header id="header">
-    <div class="mainheading">Podcast Catalogue</div>
-    <div style="position: absolute; font-size: 12px; text-align: left; justify-content: left; left: 12px; top: 110px;">By Venus Chandra</div>
-</header>
- <div class="search-container">
-        <input type="text" placeholder="Search for a podcast..." class="search-input">
-        <button class="search-button">Search</button>
+<body>
+<div id="body">
+    <!-- Include navigation partial. -->
+    {% include 'navbar.html' %}
+    <div id="content-2">
+        <!-- Include header partial. -->
+        {% include 'header.html' %}
+        <!-- Main content block to be supplied by page. -->
+        {% block content %} {% endblock %}
     </div>
-    <div style ="padding-left: 20px; padding-top: 20px; margin-left: 0px; margin-bottom: 0px; top-margin: 50px;">
-        <div class="topnav">
-        <a href="./layout.html">Home</a>
-        <a href="./catalogue.html">Podcasts</a>
-        </div>
-    </div>
-
-
+</div>
 </body>
 </html>

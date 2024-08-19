@@ -1,0 +1,15 @@
+<!-- Navigation Buttons for Pagination -->
+<div class="navigation-buttons">
+    <a href="{{ url_for('description_bp.show_description', podcast_id=1) }}"
+       class="navigation-button">First Podcast</a>
+    {% if podcast.id > 1 %}
+        <a href="{{ url_for('description_bp.show_description', podcast_id=(podcast.id - 1)) }}"
+           class="navigation-button">Previous Podcast</a>
+    {% endif %}
+    {% if podcast.id < 1000 %}
+        <a href="{{ url_for('description_bp.show_description', podcast_id=(podcast.id + 1)) }}"
+           class="navigation-button">Next Podcast</a>
+    {% endif %}
+    <a href="{{ url_for('description_bp.show_description', podcast_id=1000) }}"
+       class="navigation-button">Last Podcast</a>
+</div>

@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <!-- Pagination -->
+    {% include 'pagination.html' %}
+    <main id="main">
+        <div id="podcast">
+            <ul>
+                {% for podcast in podcasts %}
+                    <li>
+                        <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id) }}">
+                            <div class="podcast-list">
+                                <img src="{{ podcast.image }}"
+                                     alt="podcast image">
+                                <span>{{ podcast.title }}</span>
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </main>
+{% endblock %}

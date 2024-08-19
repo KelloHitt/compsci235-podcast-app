@@ -1,25 +1,333 @@
+/* General Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #f1e0eb;
+    color: #444444;
+}
+
+h1 {
+    text-align: center;
+    font-weight: bold;
+}
+
+#logo {
+    width: 150px;
+}
+
+/* Navigation Styles */
+nav {
+    width: 260px;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    padding: 15px;
+    background-color: #a34b86;
+    text-align: center;
+    color: white;
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+nav .heading {
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 15px;
+}
+
+nav ul {
+    position: relative;
+    overflow: auto;
+    display: inline;
+}
+
+nav ul li a {
+    display: block;
+    color: #ffffff;
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 10px;
+    transition: 0.2s ease-in;
+}
+
+nav ul li a:hover {
+    background-color: #ead1e1;
+    color: #000000;
+}
+
+#nav-footer {
+    font-size: 0.8em;
+
+    margin-bottom: 20px;
+    word-wrap: break-word;
+}
+
+nav .sub-navbar ul a {
+    font-size: 0.8em;
+}
+
+/* Header Styles */
 #header {
-  padding: 20px;
-  background: 	#E6E6FA;
-  border-bottom: 1px solid #e0e4e8;
-  font-size: 25px;
-  font-weight: bold;
-  text-align: center;
+    padding: 40px;
+    background: #cf97bc;
+    text-align: center;
+    font-size: 3em;
+    font-weight: bold;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .copyright {
-  color: black;
-  font-size: 0.9em;
+    font-size: 1rem;
+    color: #444444;
+    padding-top: 20px;
+}
+
+/* Main Content Styles */
+#content-2 {
+    height: 100vh;
+    margin-right: 260px; /* Assuming the navbar's width is 260px */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+}
+
+#container {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+}
+
+#main {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+    padding: 10px;
+    color: #717171;
+    line-height: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Search Box Styles */
+.search-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #fff;
+    margin: 20px auto;
+}
+
+.search-input {
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    flex: 1;
+}
+
+.search-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #883f70;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    outline: none;
+}
+
+.search-button:hover {
+    background-color: #473080;
+}
+
+/* Podcast Grid Styles */
+#podcast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 20px;
+    margin: 20px auto;
+    max-width: 80%;
+}
+
+.podcast-item {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-wrap: break-word;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.podcast-item:hover {
+    transform: translateY(-5px);
+}
+
+.podcast-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+
+.podcast-info {
+    padding: 10px 0;
+}
+
+.podcast-info h3 {
+    font-size: 1.1em;
+    margin: 5px;
+    color: black;
+}
+
+.podcast-info p {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 10px;
+}
+
+/* Podcast List Styles in Catalogue */
+.podcast-list {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between image and text */
+    padding: 10px;
+    background-color: white;
+    color: #333;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin: 15px;
+}
+
+.podcast-list:hover {
+    background-color: #883f70;
+    color: white;
+}
+
+.podcast-list img {
+    width: 150px;
+    height: auto;
+}
+
+.podcast-list span {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* Description Styles in podcastDescription */
+.description {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    line-height: 1.6;
+}
+
+.description h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+}
+
+.description p {
+    font-size: 1em;
+    margin: 10px 0;
+    color: #555;
 }
 
 .description p i {
-    font-family: 'Gill Sans';
     font-weight: bold;
-    font-size: 18px;
-    text-transform: uppercase;
-    color:darkslateblue
-    }
+    color: #333;
+}
 
 .description img {
-        vertical-align: top;
-    }
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.description table {
+    color: black;
+    border-collapse: collapse;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.description th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.description tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 20px;
+}
+
+.navigation-button {
+    background-color: #a34b86;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.navigation-button:hover {
+    background-color: #8b3a70;
+}
+
+/* Pagination styles in Catalogue */
+.pagination {
+    display: inline-block;
+    margin-top: 20px
+}
+
+.pagination a, .pagination span {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background-color: #a34b86;
+    color: white;
+    border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #dbb1cd;
+    border-radius: 5px;
+}
+
+.pagination span {
+    padding: 8px 16px;
+    text-decoration: none;
+    background-color: transparent;
+    cursor: default;
+}

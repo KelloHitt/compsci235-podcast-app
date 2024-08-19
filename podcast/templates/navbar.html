@@ -1,0 +1,24 @@
+<nav>
+    <div id="nav-footer">
+        © xli910 | owak638 | vcha997
+    </div>
+    <img id="logo" src="{{ url_for('static', filename='logo.png') }}" alt="a microphone logo"/>
+    <div class="heading">Pod Library</div>
+    <div class="navbar">
+        <ul>
+            <li><a href="{{ url_for('home_bp.home') }}"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="{{ url_for('browse_bp.show_podcasts', page_number=1) }}"><i class="fa-solid fa-podcast"></i>
+                Podcasts</a></li>
+        </ul>
+    </div>
+    <div class="sub-navbar">
+        <div class="heading" style="font-size: 1rem">Browse by Category</div>
+        <ul>
+            {% for category in categories %}
+                <li>
+                    <a href="{{ url_for('browse_bp.show_podcasts', category=category.name, page_number=1) }}">{{ category.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</nav>

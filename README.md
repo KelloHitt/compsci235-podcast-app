@@ -3,7 +3,7 @@ This is a starter repository for the podcasts webapp project of CompSci 235 in S
 
 ## Description
 
-This repository contains a partial implementation of the domain model. It contains unit tests which can be run through pytest. It also contains a simple Flask application that renders content of a Podcast object instance from our domain model on a blank HTML page. You'll be expanding the domain model implementation, and you have the freedom to modify or remove test cases as needed.
+This is a Podcast Library web application that implements Python's Flask framework as well as libraries such as Jinja templating. It contains features such as a podcast search function, browse by categories function, and a page to browse all podcasts. Repository pattern is utilised for Dependency Inversion principle, and the Blueprints are implemented for Single Responsibility principle. Each blueprint also has a service layer to provide service logics to each requested function. Testing includes unit and end-to-end testing using pytest.
 
 ## Installation
 
