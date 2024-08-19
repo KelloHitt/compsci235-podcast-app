@@ -416,9 +416,21 @@ class Review:
     def podcast(self) -> Podcast:
         return self._podcast
 
+    @podcast.setter
+    def podcast(self, new_podcast: Podcast):
+        if not isinstance(new_podcast, Podcast):
+            raise TypeError("Podcast must be a Podcast object.")
+        self._podcast = new_podcast
+
     @property
     def reviewer(self) -> User:
         return self._reviewer
+
+    @reviewer.setter
+    def reviewer(self, new_reviewer: User):
+        if not isinstance(new_reviewer, User):
+            raise TypeError("Review must be a User object.")
+        self._reviewer = new_reviewer
 
     @property
     def rating(self) -> int:
@@ -439,89 +451,88 @@ class Review:
             validate_non_empty_string(new_review)
         self._content = new_review
 
-    def __repr_(self):
-        return f"<Review {self._id} made by {self._reviewer} for podcast {self._podcast.title} with a rating of {self._rating} and a description of {self._content}>"
+    def __repr__(self):
+        return f"<Review {self.id} made by {self.reviewer.username} for podcast '{self.podcast.title}' with a rating of {self.rating} and a description of {self.content}>"
 
     def __eq__(self, other):
         if not isinstance(other, Review):
             return False
-        return self._id == other._id
+        return self.id == other.id
 
     def __lt__(self, other):
         if not isinstance(other, Review):
             return False
-        return self._rating < other._id
+        return self.rating < other.rating
 
     def __hash__(self):
         return hash(self.id)
 
 
 class Playlist:
-    class Playlist:
-        def __init__(self, playlist_id: int, playlist_owner: User, playlist_name: str):
-            validate_non_negative_int(playlist_id)
-            if not isinstance(playlist_owner, User):
-                raise TypeError("Playlist owner must be a User object.")
-            if not isinstance(playlist_name, str):
-                raise TypeError("Playlist name must be a string object.")
-            self._id = playlist_id
-            self._owner = playlist_owner
-            self._name = playlist_name
-            self._episodes = []
+    def __init__(self, playlist_id: int, playlist_owner: User, playlist_name: str):
+        validate_non_negative_int(playlist_id)
+        if not isinstance(playlist_owner, User):
+            raise TypeError("Playlist owner must be a User object.")
+        if not isinstance(playlist_name, str):
+            raise TypeError("Playlist name must be a string object.")
+        self._id = playlist_id
+        self._owner = playlist_owner
+        self._name = playlist_name
+        self._episodes = []
 
-        @property
-        def id(self) -> int:
-            return self._id
+    @property
+    def id(self) -> int:
+        return self._id
 
-        @property
-        def owner(self) -> User:
-            return self._owner
+    @property
+    def owner(self) -> User:
+        return self._owner
 
-        @owner.setter
-        def owner(self, new_owner: User):
-            if not isinstance(new_owner, User):
-                raise TypeError("Owner must be a User object.")
-            self._owner = new_owner
+    @owner.setter
+    def owner(self, new_owner: User):
+        if not isinstance(new_owner, User):
+            raise TypeError("Owner must be a User object.")
+        self._owner = new_owner
 
-        @property
-        def name(self) -> str:
-            return self._name
+    @property
+    def name(self) -> str:
+        return self._name
 
-        @name.setter
-        def name(self, new_name: str):
-            if not isinstance(new_name, str):
-                raise TypeError("Name must be a string object.")
-            self._name = new_name
+    @name.setter
+    def name(self, new_name: str):
+        validate_non_empty_string(new_name, "Playlist title")
+        self._name = new_name.strip()
 
-        def __repr__(self):
-            return f"<Playlist {self.id}: Owned by: {self.owner.username}>"
+    def __repr__(self):
+        return f"<Playlist {self.id} '{self.name}': Owned by {self.owner.username}>"
 
-        def __eq__(self, other):
-            if not isinstance(other, Playlist):
-                return False
-            return self.id == other.id and self.owner == other.owner and self.name == other.name
+    def __eq__(self, other):
+        if not isinstance(other, Playlist):
+            return False
+        return self.id == other.id and self.owner == other.owner and self.name == other.name
 
-        def __lt__(self, other):
-            if not isinstance(other, Playlist):
-                return False
-            return self.id < other.id
+    def __lt__(self, other):
+        if not isinstance(other, Playlist):
+            return False
+        return self.id < other.id
 
-        def __hash__(self):
-            return ((self.id, self.owner, self.name))
+    def __hash__(self):
+        return hash(self.id)
 
-        @property
-        def episodes(self):
-            return self._episodes
+    @property
+    def episodes(self):
+        return self._episodes
 
-        def add_episode(self, new_episode: Episode):
-            if not isinstance(new_episode, Episode):
-                raise TypeError("Episode must be an episode object.")
-            if new_episode not in self._episodes:
-                self._episodes.append(new_episode)
+    def add_episode(self, new_episode: Episode):
+        if not isinstance(new_episode, Episode):
+            raise TypeError("Episode must be an episode object.")
+        if new_episode not in self._episodes:
+            self._episodes.append(new_episode)
 
-        def delete_episode(self, to_delete: Episode):
-            if not isinstance(to_delete, Episode):
-                raise TypeError("Episode to delete must be an Episode object")
-            if to_delete in self._episodes:
-                self._episodes.remove(to_delete)
-
+    def delete_episode(self, to_delete: Episode):
+        if not isinstance(to_delete, Episode):
+            raise TypeError("Episode to delete must be an Episode object")
+        if to_delete in self._episodes:
+            self._episodes.remove(to_delete)
+        else:
+            raise ValueError("Episode not found.")
