@@ -13,7 +13,7 @@
     </div>
     <div class="sub-navbar">
         <div class = "dropdown">
-            <button class="dropbtn" style="font-size: 1rem">Browse by Category  <i class="fa-sharp fa-solid fa-angle-down"></i></button>
+            <button class="dropbtn" style="font-size: 1rem">Browse Categories <i class="fa-sharp fa-solid fa-angle-down"></i></button>
             <ul class = "dropdown-content">
                 {% for category in categories %}
                     <li>
@@ -21,6 +21,11 @@
                     </li>
                 {% endfor %}
             </ul>
+        {% if category %}
+            <h3 id = "category-header">Category</h3>
+            <h5 id = "display-category"> {{ category }}</h5>
+        {% endif %}
         </div>
     </div>
 </nav>
+

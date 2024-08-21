@@ -347,9 +347,10 @@ nav .sub-navbar ul a {
     background-color: #a34b86;
     position: relative;
     justify-content: center;
-    padding-left: 16%;
-    padding-bottom: 7%;
-    padding-top: 13px;
+    /*padding-left: 16%;*/
+    /*padding-bottom: 7%;*/
+    padding: 15px;
+    /*padding-top: 13px;*/
     overflow: auto;
     font-size: 1rem;
     border-radius: 10px;
@@ -394,3 +395,16 @@ nav .sub-navbar ul a {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+
+#category-header{
+    text-align: center;
+}
+
+#display-category {
+    padding-top: 4%;
+    text-align: center;
+    display: block;
+}
+
+
+
