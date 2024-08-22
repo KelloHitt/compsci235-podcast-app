@@ -69,10 +69,6 @@ nav ul li a:hover {
     word-wrap: break-word;
 }
 
-nav .sub-navbar ul a {
-    font-size: 0.8em;
-}
-
 /* Header Styles */
 #header {
     padding: 40px;
@@ -82,8 +78,6 @@ nav .sub-navbar ul a {
     font-weight: bold;
     width: 100%;
     box-sizing: border-box;
-
-
 
 
 }
@@ -337,30 +331,25 @@ nav .sub-navbar ul a {
     cursor: default;
 }
 
-.dropdown {
-    overflow:hidden;
-    background-color: #a34b86;
-
+/* Sub-navigation Bar Styles in Navbar */
+nav .sub-navbar ul a {
+    font-size: 0.8em;
 }
 
-.dropdown .dropbtn {
+.dropdown {
+    overflow: hidden;
+    background-color: #a34b86;
+}
+
+button {
     border: none;
     outline: none;
     text-decoration: none;
-    display: block;
     color: #ffffff;
     background-color: #a34b86;
-    position: relative;
-    justify-content: center;
-    padding-left: 18%;
-    padding-bottom: 15px;
-    padding-top:15px;
     overflow: auto;
-    font-size: 1rem;
     border-radius: 10px;
     transition: 0.5s ease-in;
-
-
 }
 
 .dropdown-content {
@@ -372,49 +361,37 @@ nav .sub-navbar ul a {
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     padding: 0;
-    /*padding-left: 15%;*/
     overflow: scroll;
     max-height: 380px;
     color: #a34b86;
-    background-color:  #ffffff;
+    background-color: #ffffff;
 }
 
 .dropdown-content a {
     float: none;
     margin: 0;
     color: #a34b86;
-
-    background-color:  #ffffff;
+    background-color: #ffffff;
     text-decoration: none;
     display: block;
     text-align: left;
-
 }
 
 .dropdown-content a:hover {
     background-color: #a34b86;
-    color:  #ffffff;
+    color: #ffffff;
 }
 
 .dropdown:hover .dropdown-content {
-  display: block;
+    display: block;
 }
 
-#category-header{
+#category-header {
     text-align: center;
     font-size: 1rem;
-
+    margin-top: 20px;
+    background-color: white;
+    color: #a34b86;
+    padding: 15px;
+    border-radius: 10px;
 }
-
-#display-category {
-    padding-top: 8%;
-    text-align: center;
-    display: block;
-    font-size: 0.8rem;
-
-}
-
-
-
-
-
