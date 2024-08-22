@@ -12,19 +12,19 @@
         </ul>
     </div>
     <div class="sub-navbar">
-        <div class = "dropdown">
-            <button class="dropbtn" style="font-size: 1rem">Browse Categories <i class="fa-sharp fa-solid fa-angle-down"></i></button>
-            <ul class = "dropdown-content">
+        <div class="dropdown">
+            <button class="dropbtn" style="font-size: 1rem">Browse Categories <i
+                    class="fa-sharp fa-solid fa-angle-down"></i></button>
+            <ul class="dropdown-content">
                 {% for category in categories %}
                     <li>
                         <a href="{{ url_for('browse_bp.show_podcasts', category=category.name, page_number=1) }}">{{ category.name }}</a>
                     </li>
                 {% endfor %}
             </ul>
-        {% if category %}
-            <h3 id = "category-header">Category</h3>
-            <h5 id = "display-category"> {{ category }}</h5>
-        {% endif %}
+            {% if category %}
+                <div id="category-header">Category: {{ category }}</div>
+            {% endif %}
         </div>
     </div>
 </nav>
