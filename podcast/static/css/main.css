@@ -80,6 +80,7 @@ nav ul li a:hover {
     width: 100%;
     color: black;
     box-sizing: border-box;
+    background-image: url(https://img.icons8.com/external-victoruler-solid-victoruler/64/FFFFFF/external-stars-christmas-victoruler-solid-victoruler.png);
 
 }
 
@@ -308,7 +309,7 @@ nav ul li a:hover {
 /* Pagination styles in Catalogue */
 .pagination {
     display: inline-block;
-    margin-top: 20px
+    margin-top: 20px;
 }
 
 .pagination a, .pagination span {
