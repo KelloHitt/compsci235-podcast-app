@@ -1,5 +1,4 @@
 <div class="pagination">
-
     {% if has_previous %}
         <a href="{{ url_for('browse_bp.show_podcasts', page_number=previous_page, category=category) if category
         else url_for('browse_bp.show_podcasts', page_number=previous_page) }}">&laquo;</a>
