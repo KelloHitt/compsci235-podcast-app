@@ -78,6 +78,7 @@ nav ul li a:hover {
     font-size: 3em;
     font-weight: bold;
     width: 100%;
+    color: black;
     box-sizing: border-box;
 
 }
@@ -85,8 +86,9 @@ nav ul li a:hover {
 
 .copyright {
     font-size: 1rem;
-    color: #444444;
+    color: black;
     padding-top: 20px;
+    color: black;
 }
 
 /* Main Content Styles */
