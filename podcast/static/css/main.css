@@ -1,5 +1,4 @@
 /* General Styles */
-
 * {
     margin: 0;
     padding: 0;
@@ -85,7 +84,6 @@ nav ul li a:hover {
     font-size: 1rem;
     color: black;
     padding-top: 20px;
-    color: black;
 }
 
 /* Main Content Styles */
@@ -396,7 +394,4 @@ button {
     border-radius: 10px;
     border-style: dashed;
     border-color: #9176d6;
-  }
-
-
-
+}
