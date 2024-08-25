@@ -12,7 +12,6 @@
 body {
     background-color: #f1e0eb;
     color: #444444;
-
 }
 
 h1 {
@@ -65,7 +64,6 @@ nav ul li a:hover {
 
 #nav-footer {
     font-size: 0.8em;
-
     margin-bottom: 20px;
     word-wrap: break-word;
 }
@@ -73,15 +71,13 @@ nav ul li a:hover {
 /* Header Styles */
 #header {
     padding: 40px;
-    background: #cf97bc;
     text-align: center;
     font-size: 3em;
     font-weight: bold;
     width: 100%;
     color: black;
     box-sizing: border-box;
-    background-image: url(https://img.icons8.com/external-victoruler-solid-victoruler/64/FFFFFF/external-stars-christmas-victoruler-solid-victoruler.png);
-
+    background: #cf97bc url(https://img.icons8.com/external-victoruler-solid-victoruler/64/FFFFFF/external-stars-christmas-victoruler-solid-victoruler.png);
 }
 
 
@@ -116,7 +112,6 @@ nav ul li a:hover {
     line-height: 25px;
     display: flex;
     justify-content: center;
-
 }
 
 /* Search Box Styles */
@@ -161,7 +156,6 @@ nav ul li a:hover {
     grid-gap: 20px;
     margin: 20px auto;
     max-width: 80%;
-
 }
 
 .podcast-item {
@@ -364,7 +358,7 @@ button {
     font-size: 0.99rem;
     left: 10%;
     right: 10%;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     z-index: 1;
     padding: 0;
     overflow: scroll;
@@ -386,7 +380,6 @@ button {
 .dropdown-content a:hover {
     background-color: #a34b86;
     color: #ffffff;
-    border-radius: 0px;
 }
 
 .dropdown:hover .dropdown-content {
