@@ -1,20 +1,6 @@
 from pathlib import Path
 
-import pytest
-
 from podcast.adapters.datareader.csvdatareader import CSVDataReader
-
-
-@pytest.fixture
-def data_path() -> Path:
-    data_path = Path(__file__).parent.parent / "data"
-    return data_path
-
-
-@pytest.fixture
-def csv_reader() -> CSVDataReader:
-    csv_reader = CSVDataReader()
-    return csv_reader
 
 
 def test_csv_data_reader_load_podcasts_authors_categories(data_path: Path, csv_reader: CSVDataReader):

@@ -1,18 +1,4 @@
-from pathlib import Path
-
-import pytest
-
-import podcast.adapters.repository as repo
-from podcast.adapters.memory_repository import MemoryRepository, populate_data
 from podcast.domainmodel.model import Podcast, Author, Episode
-
-
-@pytest.fixture
-def in_memory_repo() -> repo.AbstractRepository:
-    repo.repo_instance = MemoryRepository()
-    data_path = Path(__file__).parent.parent / "data"
-    populate_data(repo.repo_instance, data_path)
-    return repo.repo_instance
 
 
 def test_memory_repository_can_retrieve_podcasts(in_memory_repo):

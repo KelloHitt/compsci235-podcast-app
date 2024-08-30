@@ -1,21 +1,7 @@
-from pathlib import Path
-
-import pytest
-
-import podcast.adapters.repository as repo
-from podcast.adapters.memory_repository import MemoryRepository, populate_data
 from podcast.browse import services as browse_services
 from podcast.description import services as description_services
 from podcast.home import services as home_services
 from podcast.utilities import services as utilities_services
-
-
-@pytest.fixture
-def in_memory_repo() -> repo.AbstractRepository:
-    repo.repo_instance = MemoryRepository()
-    data_path = Path(__file__).parent.parent / "data"
-    populate_data(repo.repo_instance, data_path)
-    return repo.repo_instance
 
 
 def test_get_podcast_by_page(in_memory_repo):
