@@ -1,4 +1,4 @@
-from podcast.domainmodel.model import Podcast, Author, Episode
+from podcast.domainmodel.model import Podcast, Author, Episode, User
 
 
 def test_memory_repository_can_retrieve_podcasts(in_memory_repo):
@@ -111,3 +111,15 @@ def test_csv_data_reader_retrieve_category_podcasts(in_memory_repo):
     assert len(podcasts) == 2
     assert podcasts[0] == in_memory_repo.get_podcast(1)
     assert podcasts[1] == in_memory_repo.get_podcast(3)
+
+
+def test_repository_can_add_and_retrieve_a_user(in_memory_repo):
+    user = User(1, "dave", "123456789")
+    in_memory_repo.add_user("dave", "123456789")
+    added_user = in_memory_repo.get_user("dave")
+    assert added_user == user
+
+
+def test_repository_does_not_retrieve_a_non_existent_user(in_memory_repo):
+    user = in_memory_repo.get_user("prince")
+    assert user is None
