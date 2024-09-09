@@ -61,7 +61,7 @@ def test_podcast_no_reviews(client):
     pass
 
 
-def test_game_wtih_reviews(client):
+def test_podcast_with_reviews(client):
     pass
 
 
