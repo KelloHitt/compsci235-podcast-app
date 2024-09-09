@@ -1,6 +1,7 @@
 import abc
 from typing import List
-from podcast.domainmodel.model import Author, Podcast, Category, Episode
+
+from podcast.domainmodel.model import Author, Podcast, Category, Episode, User
 
 repo_instance = None
 
@@ -101,4 +102,16 @@ class AbstractRepository(abc.ABC):
     @abc.abstractmethod
     def add_category(self, category: Category):
         """ Adds a Category to the repository. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_user(self, username: str, password: str):
+        """ Adds a User to the repository. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_user(self, username: str) -> User:
+        """ Returns the User named username from the repository.
+        If there is no User with the given user_name, this method returns None.
+        """
         raise NotImplementedError

@@ -4,7 +4,7 @@ from typing import List
 
 from podcast.adapters.datareader.csvdatareader import CSVDataReader
 from podcast.adapters.repository import AbstractRepository
-from podcast.domainmodel.model import Author, Podcast, Episode, Category
+from podcast.domainmodel.model import Author, Podcast, Episode, Category, User
 
 
 class MemoryRepository(AbstractRepository):
@@ -14,6 +14,7 @@ class MemoryRepository(AbstractRepository):
         self.__authors = dict()
         self.__categories = dict()
         self.__podcasts_by_id = dict()
+        self.__users = list()
 
     def add_podcast(self, podcast: Podcast):
         if podcast not in self.__podcasts:
@@ -79,6 +80,13 @@ class MemoryRepository(AbstractRepository):
 
     def add_category(self, category: Category):
         self.__categories[category.name] = category
+
+    def add_user(self, username: str, password: str):
+        new_user = User((len(self.__users) + 1), username, password)
+        self.__users.append(new_user)
+
+    def get_user(self, username) -> User:
+        return next((user for user in self.__users if user.username == username), None)
 
 
 # Populate the data into memory repository
