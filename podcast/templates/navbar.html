@@ -3,17 +3,33 @@
         © xli910 | owak638 | vcha997
     </div>
     <img id="logo" src="{{ url_for('static', filename='logo.png') }}" alt="a microphone logo"/>
-    <div class="heading">Pod Library</div>
+    <div class="heading">Pod Library
+
+    </div>
+
     <div class="navbar">
         <ul>
             <li><a href="{{ url_for('home_bp.home') }}"><i class="fa-solid fa-house"></i> Home</a></li>
-            <li>
-                <a href="{{ url_for('browse_bp.show_podcasts', page_number=1) }}">
-                    <i class="fa-solid fa-podcast"></i> Podcasts
-                </a>
-            </li>
+            <li><a href="{{ url_for('browse_bp.show_podcasts', page_number=1) }}">
+                <i class="fa-solid fa-podcast"></i> Podcasts</a></li>
+            <li><a href=""><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
+            <hr style="border: none; border-top: 1px solid white; margin: 20px auto;">
+
+
+            {% if 'username' in session %} Hello, {{ session['username'] }}
+                <li><a href=""><i class="fa-solid fa-user"></i> Profile</a></li>
+                <li><a href=""><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+{% else %}
+                <li><a href="{{ url_for('authentication_bp.register') }}"><i class="fa-solid fa-pen"></i> Register</a>
+                </li>
+                <li><a href=""><i class="fa-solid fa-right-to-bracket"></i> Login</a></li>
+
+            {% endif %}
+
+
         </ul>
     </div>
+    <hr style="border: none; border-top: 1px solid white; margin: 20px auto;">
     <div class="sub-navbar">
         <div class="dropdown">
             <button class="heading" style="font-size: 1rem">Browse Categories <i
