@@ -40,4 +40,7 @@ def create_app(test_config=None):
         from .browse import browse
         app.register_blueprint(browse.browse_blueprint)
 
+        from .authentication import authentication
+        app.register_blueprint(authentication.authentication_blueprint)
+
     return app
