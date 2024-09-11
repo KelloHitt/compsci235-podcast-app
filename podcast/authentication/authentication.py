@@ -1,13 +1,14 @@
 from functools import wraps
 
-import podcast.adapters.repository as repo
-import podcast.authentication.services as services
-import podcast.utilities.utilities as utilities
 from flask import Blueprint, render_template, redirect, url_for, session
 from flask_wtf import FlaskForm
 from password_validator import PasswordValidator
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, ValidationError
+
+import podcast.adapters.repository as repo
+import podcast.authentication.services as services
+import podcast.utilities.utilities as utilities
 
 # Configure Blueprint.
 authentication_blueprint = Blueprint(
@@ -18,8 +19,7 @@ authentication_blueprint = Blueprint(
 def register():
     form = RegistrationForm()
     username_error = None
-    password_error = ("Your password must be at least 8 characters, and contain an upper case letter, lower case "
-                      "letter and a digit.")
+    password_error = None
 
     if form.validate_on_submit():
         # Successful POST, i.e. the username and password have passed validation checking.
@@ -94,7 +94,6 @@ def login_required(view):
         if 'user_name' not in session:
             return redirect(url_for('authentication_bp.login'))
         return view(**kwargs)
-
     return wrapped_view
 
 
@@ -113,10 +112,13 @@ class PasswordValid:
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField("Username", [DataRequired(message="Your username is required")],
+    username = StringField("Username", [
+        DataRequired(message="Your username is required"),
+        Length(min=3, message="Your username is too short")],
                            render_kw={"placeholder": "Username"})
-    password = PasswordField("Password", [DataRequired(message="Your password is required"),
-                                          PasswordValid("Your password is invalid")],
+    password = PasswordField("Password", [
+        DataRequired(message="Your password is required"),
+        PasswordValid()],
                              render_kw={"placeholder": "Password"})
     submit = SubmitField("Register")
 
