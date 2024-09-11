@@ -15,20 +15,23 @@
             <li><a href=""><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
             <hr style="border: none; border-top: 1px solid white; margin: 20px auto;">
 
-
-            {% if 'username' in session %} Hello, {{ session['username'] }}
+            <!-- Authentication options in navbar -->
+            {% if 'username' in session %}
+                <div id="category-header">Hello, {{ session['username'] }}</div>
                 <li><a href=""><i class="fa-solid fa-user"></i> Profile</a></li>
-                <li><a href=""><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-{% else %}
+                <li><a href=""><i class="fa-solid fa-music"></i> Playlist</a></li>
+                <li><a href="{{ url_for('authentication_bp.logout') }}"><i class="fa-solid fa-right-from-bracket"></i>
+                    Logout</a></li>
+            {% else %}
                 <li><a href="{{ url_for('authentication_bp.register') }}"><i class="fa-solid fa-pen"></i> Register</a>
                 </li>
-                <li><a href=""><i class="fa-solid fa-right-to-bracket"></i> Login</a></li>
-
+                <li><a href="{{ url_for('authentication_bp.login') }}"><i class="fa-solid fa-right-to-bracket"></i>
+                    Login</a></li>
             {% endif %}
-
-
         </ul>
     </div>
+
+    <!-- Browse by categories sub-navbar -->
     <hr style="border: none; border-top: 1px solid white; margin: 20px auto;">
     <div class="sub-navbar">
         <div class="dropdown">
