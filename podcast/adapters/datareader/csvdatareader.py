@@ -1,5 +1,6 @@
 import csv
 from pathlib import Path
+
 from podcast.domainmodel.model import Podcast, Episode, Category, Author
 
 
@@ -11,7 +12,7 @@ class CSVDataReader:
         self.__dataset_of_categories = dict()
 
     def read_csv_file(self, filename: str):
-        with open(filename, 'r', newline='') as csv_file:
+        with open(filename, 'r', newline='', encoding='utf-8-sig') as csv_file:
             reader = csv.reader(csv_file)
 
             # Read column names of the CSV file
