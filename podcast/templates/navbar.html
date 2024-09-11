@@ -3,10 +3,7 @@
         © xli910 | owak638 | vcha997
     </div>
     <img id="logo" src="{{ url_for('static', filename='logo.png') }}" alt="a microphone logo"/>
-    <div class="heading">Pod Library
-
-    </div>
-
+    <div class="heading">Pod Library</div>
     <div class="navbar">
         <ul>
             <li><a href="{{ url_for('home_bp.home') }}"><i class="fa-solid fa-house"></i> Home</a></li>
@@ -17,7 +14,7 @@
 
             <!-- Authentication options in navbar -->
             {% if 'username' in session %}
-                <div id="category-header">Hello, {{ session['username'] }}</div>
+                <div id="category-header" style="margin-bottom: 10px">Hello, {{ session['username'] }}!</div>
                 <li><a href=""><i class="fa-solid fa-user"></i> Profile</a></li>
                 <li><a href=""><i class="fa-solid fa-music"></i> Playlist</a></li>
                 <li><a href="{{ url_for('authentication_bp.logout') }}"><i class="fa-solid fa-right-from-bracket"></i>
