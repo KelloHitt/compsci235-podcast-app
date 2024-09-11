@@ -488,3 +488,17 @@ button {
 .form-wrapper button:hover {
     background-color: #473080;
 }
+
+.register-link {
+    display: block;
+    text-align: center;
+    font-size: 1em;
+    text-decoration: none;
+    color: #0056b3;
+    transition: color 0.3s ease-in-out;
+}
+
+.register-link:hover {
+    color: #883f70;
+    text-decoration: underline;
+}
