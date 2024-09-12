@@ -1,7 +1,7 @@
 import abc
 from typing import List
 
-from podcast.domainmodel.model import Author, Podcast, Category, Episode, User
+from podcast.domainmodel.model import Author, Podcast, Category, Episode, User, Review
 
 repo_instance = None
 
@@ -114,4 +114,18 @@ class AbstractRepository(abc.ABC):
         """ Returns the User named username from the repository.
         If there is no User with the given user_name, this method returns None.
         """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_review(self, review: Review):
+        """ Adds a review to the repository. If a review doesn't have unidirectional links with a Podcast and a User
+            this method raises a Repository Exception and doesn't update the repository."""
+        if review.reviewer is None:
+            raise RepositoryException('Review not correctly attached to a User')
+        if review.podcast is None:
+            raise RepositoryException('Review is not correctly attached to a Podcast')
+
+    @abc.abstractmethod
+    def get_reviews(self):
+        """ Returns Reviews stored in the repository. """
         raise NotImplementedError
