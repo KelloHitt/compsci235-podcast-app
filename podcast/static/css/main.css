@@ -396,24 +396,6 @@ button {
     border-color: #9176d6;
 }
 
-/* Form styles in credential page*/
-.form-wrapper {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    line-height: 1.6;
-}
-
-.form-wrapper h2 {
-    font-size: 2em;
-    margin-bottom: 10px;
-    color: #333;
-    text-align: center;
-}
-
 /* Form styles in credential page */
 .form-wrapper {
     background-color: #fff;
@@ -421,7 +403,7 @@ button {
     border-radius: 8px;
     padding: 20px;
     margin: 20px auto;
-    width: 60%; /* Center and limit the width */
+    width: 60%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     line-height: 1.6;
 }
