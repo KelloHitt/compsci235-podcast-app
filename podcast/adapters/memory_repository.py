@@ -117,5 +117,8 @@ def add_review(self, description: str, rating: int, podcast_id: int, user: User)
     review = Review(len(self.__reviews) + 1, user, description, rating)
     self.__reviews.append(review)
 
+def get_review(self, review_id) -> Review:
+    return next((review for review in self.__reviews if review.id == review_id), None)
+
 def get_reviews(self):
     return self.__reviews
