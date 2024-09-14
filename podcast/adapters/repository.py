@@ -117,14 +117,14 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def add_review(self, review: Review):
-        """ Adds a review to the repository. If a review doesn't have unidirectional links with a Podcast and a User
-            this method raises a Repository Exception and doesn't update the repository."""
-        if review.reviewer is None:
-            raise RepositoryException('Review not correctly attached to a User')
-        if review.podcast is None:
-            raise RepositoryException('Review is not correctly attached to a Podcast')
+    def add_review(self, description: str, rating: int, podcast: Podcast, user: User):
+        """ Adds a review to the repository."""
+        raise NotImplementedError
 
+    @abc.abstractmethod
+    def get_review(self, review_id):
+        """ Returns Review stored in the repository based on review id. """
+        raise NotImplementedError
     @abc.abstractmethod
     def get_reviews(self):
         """ Returns Reviews stored in the repository. """
