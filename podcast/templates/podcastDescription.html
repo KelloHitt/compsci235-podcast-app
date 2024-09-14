@@ -27,19 +27,8 @@
                     {{form.podcast_id}}
                     {{form.csrf_token}}
                     <br>
-                    <div> <label for="content">Review:</label>
-                        {{form.comment(size = 100, placeholder="Leave your review here!", class="textarea", cols="50", rows="6", wrap="hard")}}<br>
-                        <label for="rating">Rating:</label><br>
-                        <input type="radio" id="1" name="rating" value="1">
-                        <label for="1">1</label><br>
-                        <input type="radio" id="2" name="rating" value="2">
-                        <label for="2">2</label><br>
-                        <input type="radio" id="3" name="rating" value="3">
-                        <label for="3">3</label><br>
-                        <input type="radio" id="4" name="rating" value="4">
-                        <label for="4">4</label><br>
-                        <input type="radio" id="5" name="rating" value="5">
-                        <label for="5">5</label><br>
+                    <div class ="form-field">{{form.review.label}} </br>{{form.review(size = 100, placeholder="Leave your review here!", class="textarea", cols="50", rows="10", wrap="hard")}}
+                        <br>{{form.review(size = 100, class="radio", cols="50", rows="10", wrap="hard")}}</br>
                         {% if form.review.errors %}
                         <ul class="errors">
                             {% for error in form.review.errors %}
@@ -49,6 +38,16 @@
                     </div>
                     {{ form.submit }}
                 </form>
+            </div>
+            <div>
+                {% if reviews.podcast_id|length > 0 %}
+                <div>
+                <p>Reviews:</p><br>
+                {% for review reviews.podcast_id %}
+                <p>{{review.rating}}/5. {{review.content}}, by {{review.reviewer}} </p>
+                {% endfor %}
+                    </div>
+                {% endif %}
             </div>
         </main>
     </div>
