@@ -113,8 +113,8 @@ def populate_data(repo: AbstractRepository, data_path: Path):
     for episode in episodes:
         repo.add_episode(episode)
 
-def add_review(self, review: Review):
-    super().add_review(review)
+def add_review(self, description: str, rating: int, podcast_id: int, user: User):
+    review = Review(len(self.__reviews) + 1, user, description, rating)
     self.__reviews.append(review)
 
 def get_reviews(self):
