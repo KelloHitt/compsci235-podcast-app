@@ -2,16 +2,20 @@
     <table>
         <thead>
         <tr>
-            <th>#</th>
+            <th>Id</th>
             <th>Title</th>
+            <th>Audio</th>
             <th>Published Date</th>
         </tr>
         </thead>
         <tbody>
         {% for episode in episodes %}
             <tr>
-                <td>{{ loop.index }}</td>
+                <td>{{ episode.id }}</td>
                 <td>{{ episode.title }}</td>
+                <td><a href="{{ episode.url }}" target="_blank">
+                    Download</a>
+                </td>
                 <td>{{ episode.date }}</td>
             </tr>
         {% endfor %}
@@ -20,3 +24,18 @@
 {% else %}
     <p style="align-items: center">No episodes available.</p>
 {% endif %}
+
+<!-- Episode Pagination Controls -->
+<div class="navigation-buttons">
+    <div class="pagination">
+        {% if prev_episode_page %}
+            <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id, episode_page=prev_episode_page) }}">Previous
+                Episodes</a>
+        {% endif %}
+        <span>Page {{ episode_page }}</span>
+        {% if next_episode_page %}
+            <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id, episode_page=next_episode_page) }}">Next
+                Episodes</a>
+        {% endif %}
+    </div>
+</div>

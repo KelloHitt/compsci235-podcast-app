@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <!-- Navigation Buttons for Pagination -->
+    <!-- Navigation Buttons for Podcast Pagination -->
     {% include 'navbuttons.html' %}
     <div id="container">
         <main id="main">
@@ -19,7 +19,7 @@
                 <p><i>Language:</i> {{ podcast.language }}</p>
                 <p><i>Website:</i> <a href="{{ podcast.website }}" target="_blank">{{ podcast.website }}</a></p>
                 <p><i>Episodes:</i></p>
-                <!-- Episodes List  -->
+                <!-- Episodes List -->
                 {% include 'episodesList.html' %}
             </div>
         </main>
