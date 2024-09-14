@@ -22,6 +22,23 @@
                 <!-- Episodes List  -->
                 {% include 'episodesList.html' %}
             </div>
+            <div class="form-wrapper">
+                <form action="{{handler_url}}" method="post">
+                    {{form.podcast_id}}
+                    ((form.csrf_token}}
+                    <br>
+                    <div class="form-field">{{form.review.label}} </br>{{form.review(size=100, placeholder="Leave your review here!"}}
+                        {% if form.review.errors %}
+                        <ul class="errors">
+                            {% for error in form.review.errors %}
+                            <li>{{error}}</li>
+                            {% endfor %}
+                        </ul>
+                        <div class="form-field">{{form.review.label}}</div>
+                    </div>
+
+                </form>
+            </div>
         </main>
     </div>
 {% endblock %}
