@@ -1,9 +1,9 @@
 from better_profanity import profanity
 from flask import Blueprint, render_template, request, url_for
 from flask_wtf import FlaskForm
-from wtforms import TextAreaField, HiddenField, SubmitField
+from wtforms import TextAreaField, HiddenField, SubmitField, RadioField
 from wtforms.csrf import session
-from wtforms.validators import ValidationError, DataRequired, Length
+from wtforms.validators import ValidationError, DataRequired, Length, InputRequired
 
 import podcast.adapters.repository as repository
 import podcast.description.services as services
@@ -70,8 +70,9 @@ class ReviewForm(FlaskForm):
     review = TextAreaField('Review', [DataRequired(),
                            Length(min=5, message='Your review is too short!'),
                            ProfanityFree(message='Your review must not contain profanity!')])
+    rating = RadioField('Select a rating from 1-5:', validators=[InputRequired(message='You must pick a rating!')], choices=[ ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')])
     podcast_id = HiddenField("Podcast ID")
-    post = SubmitField("Post")
+    submit = SubmitField("Post")
 
 
 
