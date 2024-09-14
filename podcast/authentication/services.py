@@ -49,7 +49,7 @@ def authenticate_user(username: str, password: str, repo: AbstractRepository):
     if not authenticated:
         raise AuthenticationException
 
-def add_review(podcast: Podcast, review_description: str, review_rating: int, user: User, repo: AbstractRepository):
+def add_review(review_id: int, podcast: Podcast, review_description: str, review_rating: int, user: User, repo: AbstractRepository):
     podcast = repo.get_podcast(podcast.id)
     if podcast is None:
         raise NonExistentPodcastException
@@ -65,7 +65,7 @@ def get_reviews_for_podcast(podcast_id, repo: AbstractRepository):
     if podcast is None:
         raise NonExistentPodcastException
 
-    return reviews_to_dict(podcast.)
+    return reviews_to_dict(repo.get_reviews())
 
 
 # ===================================================
