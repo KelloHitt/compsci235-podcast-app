@@ -24,13 +24,23 @@ def show_description():
     podcast = services.get_podcast_by_id(repository.repo_instance, podcast_id)
     all_episodes = sorted(podcast.episodes, key=lambda episode: episode.date)
 
+    # Calculate the total number of pages
+    total_episodes = len(all_episodes)
+    total_pages = (total_episodes + episodes_per_page - 1) // episodes_per_page  # This ensures rounding up
+
+    # Ensure episode_page is within the valid range
+    if episode_page < 1:
+        episode_page = 1
+    if episode_page > total_pages:
+        episode_page = total_pages
+
     # Paginate episodes
     start = (episode_page - 1) * episodes_per_page
     end = start + episodes_per_page
     paginated_episodes = all_episodes[start:end]
 
     # Determine if there are next or previous pages for episodes
-    next_episode_page = episode_page + 1 if end < len(all_episodes) else None
+    next_episode_page = episode_page + 1 if end < total_episodes else None
     prev_episode_page = episode_page - 1 if start > 0 else None
 
     categories = utilities.get_categories()['categories']
@@ -42,5 +52,6 @@ def show_description():
         categories=categories,
         episode_page=episode_page,
         next_episode_page=next_episode_page,
-        prev_episode_page=prev_episode_page
+        prev_episode_page=prev_episode_page,
+        total_pages=total_pages
     )
