@@ -103,7 +103,7 @@ nav ul li a:hover {
 
 #main {
     width: 100%;
-    max-width: 800px;
+    max-width: 70%;
     margin-top: 20px;
     padding: 10px;
     color: #717171;
@@ -483,4 +483,21 @@ button {
 .register-link:hover {
     color: #883f70;
     text-decoration: underline;
+}
+
+/* Styles for flash messages */
+.flash-message {
+    padding: 10px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.flash-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.flash-error {
+    background-color: #fff3cd;
+    color: #856404;
 }
