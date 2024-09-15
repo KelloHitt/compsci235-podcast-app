@@ -54,3 +54,9 @@ def test_get_categories(in_memory_repo):
     assert categories[0].name == "Comedy"
     assert categories[1].name == "Professional"
     assert categories[2].name == "Society & Culture"
+
+
+# TODO: test user blueprint services
+
+
+# TODO: test added funtions in description services
