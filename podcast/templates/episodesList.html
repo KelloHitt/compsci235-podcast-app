@@ -14,9 +14,9 @@
             <tr>
                 <td>{{ episode.id }}</td>
                 <td>{{ episode.title }}</td>
-                <td><a href="{{ episode.url }}" target="_blank">Download</a></td>
+                <td><a href="{{ episode.url }}" target="_blank">Listen</a></td>
                 <td>{{ episode.date }}</td>
-                <td>{% include 'playlistActions.html' %}</td>
+                <td>{% include 'user/playlistActions.html' %}</td>
             </tr>
         {% endfor %}
         </tbody>
