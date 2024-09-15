@@ -275,6 +275,10 @@ nav ul li a:hover {
     border-bottom: 1px solid #ddd;
 }
 
+.description th {
+    text-align: center;
+}
+
 .description tr:nth-child(even) {
     background-color: #f2f2f2;
 }
@@ -477,7 +481,7 @@ button {
     font-size: 1em;
     text-decoration: none;
     color: #0056b3;
-    transition: color 0.3s ease-in-out;
+    transition: color 0.2s ease-in-out;
 }
 
 .register-link:hover {
