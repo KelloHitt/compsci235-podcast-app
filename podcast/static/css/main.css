@@ -485,6 +485,41 @@ button {
     text-decoration: underline;
 }
 
+/* Styles for playlist action buttons */
+.sub-form-wrapper #add {
+    background-color: #A67EB1;
+    color: white;
+    padding: 10px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.sub-form-wrapper #add:hover {
+    background-color: #8B679A;
+}
+
+.sub-form-wrapper #remove {
+    background-color: #D16A8D;
+    color: white;
+    padding: 10px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.sub-form-wrapper #remove:hover {
+    background-color: #B15876;
+}
+
 /* Styles for flash messages */
 .flash-message {
     padding: 10px;
