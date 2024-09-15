@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 
 import podcast.adapters.repository as repository
 import podcast.description.services as services
 import podcast.utilities.utilities as utilities
+from podcast.authentication.authentication import login_required
 
 description_blueprint = Blueprint('description_bp', __name__)
 
@@ -45,6 +46,16 @@ def show_description():
 
     categories = utilities.get_categories()['categories']
 
+    # Get the logged-in user's playlist
+    playlist = services.get_playlist(repository.repo_instance)
+
+    # Check if episodes are in the playlist using in_playlist method
+    episodes_in_playlist = set()
+    if playlist:
+        for episode in paginated_episodes:
+            if services.in_playlist(playlist, episode):
+                episodes_in_playlist.add(episode.id)
+
     return render_template(
         'podcastDescription.html',
         podcast=podcast,
@@ -53,5 +64,32 @@ def show_description():
         episode_page=episode_page,
         next_episode_page=next_episode_page,
         prev_episode_page=prev_episode_page,
-        total_pages=total_pages
+        total_pages=total_pages,
+        episodes_in_playlist=episodes_in_playlist
     )
+
+
+@description_blueprint.route("/add_to_playlist", methods=["GET", "POST"])
+@login_required
+def add_to_playlist():
+    episode_id = request.form.get("episode_id")
+    episode = services.get_episode_by_id(repository.repo_instance, int(episode_id))
+    try:
+        services.add_to_playlist(repository.repo_instance, episode)
+        flash(f'Episode "{episode.title}" added to playlist successfully!', "success")
+    except Exception as error:
+        flash(str(error), "error")
+    return redirect(url_for("description_bp.show_description", podcast_id=episode.podcast.id))
+
+
+@description_blueprint.route("/remove_from_playlist", methods=["GET", "POST"])
+@login_required
+def remove_from_playlist():
+    episode_id = request.form.get("episode_id")
+    episode = services.get_episode_by_id(repository.repo_instance, int(episode_id))
+    try:
+        services.remove_from_playlist(repository.repo_instance, episode)
+        flash(f'Episode "{episode.title}" removed from playlist successfully!', "error")
+    except Exception as error:
+        flash(str(error), "error")
+    return redirect(url_for("description_bp.show_description", podcast_id=episode.podcast.id))
