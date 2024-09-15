@@ -9,6 +9,7 @@ user_blueprint = Blueprint('user_bp', __name__)
 
 
 @user_blueprint.route('/user/playlist', methods=['GET', 'POST'])
+@login_required
 def show_user_playlist():
     playlist = None
     episodes_in_playlist = []
@@ -48,8 +49,8 @@ def show_user_playlist():
 @user_blueprint.route("/user/playlist/remove_from_playlist", methods=["GET", "POST"])
 @login_required
 def remove_from_playlist():
-    episode_id = request.form.get("episode_id")
-    episode = services.get_episode_by_id(repository.repo_instance, int(episode_id))
+    episode_id = request.form.get("episode_id", type=int)
+    episode = services.get_episode_by_id(repository.repo_instance, episode_id)
     try:
         services.remove_from_playlist(repository.repo_instance, episode)
         flash(f'Episode "{episode.title}" removed from playlist successfully!', "error")
@@ -72,3 +73,42 @@ def remove_all_from_playlist():
     except Exception as error:
         flash(str(error), "error")
     return redirect(url_for("user_bp.show_user_playlist"))
+
+
+@user_blueprint.route('/user/reviews', methods=['GET'])
+@login_required
+def show_user_reviews():
+    user_reviews = []
+    page = request.args.get('page', default=1, type=int)
+    reviews_per_page = 10
+    try:
+        user_reviews = services.get_users_reviews(repository.repo_instance)
+    except Exception as error:
+        flash(str(error), "error")
+    total_reviews = len(user_reviews)
+    pages_count = (total_reviews + reviews_per_page - 1) // reviews_per_page
+    if page < 1:
+        page = 1
+    if page > pages_count:
+        page = pages_count
+    start = (page - 1) * reviews_per_page
+    end = start + reviews_per_page
+    paginated_reviews = user_reviews[start:end]
+    return render_template(
+        'user/profile.html',
+        user_reviews=paginated_reviews,
+        current_page=page,
+        pages_count=pages_count
+    )
+
+
+@user_blueprint.route('/user/delete_review', methods=['POST'])
+@login_required
+def delete_review():
+    review_id = request.form.get("review_id", type=int)
+    try:
+        services.delete_review(repository.repo_instance, review_id)
+        flash(f'Review deleted successfully!', "error")
+    except Exception as error:
+        flash(str(error), "error")
+    return redirect(url_for("user_bp.show_user_reviews"))
