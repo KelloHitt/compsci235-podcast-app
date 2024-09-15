@@ -1,7 +1,7 @@
 import abc
 from typing import List
 
-from podcast.domainmodel.model import Author, Podcast, Category, Episode, User, Playlist
+from podcast.domainmodel.model import Author, Podcast, Category, Episode, User, Playlist, Review
 
 repo_instance = None
 
@@ -124,4 +124,21 @@ class AbstractRepository(abc.ABC):
     @abc.abstractmethod
     def get_users_playlist(self, username: str) -> Playlist:
         """ Returns user's playlist with the given username. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_review(self, podcast: Podcast, user: User, rating: int, description: str):
+        """ Adds a Review to the repository.
+        Update User and Podcast's reviews list """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_users_reviews(self, username: str) -> List[Review]:
+        """ Returns user's reviews list with the given username. '"""
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def delete_review(self, review_id: int):
+        """ Deletes a Review from the repository.
+        Update User and Podcast's reviews list '"""
         raise NotImplementedError
