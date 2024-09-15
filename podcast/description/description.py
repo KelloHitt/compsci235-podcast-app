@@ -93,3 +93,18 @@ def remove_from_playlist():
     except Exception as error:
         flash(str(error), "error")
     return redirect(url_for("description_bp.show_description", podcast_id=episode.podcast.id))
+
+
+@description_blueprint.route('/add_all_to_playlist', methods=['POST'])
+@login_required
+def add_all_to_playlist():
+    podcast_id = request.form.get('podcast_id', type=int)
+    podcast = services.get_podcast_by_id(repository.repo_instance, podcast_id)
+    all_episodes = podcast.episodes
+    try:
+        for episode in all_episodes:
+            services.add_to_playlist(repository.repo_instance, episode)
+        flash(f'All episodes in the podcast added to playlist successfully!', "success")
+    except Exception as error:
+        flash(str(error), "error")
+    return redirect(url_for('description_bp.show_description', podcast_id=podcast_id))
