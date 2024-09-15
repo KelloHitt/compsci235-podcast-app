@@ -218,6 +218,7 @@ class User:
         self._username = username.lower().strip()
         self._password = password
         self._subscription_list = []
+        self._playlist = None
 
     @property
     def id(self) -> int:
@@ -244,6 +245,14 @@ class User:
     def remove_subscription(self, subscription: PodcastSubscription):
         if subscription in self._subscription_list:
             self._subscription_list.remove(subscription)
+
+    def create_playlist(self, playlist_name: str):
+        if self._playlist is None:
+            self._playlist = Playlist(self.id, self, playlist_name)
+
+    @property
+    def playlist(self):
+        return self._playlist
 
     def __repr__(self):
         return f"<User {self.id}: {self.username}>"

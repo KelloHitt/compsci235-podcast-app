@@ -115,3 +115,8 @@ class AbstractRepository(abc.ABC):
         If there is no User with the given user_name, this method returns None.
         """
         raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_to_playlist(self, username: str, episode: Episode):
+        """ Adds an Episode to the playlist with the given username. """
+        raise NotImplementedError

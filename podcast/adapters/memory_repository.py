@@ -88,6 +88,14 @@ class MemoryRepository(AbstractRepository):
     def get_user(self, username) -> User:
         return next((user for user in self.__users if user.username == username), None)
 
+    def add_to_playlist(self, username: str, episode: Episode):
+        user = self.get_user(username)
+        if not user:
+            raise ValueError(f'User {username} is not found!')
+        if user.playlist is None:
+            user.create_playlist(f'{username}s Playlist')
+        user.playlist.add_episode(episode)
+
 
 # Populate the data into memory repository
 def populate_data(repo: AbstractRepository, data_path: Path):
