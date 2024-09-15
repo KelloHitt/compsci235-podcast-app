@@ -1,6 +1,6 @@
 import podcast.utilities.utilities as utilities
 from podcast.adapters.repository import AbstractRepository
-from podcast.domainmodel.model import Episode, Playlist
+from podcast.domainmodel.model import Episode, Playlist, User, Podcast
 
 
 def get_podcast_by_id(repository: AbstractRepository, podcast_id: int):
@@ -32,3 +32,14 @@ def remove_from_playlist(repository: AbstractRepository, episode: Episode):
     user = repository.get_user(username)
     if user is not None:
         user.playlist.delete_episode(episode)
+
+
+def get_user_by_username(repository: AbstractRepository, username: str):
+    return repository.get_user(username)
+
+
+def add_review(repository: AbstractRepository, podcast: Podcast, user: User, rating: int, description: str):
+    if user is not None:
+        repository.add_review(podcast, user, rating, description)
+    else:
+        raise ValueError("User is not found!")

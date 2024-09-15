@@ -23,11 +23,11 @@ def show_description():
     episodes_per_page = 10
 
     podcast = services.get_podcast_by_id(repository.repo_instance, podcast_id)
-    all_episodes = sorted(podcast.episodes, key=lambda episode: episode.date)
+    all_episodes = sorted(podcast.episodes, key=lambda ep: ep.date)
 
     # Calculate the total number of pages
     total_episodes = len(all_episodes)
-    total_pages = (total_episodes + episodes_per_page - 1) // episodes_per_page  # This ensures rounding up
+    total_pages = (total_episodes + episodes_per_page - 1) // episodes_per_page
 
     # Ensure episode_page is within the valid range
     if episode_page < 1:
@@ -46,6 +46,13 @@ def show_description():
 
     categories = utilities.get_categories()['categories']
 
+    # Calculate average rating
+    reviews = podcast.reviews
+    if reviews:
+        average_rating = sum(review.rating for review in reviews) / len(reviews)
+    else:
+        average_rating = 0  # Set default value to 0 if there are no reviews
+
     # Get the logged-in user's playlist
     playlist = services.get_playlist(repository.repo_instance)
 
@@ -57,7 +64,7 @@ def show_description():
                 episodes_in_playlist.add(episode.id)
 
     return render_template(
-        'podcastDescription.html',
+        'description/podcastDescription.html',
         podcast=podcast,
         episodes=paginated_episodes,
         categories=categories,
@@ -65,15 +72,17 @@ def show_description():
         next_episode_page=next_episode_page,
         prev_episode_page=prev_episode_page,
         total_pages=total_pages,
-        episodes_in_playlist=episodes_in_playlist
+        episodes_in_playlist=episodes_in_playlist,
+        average_rating=average_rating,
+        podcast_reviews=reviews
     )
 
 
 @description_blueprint.route("/add_to_playlist", methods=["GET", "POST"])
 @login_required
 def add_to_playlist():
-    episode_id = request.form.get("episode_id")
-    episode = services.get_episode_by_id(repository.repo_instance, int(episode_id))
+    episode_id = request.form.get("episode_id", type=int)
+    episode = services.get_episode_by_id(repository.repo_instance, episode_id)
     try:
         services.add_to_playlist(repository.repo_instance, episode)
         flash(f'Episode "{episode.title}" added to playlist successfully!', "success")
@@ -85,8 +94,8 @@ def add_to_playlist():
 @description_blueprint.route("/remove_from_playlist", methods=["GET", "POST"])
 @login_required
 def remove_from_playlist():
-    episode_id = request.form.get("episode_id")
-    episode = services.get_episode_by_id(repository.repo_instance, int(episode_id))
+    episode_id = request.form.get("episode_id", type=int)
+    episode = services.get_episode_by_id(repository.repo_instance, episode_id)
     try:
         services.remove_from_playlist(repository.repo_instance, episode)
         flash(f'Episode "{episode.title}" removed from playlist successfully!', "error")
@@ -107,4 +116,21 @@ def add_all_to_playlist():
         flash(f'All episodes in the podcast added to playlist successfully!', "success")
     except Exception as error:
         flash(str(error), "error")
+    return redirect(url_for('description_bp.show_description', podcast_id=podcast_id))
+
+
+@description_blueprint.route('/add_review', methods=['POST'])
+@login_required
+def add_review():
+    podcast_id = request.form.get('podcast_id', type=int)
+    rating = request.form.get('rating', type=int)
+    description = request.form.get('description')
+    username = utilities.get_username()
+    user = services.get_user_by_username(repository.repo_instance, username)
+    try:
+        podcast = services.get_podcast_by_id(repository.repo_instance, podcast_id)
+        services.add_review(repository.repo_instance, podcast, user, rating, description)
+        flash('Review added successfully!', 'success')
+    except ValueError as e:
+        flash(str(e), 'error')
     return redirect(url_for('description_bp.show_description', podcast_id=podcast_id))
