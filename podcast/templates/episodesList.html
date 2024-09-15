@@ -5,7 +5,7 @@
             <th>Id</th>
             <th>Title</th>
             <th>Audio</th>
-            <th>Published Date</th>
+            <th>Published</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -14,24 +14,30 @@
             <tr>
                 <td>{{ episode.id }}</td>
                 <td>{{ episode.title }}</td>
-                <td><a href="{{ episode.url }}" target="_blank">Listen</a></td>
+                <td><a href="{{ episode.url }}" target="_blank" class="register-link">Listen</a></td>
                 <td>{{ episode.date }}</td>
                 <td>{% include 'user/playlistActions.html' %}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    <div class="sub-form-wrapper">
+        <form method="POST" action="{{ url_for('description_bp.add_all_to_playlist') }}">
+            <input type="hidden" name="podcast_id" value="{{ podcast.id }}">
+            <button type="submit" id="add">Add All Episodes to Playlist</button>
+        </form>
+    </div>
     <!-- Episode Pagination Controls -->
     <div class="navigation-buttons">
         <div class="pagination">
             {% if prev_episode_page %}
-                <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id, episode_page=prev_episode_page) }}">Previous
-                    Episodes</a>
+                <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id, episode_page=prev_episode_page) }}">
+                    Previous</a>
             {% endif %}
-            <span>Page {{ episode_page }}</span>
+            <span>Page {{ episode_page }} of {{ total_pages }}</span>
             {% if next_episode_page %}
-                <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id, episode_page=next_episode_page) }}">Next
-                    Episodes</a>
+                <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id, episode_page=next_episode_page) }}">
+                    Next</a>
             {% endif %}
         </div>
     </div>
