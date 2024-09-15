@@ -15,7 +15,7 @@
             <!-- Authentication options in navbar -->
             {% if 'username' in session %}
                 <div id="category-header" style="margin-bottom: 10px">Hello, {{ session['username'] }}!</div>
-                <li><a href=""><i class="fa-solid fa-user"></i> Profile</a></li>
+                <li><a href="{{ url_for('user_bp.show_user_reviews') }}"><i class="fa-solid fa-user"></i> Profile</a></li>
                 <li><a href="{{ url_for('user_bp.show_user_playlist') }}"><i class="fa-solid fa-music"></i> Playlist</a></li>
                 <li><a href="{{ url_for('authentication_bp.logout') }}"><i class="fa-solid fa-right-from-bracket"></i>
                     Logout</a></li>
