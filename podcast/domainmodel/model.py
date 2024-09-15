@@ -74,6 +74,7 @@ class Podcast:
         self._itunes_id = itunes_id
         self.categories = []
         self.episodes = []
+        self.reviews = []
 
     @property
     def id(self) -> int:
@@ -155,6 +156,17 @@ class Podcast:
         if episode in self.episodes:
             self.episodes.remove(episode)
 
+    def add_review(self, review: Review):
+        if not isinstance(review, Review):
+            raise TypeError("Expected a Review instance.")
+        if review not in self.reviews:
+            self.reviews.append(review)
+            self.reviews = sorted(self.reviews, key=lambda rev: rev.rating, reverse=True)
+
+    def remove_review(self, review: Review):
+        if review in self.reviews:
+            self.reviews.remove(review)
+
     def __repr__(self):
         return f"<Podcast {self.id}: '{self.title}' by {self.author.name}>"
 
@@ -219,6 +231,7 @@ class User:
         self._password = password
         self._subscription_list = []
         self._playlist = None
+        self._reviews = []
 
     @property
     def id(self) -> int:
@@ -236,6 +249,14 @@ class User:
     def subscription_list(self):
         return self._subscription_list
 
+    @property
+    def playlist(self):
+        return self._playlist
+
+    @property
+    def reviews(self):
+        return self._reviews
+
     def add_subscription(self, subscription: PodcastSubscription):
         if not isinstance(subscription, PodcastSubscription):
             raise TypeError("Subscription must be a PodcastSubscription object.")
@@ -250,9 +271,15 @@ class User:
         if self._playlist is None:
             self._playlist = Playlist(self.id, self, playlist_name)
 
-    @property
-    def playlist(self):
-        return self._playlist
+    def add_review(self, review: Review):
+        if not isinstance(review, Review):
+            raise TypeError("Expected a Review instance.")
+        if review not in self.reviews:
+            self.reviews.append(review)
+
+    def remove_review(self, review: Review):
+        if review in self.reviews:
+            self.reviews.remove(review)
 
     def __repr__(self):
         return f"<User {self.id}: {self.username}>"
