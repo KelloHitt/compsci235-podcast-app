@@ -1,7 +1,7 @@
 import abc
 from typing import List
 
-from podcast.domainmodel.model import Author, Podcast, Category, Episode, User
+from podcast.domainmodel.model import Author, Podcast, Category, Episode, User, Playlist
 
 repo_instance = None
 
@@ -119,4 +119,9 @@ class AbstractRepository(abc.ABC):
     @abc.abstractmethod
     def add_to_playlist(self, username: str, episode: Episode):
         """ Adds an Episode to the playlist with the given username. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_users_playlist(self, username: str) -> Playlist:
+        """ Returns user's playlist with the given username. """
         raise NotImplementedError

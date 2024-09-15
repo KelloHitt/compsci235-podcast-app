@@ -93,8 +93,16 @@ class MemoryRepository(AbstractRepository):
         if not user:
             raise ValueError(f'User {username} is not found!')
         if user.playlist is None:
-            user.create_playlist(f'{username}s Playlist')
+            user.create_playlist(f"{username.title()}'s Playlist")
         user.playlist.add_episode(episode)
+
+    def get_users_playlist(self, username: str):
+        user = self.get_user(username)
+        if not user:
+            raise ValueError(f'User {username} is not found!')
+        if user.playlist is None:
+            user.create_playlist(f"{username.title()}'s Playlist")
+        return user.playlist
 
 
 # Populate the data into memory repository
