@@ -115,3 +115,24 @@ class AbstractRepository(abc.ABC):
         If there is no User with the given user_name, this method returns None.
         """
         raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_podcasts_by_category(self, category_query: str) -> list:
+        "Returns a list of podcasts"
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_podcasts_by_title(self, title: str) -> list:
+        "Returns a list of podcasts"
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_podcasts_by_author(self, author: str) -> list:
+        "Returns a list of podcasts"
+        raise NotImplementedError
+
+
+
+
+
+
