@@ -88,6 +88,28 @@ class MemoryRepository(AbstractRepository):
     def get_user(self, username) -> User:
         return next((user for user in self.__users if user.username == username), None)
 
+    def get_podcasts_by_category(self, category_query: str):
+        podcasts = []
+        for podcast in self.__podcasts:
+            for category in podcast.categories:
+                if category_query in category.name:
+                    podcasts.append(podcast)
+        return podcasts
+
+    def get_podcasts_by_title(self, title: str):
+        podcasts = []
+        for podcast in self.__podcasts:
+            if title in podcast.title:
+                podcasts.append(podcast)
+        return podcasts
+
+    def get_podcasts_by_author(self, author: str) -> list:
+        podcasts = []
+        for podcast in self.__podcasts:
+            if author in podcast.author.name:
+                podcasts.append(podcast)
+        return podcasts
+
 
 # Populate the data into memory repository
 def populate_data(repo: AbstractRepository, data_path: Path):
