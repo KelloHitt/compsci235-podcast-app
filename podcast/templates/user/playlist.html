@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div id="container">
+        <main id="main">
+            <div class="description">
+                <h2>{{ playlist.name }}</h2>
+                <hr style="border: none; border-top: 1px solid #a34b86; width: 100%; margin: 20px auto;">
+                {% include 'user/playlistEpisodes.html' %}
+            </div>
+        </main>
+    </div>
+{% endblock %}
