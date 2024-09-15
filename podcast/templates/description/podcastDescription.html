@@ -2,7 +2,7 @@
 
 {% block content %}
     <!-- Navigation Buttons for Podcast Pagination -->
-    {% include 'navbuttons.html' %}
+    {% include 'description/navbuttons.html' %}
     <div id="container">
         <main id="main">
             <div class="description">
@@ -20,7 +20,10 @@
                 <p><i>Website:</i> <a href="{{ podcast.website }}" target="_blank">{{ podcast.website }}</a></p>
                 <p><i>Episodes:</i></p>
                 <!-- Episodes List -->
-                {% include 'episodesList.html' %}
+                {% include 'description/episodesList.html' %}
+                <hr style="border: none; border-top: 1px solid #a34b86; width: 100%; margin: 20px auto;">
+                <p><i>Reviews:</i></p>
+                {% include'description/podcastReview.html' %}
             </div>
         </main>
     </div>
