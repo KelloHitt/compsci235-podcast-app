@@ -92,21 +92,21 @@ class MemoryRepository(AbstractRepository):
         podcasts = []
         for podcast in self.__podcasts:
             for category in podcast.categories:
-                if category_query in category.name:
+                if category_query.lower() in category.name.lower():
                     podcasts.append(podcast)
         return podcasts
 
     def get_podcasts_by_title(self, title: str):
         podcasts = []
         for podcast in self.__podcasts:
-            if title in podcast.title:
+            if title.lower() in podcast.title.lower():
                 podcasts.append(podcast)
         return podcasts
 
     def get_podcasts_by_author(self, author: str) -> list:
         podcasts = []
         for podcast in self.__podcasts:
-            if author in podcast.author.name:
+            if author.lower() in podcast.author.name.lower():
                 podcasts.append(podcast)
         return podcasts
 
