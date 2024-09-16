@@ -17,13 +17,9 @@ def results():
     search_query = request.args.get('q', '')
     search_field = request.args.get('field', 'title')
 
-    podcasts = []
-    if search_field == 'category':
-        podcasts = services.get_podcasts_category(repository.repo_instance, search_query)
-    elif search_field == 'title':
-        podcasts = services.get_podcasts_title(repository.repo_instance, search_query)
-    else:
-        podcasts = services.get_podcasts_author(repository.repo_instance, search_query)
+
+    podcasts = services.get_podcasts_filtered(repository.repo_instance, search_query)
+
 
     return render_template('search.html', results=podcasts, query=search_query, field=search_field)
 

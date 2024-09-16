@@ -1,13 +1,11 @@
 from podcast.adapters.repository import AbstractRepository
 
 
-def get_podcasts_category(repository: AbstractRepository, category):
-    return repository.get_podcasts_by_category(category)
+def get_podcasts_get_podcasts_filtered(repository: AbstractRepository, search_query):
+    if search_query == 'category':
+        repository.get_podcasts_by_category(search_query)
+    elif search_query == 'title':
+        return repository.get_podcasts_by_title(search_query)
+    else:
+        return repository.get_podcasts_by_author(search_query)
 
-
-def get_podcasts_title(repository: AbstractRepository, title):
-    return repository.get_podcasts_by_title(title)
-
-
-def get_podcasts_author(repository: AbstractRepository, author):
-    return repository.get_podcasts_by_author(author)
