@@ -1,55 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Podcast Library</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}" type="text/css">
-    <script src="https://kit.fontawesome.com/b18330247f.js" crossorigin="anonymous"></script>
-</head>
-<body style="background-image: url('https://plus.unsplash.com/premium_photo-1710346961272-c23f174b6e39?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fHB1cnBsZSUyMG1vdW50YWlucyUyMGNhcnRvb258ZW58MHx8MHx8fDA%3D');
+{% extends 'layout.html' %}
+{% block content %}
+    <div style="background-image: url('https://plus.unsplash.com/premium_photo-1710346961272-c23f174b6e39?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fHB1cnBsZSUyMG1vdW50YWlucyUyMGNhcnRvb258ZW58MHx8MHx8fDA%3D');
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
-    background-size: cover;">
-<form action="/results" method="get">
-    <label for="field">Search By:</label>
-    <select id="field" name="field">
-        <option value="title" {% if field == 'title' %}selected{% endif %}>Title</option>
-        <option value="author" {% if field == 'author' %}selected{% endif %}>Author</option>
-        <option value="category" {% if field == 'category' %}selected{% endif %}>Category</option>
-    </select>
-    <br>
-    {% block content %}
-    <div id="container">
-        <main id="main">
+    background-size: cover; width: 100%; height:100%; overflow-y: scroll;">
+        <form action="/results" method="get">
+            <select name="field" class="search-container" style="width:30%; padding-right: 20%;">
+                <option value="title" {% if field == 'title' %}selected{% endif %}>Title</option>
+                <option value="author" {% if field == 'author' %}selected{% endif %}>Author</option>
+                <option value="category" {% if field == 'category' %}selected{% endif %}>Category</option>
+            </select>
             <div class="search-container">
-                <input type="text" id="query" name="q" placeholder="Search Podcast..." value="{{ query }}" class="search-input">
+                <input type="text" id="query" name="q" placeholder="Search Podcast..." value="{{ query }}"
+                       class="search-input">
                 <button type="submit" class="search-button">Search</button>
             </div>
-        </main>
+            <br>
+        </form>
+
+        {% if results %}
+        <h2 style="color: white;">Podcasts For {{ field }} Based On "{{query}}"</h2>
+           <div class="description" style="overflow-x: scroll; display: flex; align-items: center;">
+               {% include 'podcastList.html' %}
+           </div>
+       {% endif %}
     </div>
-    {% endblock %}
-    <br>
-</form>
 
-{% if results %}
-    <h2>Results:</h2>
-    <ul>
-        {% for podcast in results %}
-                    <li>
-                        <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id) }}">
-                            <div class="podcast-list">
-                                <img src="{{ podcast.image }}"
-                                     alt="podcast image">
-                                <span>{{ podcast.title }}</span>
-                            </div>
-                        </a>
-                    </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No results found</p>
-{% endif %}
+{% endblock %}
 
 
-</body>
