@@ -1,0 +1,27 @@
+{% if results %}
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author(s)</th>
+            <th>Category(s)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for podcast in results %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>
+                    <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id) }}">{{ podcast.title }}
+                </td>
+                <td>{{ podcast.author.name }}</td>
+                <td> {{podcast.categories}}</td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p style="align-items: center">No podcasts available.</p>
+{% endif %}
