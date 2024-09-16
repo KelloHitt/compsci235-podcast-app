@@ -139,7 +139,7 @@ class Podcast:
         if not isinstance(category, Category):
             raise TypeError("Expected a Category instance.")
         if category not in self.categories:
-            self.categories.append(category)
+            self.categories.append(category.name)
 
     def remove_category(self, category: Category):
         if category in self.categories:
