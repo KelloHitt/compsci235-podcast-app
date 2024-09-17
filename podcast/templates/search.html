@@ -6,7 +6,7 @@
     background-attachment: fixed;
     background-size: cover; width: 100%; height:100%; overflow-y: scroll;">
         <form action="/results" method="get">
-            <select name="field" class="search-container" style="width:30%; padding-right: 20%;">
+            <select name="field" class="search-container" field = "field" style="width:30%; padding-right: 20%;">
                 <option value="title" {% if field == 'title' %}selected{% endif %}>Title</option>
                 <option value="author" {% if field == 'author' %}selected{% endif %}>Author</option>
                 <option value="category" {% if field == 'category' %}selected{% endif %}>Category</option>
@@ -16,15 +16,27 @@
                        class="search-input">
                 <button type="submit" class="search-button">Search</button>
             </div>
+
             <br>
         </form>
 
         {% if results %}
-        <h2 style="color: white;">Podcasts For {{ field }} Based On "{{query}}"</h2>
-           <div class="description" style="overflow-x: scroll; display: flex; align-items: center;">
-               {% include 'podcastList.html' %}
-           </div>
-       {% endif %}
+            <!-- Pagination Links -->
+            <div class="pagination">
+                {% if page > 1 %}
+                    <a href="{{ url_for('search_bp.results', q=query, field=field, page=page-1) }}">Previous</a>
+                {% endif %}
+
+
+                {% if page < total_pages %}
+                    <a href="{{ url_for('search_bp.results', q=query, field=field, page=page+1) }}">Next</a>
+                {% endif %}
+            </div>
+            <h2 style="color: white;">Podcasts For {{ field }} Based On "{{ query }}"</h2>
+            <div class="description" style="overflow-x: scroll; display: flex; align-items: center;">
+                {% include 'podcastList.html' %}
+            </div>
+        {% endif %}
     </div>
 
 {% endblock %}

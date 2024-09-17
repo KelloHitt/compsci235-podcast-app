@@ -79,6 +79,7 @@ nav ul li a:hover {
     color: black;
     box-sizing: border-box;
     background: #cf97bc url(https://img.icons8.com/external-victoruler-solid-victoruler/64/FFFFFF/external-stars-christmas-victoruler-solid-victoruler.png);
+    background-repeat: round;
 }
 
 
@@ -124,6 +125,7 @@ nav ul li a:hover {
     overflow: hidden;
     background-color: #fff;
     margin: 20px auto;
+
 }
 
 .search-input {
@@ -137,7 +139,7 @@ nav ul li a:hover {
 .search-button {
     padding: 10px 20px;
     border: none;
-    background-color: #883f70;
+    background-color: #a34b86;
     color: #fff;
     cursor: pointer;
     font-size: 1rem;
@@ -147,6 +149,7 @@ nav ul li a:hover {
 
 .search-button:hover {
     background-color: #473080;
+
 }
 
 /* Podcast Grid Styles */
@@ -156,6 +159,7 @@ nav ul li a:hover {
     grid-gap: 20px;
     margin: 20px auto;
     max-width: 80%;
+
 }
 
 .podcast-item {
@@ -172,8 +176,18 @@ nav ul li a:hover {
 
 .podcast-item:hover {
     transform: translateY(-5px);
+    background: #cf97bc url(https://img.icons8.com/external-victoruler-solid-victoruler/64/FFFFFF/external-stars-christmas-victoruler-solid-victoruler.png);
+    background-repeat: round;
+
 }
 
+/*.podcast-item:hover .podcast-info h3 {*/
+/*    color: white; !* Change text color to white on hover *!*/
+/*}*/
+
+/*.podcast-item:hover .podcast-info p{*/
+/*    color: white;*/
+/*}*/
 .podcast-item img {
     width: 100%;
     height: auto;
@@ -192,11 +206,16 @@ nav ul li a:hover {
     color: black;
 }
 
+
+
 .podcast-info p {
     font-size: 0.9em;
     color: #666;
     margin-top: 10px;
 }
+
+
+
 
 /* Podcast List Styles in Catalogue */
 .podcast-list {
@@ -235,6 +254,9 @@ nav ul li a:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     line-height: 1.6;
 }
+
+
+
 
 .description h2 {
     font-size: 2em;

@@ -43,4 +43,7 @@ def create_app(test_config=None):
         from .authentication import authentication
         app.register_blueprint(authentication.authentication_blueprint)
 
+        from .search import search
+        app.register_blueprint(search.search_blueprint)
+
     return app
