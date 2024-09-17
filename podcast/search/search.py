@@ -40,13 +40,6 @@ def results():
     next_page = current_page + 1 if has_next else None
     previous_page = current_page - 1 if has_previous else None
 
-    print("QUERRRYY", search_query)
-    print("FIEELLD", search_field)
-    print("page###", current_page)
-    print("podcastsss", podcasts)
-    print("paginated_podcastss", paginated_podcasts)
-    print("START", start)
-    print("END", end)
 
 
 
