@@ -619,3 +619,10 @@ button {
 .review-form-wrapper button:hover {
     background-color: #5e35b1;
 }
+
+.error-messages {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
