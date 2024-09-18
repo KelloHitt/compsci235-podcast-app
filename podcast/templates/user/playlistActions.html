@@ -1,0 +1,13 @@
+<div class="sub-form-wrapper">
+    {% if episode.id in episodes_in_playlist %}
+        <form method="POST" action="{{ url_for('description_bp.remove_from_playlist') }}">
+            <input type="hidden" name="episode_id" value="{{ episode.id }}">
+            <button type="submit" id="remove">Remove from Playlist</button>
+        </form>
+    {% else %}
+        <form method="POST" action="{{ url_for('description_bp.add_to_playlist') }}">
+            <input type="hidden" name="episode_id" value="{{ episode.id }}">
+            <button type="submit" id="add">Add to Playlist</button>
+        </form>
+    {% endif %}
+</div>

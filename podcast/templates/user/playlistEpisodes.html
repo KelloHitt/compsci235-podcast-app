@@ -1,0 +1,54 @@
+{% if episodes %}
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Audio</th>
+            <th>Podcast</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for episode in episodes %}
+            <tr>
+                <td>{{ episode.id }}</td>
+                <td>{{ episode.title }}</td>
+                <td><a href="{{ episode.url }}" target="_blank" class="register-link">Listen</a></td>
+                <td>
+                    <a href="{{ url_for('description_bp.show_description', podcast_id=episode.podcast.id) }}"
+                       target="_blank"
+                       class="register-link">
+                        {{ episode.podcast.title }}
+                    </a>
+                </td>
+                <td class="sub-form-wrapper">
+                    <form method="POST" action="{{ url_for('user_bp.remove_from_playlist') }}">
+                        <input type="hidden" name="episode_id" value="{{ episode.id }}">
+                        <button type="submit" id="remove">Remove from Playlist</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="sub-form-wrapper">
+        <form method="POST" action="{{ url_for('user_bp.remove_all_from_playlist') }}">
+            <input type="hidden" name="playlist_id" value="{{ playlist.id }}">
+            <button type="submit" id="remove">Remove All Episodes from Playlist</button>
+        </form>
+    </div>
+    <div class="navigation-buttons">
+        <div class="pagination">
+            {% if prev_episode_page %}
+                <a href="{{ url_for('user_bp.show_user_playlist', episode_page=prev_episode_page) }}">Previous</a>
+            {% endif %}
+            <span>Page {{ episode_page }} of {{ total_pages }}</span>
+            {% if next_episode_page %}
+                <a href="{{ url_for('user_bp.show_user_playlist', episode_page=next_episode_page) }}">Next</a>
+            {% endif %}
+        </div>
+    </div>
+{% else %}
+    <p style="align-items: center">No episodes added to the playlist.</p>
+{% endif %}

@@ -1,6 +1,6 @@
 from functools import wraps
 
-from flask import Blueprint, render_template, redirect, url_for, session
+from flask import Blueprint, render_template, redirect, url_for, session, flash
 from flask_wtf import FlaskForm
 from password_validator import PasswordValidator
 from wtforms import StringField, PasswordField, SubmitField
@@ -26,7 +26,7 @@ def register():
         # Use the service layer to attempt to add the new user.
         try:
             services.add_user(form.username.data, form.password.data, repo.repo_instance)
-
+            flash("Registration successful!", "success")
             # All is well, redirect the user to the login page.
             return redirect(url_for('authentication_bp.login'))
         except services.NameNotUniqueException:
@@ -91,9 +91,10 @@ def logout():
 def login_required(view):
     @wraps(view)
     def wrapped_view(**kwargs):
-        if 'user_name' not in session:
+        if 'username' not in session:
             return redirect(url_for('authentication_bp.login'))
         return view(**kwargs)
+
     return wrapped_view
 
 

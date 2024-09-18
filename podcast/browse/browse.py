@@ -26,7 +26,7 @@ def show_podcasts():
         pagination_data = services.get_podcasts_by_page(repository.repo_instance, page_number)
 
     # Render the catalogue page with the retrieved data
-    return render_template('catalogue.html', **pagination_data)
+    return render_template('description/catalogue.html', **pagination_data)
 
 
 # Register a template context processor function which runs before rendering the template
