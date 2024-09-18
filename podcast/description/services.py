@@ -23,10 +23,6 @@ def get_playlist(repository: AbstractRepository):
     return user.playlist if user is not None else None
 
 
-def in_playlist(playlist: Playlist, episode: Episode):
-    return episode in playlist.episodes
-
-
 def remove_from_playlist(repository: AbstractRepository, episode: Episode):
     username = utilities.get_username()
     user = repository.get_user(username)
