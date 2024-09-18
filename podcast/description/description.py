@@ -1,4 +1,9 @@
+from better_profanity import profanity
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_wtf import FlaskForm
+from wtforms import SelectField
+from wtforms import TextAreaField, HiddenField, SubmitField
+from wtforms.validators import DataRequired, Length, ValidationError
 
 import podcast.adapters.repository as repository
 import podcast.description.services as services
@@ -11,58 +16,22 @@ description_blueprint = Blueprint('description_bp', __name__)
 @description_blueprint.route('/description', methods=['GET'])
 def show_description():
     podcast_id = request.args.get('podcast_id', default=1, type=int)
-
+    form = ReviewForm()
     # Ensure podcast_id is within valid range
     if podcast_id > 1000:
         podcast_id = 1000
     if podcast_id < 1:
         podcast_id = 1
-
-    # Episode pagination
     episode_page = request.args.get('episode_page', default=1, type=int)
-    episodes_per_page = 10
-
     podcast = services.get_podcast_by_id(repository.repo_instance, podcast_id)
     all_episodes = sorted(podcast.episodes, key=lambda ep: ep.date)
-
-    # Calculate the total number of pages
-    total_episodes = len(all_episodes)
-    total_pages = (total_episodes + episodes_per_page - 1) // episodes_per_page
-
-    # Ensure episode_page is within the valid range
-    if episode_page < 1:
-        episode_page = 1
-    if episode_page > total_pages:
-        episode_page = total_pages
-
-    # Paginate episodes
-    start = (episode_page - 1) * episodes_per_page
-    end = start + episodes_per_page
-    paginated_episodes = all_episodes[start:end]
-
-    # Determine if there are next or previous pages for episodes
-    next_episode_page = episode_page + 1 if end < total_episodes else None
-    prev_episode_page = episode_page - 1 if start > 0 else None
-
+    paginated_episodes, next_episode_page, prev_episode_page, total_pages = (
+        utilities.get_episodes_pagination(all_episodes, episode_page))
     categories = utilities.get_categories()['categories']
-
-    # Calculate average rating
     reviews = podcast.reviews
-    if reviews:
-        average_rating = sum(review.rating for review in reviews) / len(reviews)
-    else:
-        average_rating = 0  # Set default value to 0 if there are no reviews
-
-    # Get the logged-in user's playlist
+    average_rating = utilities.calculate_average_rating(reviews)
     playlist = services.get_playlist(repository.repo_instance)
-
-    # Check if episodes are in the playlist using in_playlist method
-    episodes_in_playlist = set()
-    if playlist:
-        for episode in paginated_episodes:
-            if services.in_playlist(playlist, episode):
-                episodes_in_playlist.add(episode.id)
-
+    episodes_in_playlist = utilities.get_episodes_in_playlist(paginated_episodes, playlist)
     return render_template(
         'description/podcastDescription.html',
         podcast=podcast,
@@ -74,7 +43,8 @@ def show_description():
         total_pages=total_pages,
         episodes_in_playlist=episodes_in_playlist,
         average_rating=average_rating,
-        podcast_reviews=reviews
+        podcast_reviews=reviews,
+        form=form
     )
 
 
@@ -122,15 +92,72 @@ def add_all_to_playlist():
 @description_blueprint.route('/add_review', methods=['POST'])
 @login_required
 def add_review():
+    form = ReviewForm()
     podcast_id = request.form.get('podcast_id', type=int)
-    rating = request.form.get('rating', type=int)
-    description = request.form.get('description')
-    username = utilities.get_username()
-    user = services.get_user_by_username(repository.repo_instance, username)
-    try:
-        podcast = services.get_podcast_by_id(repository.repo_instance, podcast_id)
-        services.add_review(repository.repo_instance, podcast, user, rating, description)
-        flash('Review added successfully!', 'success')
-    except ValueError as e:
-        flash(str(e), 'error')
-    return redirect(url_for('description_bp.show_description', podcast_id=podcast_id))
+    if form.validate_on_submit():
+        podcast_id = form.podcast_id.data
+        rating = form.rating.data
+        description = form.description.data
+        try:
+            # Retrieve user and podcast
+            username = utilities.get_username()
+            user = services.get_user_by_username(repository.repo_instance, username)
+            podcast = services.get_podcast_by_id(repository.repo_instance, int(podcast_id))
+            # Add the review
+            services.add_review(repository.repo_instance, podcast, user, rating, description)
+            flash('Review added successfully!', 'success')
+        except ValueError as e:
+            flash(str(e), 'error')
+        except Exception as e:
+            # Catch all other exceptions to avoid crashing the app
+            flash(f'An unexpected error occurred: {str(e)}', 'error')
+        return redirect(url_for('description_bp.show_description', podcast_id=podcast_id))
+
+    # If form validation fails, render the form with errors
+    flash('There was an error with your review submission.', 'error')
+    podcast = services.get_podcast_by_id(repository.repo_instance, podcast_id)
+    episode_page = request.args.get('episode_page', default=1, type=int)
+    all_episodes = sorted(podcast.episodes, key=lambda ep: ep.date)
+    paginated_episodes, next_episode_page, prev_episode_page, total_pages = (
+        utilities.get_episodes_pagination(all_episodes, episode_page))
+    categories = utilities.get_categories()['categories']
+    reviews = podcast.reviews
+    average_rating = utilities.calculate_average_rating(reviews)
+    playlist = services.get_playlist(repository.repo_instance)
+    episodes_in_playlist = utilities.get_episodes_in_playlist(paginated_episodes, playlist)
+    return render_template(
+        'description/podcastDescription.html',
+        podcast=podcast,
+        episodes=paginated_episodes,
+        categories=categories,
+        episode_page=episode_page,
+        next_episode_page=next_episode_page,
+        prev_episode_page=prev_episode_page,
+        total_pages=total_pages,
+        episodes_in_playlist=episodes_in_playlist,
+        average_rating=average_rating,
+        podcast_reviews=reviews,
+        form=form
+    )
+
+
+class ProfanityFree:
+    def __init__(self, message=None):
+        if not message:
+            message = u'Field must not contain profanity'
+        self.message = message
+
+    def __call__(self, form, field):
+        if profanity.contains_profanity(field.data):
+            raise ValidationError(self.message)
+
+
+class ReviewForm(FlaskForm):
+    description = TextAreaField('description', [
+        DataRequired(message='Comment is required.'),
+        Length(min=2, message='Your comment is too short.'),
+        ProfanityFree(message='Your comment must not contain profanity!')])
+    rating = SelectField('rating', choices=[(i, str(i)) for i in range(5, 0, -1)], coerce=int,
+                         validators=[DataRequired()])
+    podcast_id = HiddenField('podcast_id')
+    submit = SubmitField('Submit Review')
