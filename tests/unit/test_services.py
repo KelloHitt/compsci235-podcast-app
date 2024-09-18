@@ -67,3 +67,6 @@ def test_get_categories(in_memory_repo):
 
 # TODO: test added methods in utilities/services.py
 
+
+# TODO: test methods in searc/services.py - Venus
+
