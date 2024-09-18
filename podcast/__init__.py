@@ -43,4 +43,7 @@ def create_app(test_config=None):
         from .authentication import authentication
         app.register_blueprint(authentication.authentication_blueprint)
 
+        from .user import user
+        app.register_blueprint(user.user_blueprint)
+
     return app

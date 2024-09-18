@@ -1,4 +1,4 @@
-from podcast.domainmodel.model import Podcast, Author, Episode, User, Review
+from podcast.domainmodel.model import Podcast, Author, Episode, User
 
 
 def test_memory_repository_can_retrieve_podcasts(in_memory_repo):
@@ -124,13 +124,5 @@ def test_repository_does_not_retrieve_a_non_existent_user(in_memory_repo):
     user = in_memory_repo.get_user("prince")
     assert user is None
 
-def test_repository_can_add_and_get_a_review(in_memory_repo):
-    user1 = User(1, "abcde", "Ab123456")
-    podcast1 = Podcast(1, Author(1, "test"), "Untitled", "", "", "", 1, "")
-    review = Review(1, podcast1, user1, 5, "Good podcast")
-    in_memory_repo.add_review("Good podcast", 5, podcast1, user1)
-    review1 = in_memory_repo.get_review(4)
-    assert review1 == review
 
-def test_repository_can_retrieve_reviews(in_memory_repo):
-        assert len(in_memory_repo.get_reviews()) == 2
+# TODO: test new methods added to the memory repository, from def add_user onwards

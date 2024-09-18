@@ -89,6 +89,44 @@ class MemoryRepository(AbstractRepository):
     def get_user(self, username) -> User:
         return next((user for user in self.__users if user.username == username), None)
 
+    def add_to_playlist(self, username: str, episode: Episode):
+        user = self.get_user(username)
+        if not user:
+            raise ValueError(f'User {username} is not found!')
+        if user.playlist is None:
+            user.create_playlist(f"{username.title()}'s Playlist")
+        user.playlist.add_episode(episode)
+
+    def get_users_playlist(self, username: str):
+        user = self.get_user(username)
+        if not user:
+            raise ValueError(f'User {username} is not found!')
+        if user.playlist is None:
+            user.create_playlist(f"{username.title()}'s Playlist")
+        return user.playlist
+
+    def add_review(self, podcast: Podcast, user: User, rating: int, description: str):
+        for review in user.reviews:
+            if review.podcast.id == podcast.id:
+                raise ValueError(f'You already reviewed this podcast. Please try another one!')
+        new_review = Review(len(self.__reviews) + 1, podcast, user, rating, description)
+        self.__reviews.append(new_review)
+        user.add_review(new_review)
+        podcast.add_review(new_review)
+
+    def get_users_reviews(self, username: str):
+        user = self.get_user(username)
+        if not user:
+            raise ValueError(f'User {username} is not found!')
+        return sorted(user.reviews, key=lambda review: review.rating, reverse=True)
+
+    def delete_review(self, review_id: int):
+        for review in self.__reviews:
+            if review.id == review_id:
+                review.reviewer.remove_review(review)
+                review.podcast.remove_review(review)
+                self.__reviews.remove(review)
+
 
 # Populate the data into memory repository
 def populate_data(repo: AbstractRepository, data_path: Path):

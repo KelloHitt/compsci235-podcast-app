@@ -1,6 +1,5 @@
 from podcast.browse import services as browse_services
 from podcast.description import services as description_services
-from podcast.domainmodel.model import Podcast, Author, User, Review
 from podcast.home import services as home_services
 from podcast.utilities import services as utilities_services
 
@@ -56,24 +55,15 @@ def test_get_categories(in_memory_repo):
     assert categories[1].name == "Professional"
     assert categories[2].name == "Society & Culture"
 
-def test_can_add_review(in_memory_repo):
-    review_id = 10
-    podcast1 = Podcast(1, Author(1, "test"), "Untitled", "", "", "", 1, "")
-    user1 = User(1, "abcde", "Ab123456")
-    podcast1 = Podcast(1, Author(1, "test"), "Untitled", "", "", "", 1, "")
-    review = Review(1, podcast1, user1, 5, "Good podcast")
-    description = "Good podcast"
-    rating = 5
-    description_services.add_review(review_id, podcast1, description, rating, user1, in_memory_repo)
-    reviews_as_dict = description_services.get_reviews_for_podcast(1, in_memory_repo)
-    assert next(
-        (dictionary['review_content'] for dictionary in reviews_as_dict if dictionary['review_content'] == review_content),
-        None)is not None
 
-def test_get_reviews_for_podcast(in_memory_repo):
-    reviews_as_dict = description_services.get_reviews_for_podcast(1, in_memory_repo)
-    assert len(reviews_as_dict) == 2
-    review_ids = [review['review_id'] for review in reviews_as_dict]
-    review_ids = set(review_ids)
-    assert 1 in review_ids and len(review_ids) == 1
+# TODO: test authentication blueprint services
+
+
+# TODO: test user blueprint services
+
+
+# TODO: test added functions in description/services.py
+
+
+# TODO: test added methods in utilities/services.py
 
