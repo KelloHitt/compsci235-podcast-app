@@ -125,4 +125,4 @@ def test_repository_does_not_retrieve_a_non_existent_user(in_memory_repo):
     assert user is None
 
 
-# TODO: test new methods added to the memory repository
+# TODO: test new methods added to the memory repository, from def add_user onwards
