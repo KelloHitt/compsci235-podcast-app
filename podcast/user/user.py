@@ -19,19 +19,9 @@ def show_user_playlist():
                                       key=lambda episode: episode.podcast.title)
     except ValueError as e:
         flash(str(e), 'error')
-    episodes_count = len(episodes_in_playlist)
     episode_page = request.args.get('episode_page', default=1, type=int)
-    episodes_per_page = 10
-    pages_count = (episodes_count + episodes_per_page - 1) // episodes_per_page
-    if episode_page < 1:
-        episode_page = 1
-    if episode_page > pages_count:
-        episode_page = pages_count
-    start = (episode_page - 1) * episodes_per_page
-    end = start + episodes_per_page
-    paginated_episodes = episodes_in_playlist[start:end]
-    next_episode_page = episode_page + 1 if end < episodes_count else None
-    prev_episode_page = episode_page - 1 if start > 0 else None
+    paginated_episodes, next_episode_page, prev_episode_page, total_pages = (
+        utilities.get_episodes_pagination(episodes_in_playlist, episode_page))
     categories = utilities.get_categories()['categories']
     return render_template(
         'user/playlist.html',
@@ -40,7 +30,7 @@ def show_user_playlist():
         episode_page=episode_page,
         next_episode_page=next_episode_page,
         prev_episode_page=prev_episode_page,
-        total_pages=pages_count,
+        total_pages=total_pages,
         episodes_in_playlist=episodes_in_playlist,
         playlist=playlist
     )
