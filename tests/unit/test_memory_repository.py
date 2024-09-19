@@ -123,3 +123,6 @@ def test_repository_can_add_and_retrieve_a_user(in_memory_repo):
 def test_repository_does_not_retrieve_a_non_existent_user(in_memory_repo):
     user = in_memory_repo.get_user("prince")
     assert user is None
+
+
+# TODO: test new methods added to the memory repository, from def add_user onwards

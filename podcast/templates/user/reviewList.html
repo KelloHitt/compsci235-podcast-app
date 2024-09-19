@@ -1,0 +1,45 @@
+{% if user_reviews %}
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Podcast</th>
+            <th>Rating</th>
+            <th>Comment</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for review in user_reviews %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td><a href="{{ url_for('description_bp.show_description', podcast_id=review.podcast.id) }}"
+                       target="_blank"
+                       class="register-link">{{ review.podcast.title }}</a></td>
+                <td>{{ review.rating }}</td>
+                <td>{{ review.content }}</td>
+                <td class="sub-form-wrapper">
+                    <form method="POST" action="{{ url_for('user_bp.delete_review') }}">
+                        <input type="hidden" name="review_id" value="{{ review.id }}">
+                        <button type="submit" id="remove">Delete Review</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <!-- Pagination Controls -->
+    <div class="navigation-buttons">
+        <div class="pagination">
+            {% if current_page > 1 %}
+                <a href="{{ url_for('user_bp.show_user_reviews', page=current_page - 1) }}">Previous</a>
+            {% endif %}
+            <span>Page {{ current_page }} of {{ pages_count }}</span>
+            {% if current_page < pages_count %}
+                <a href="{{ url_for('user_bp.show_user_reviews', page=current_page + 1) }}">Next</a>
+            {% endif %}
+        </div>
+    </div>
+{% else %}
+    <p style="align-items: center">You haven't made any reviews yet!</p>
+{% endif %}

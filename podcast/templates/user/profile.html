@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div id="container">
+        <main id="main">
+            <div class="description">
+                <h2>My Reviews</h2>
+                <hr style="border: none; border-top: 1px solid #a34b86; width: 100%; margin: 20px auto;">
+                {% include 'user/reviewList.html' %}
+            </div>
+        </main>
+    </div>
+{% endblock %}

@@ -106,7 +106,7 @@ nav ul li a:hover {
 
 #main {
     width: 100%;
-    max-width: 800px;
+    max-width: 70%;
     margin-top: 20px;
     padding: 10px;
     color: #717171;
@@ -289,6 +289,10 @@ nav ul li a:hover {
     padding: 8px;
     text-align: left;
     border-bottom: 1px solid #ddd;
+}
+
+.description th {
+    text-align: center;
 }
 
 .description tr:nth-child(even) {
@@ -505,24 +509,6 @@ button {
     border-color: #9176d6;
 }
 
-/* Form styles in credential page*/
-.form-wrapper {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    line-height: 1.6;
-}
-
-.form-wrapper h2 {
-    font-size: 2em;
-    margin-bottom: 10px;
-    color: #333;
-    text-align: center;
-}
-
 /* Form styles in credential page */
 .form-wrapper {
     background-color: #fff;
@@ -530,7 +516,7 @@ button {
     border-radius: 8px;
     padding: 20px;
     margin: 20px auto;
-    width: 60%; /* Center and limit the width */
+    width: 60%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     line-height: 1.6;
 }
@@ -604,7 +590,7 @@ button {
     font-size: 1em;
     text-decoration: none;
     color: #0056b3;
-    transition: color 0.3s ease-in-out;
+    transition: color 0.2s ease-in-out;
 }
 
 .register-link:hover {
@@ -761,3 +747,142 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 /*html {*/
 /*    cursor: url('data:image/svg+xml,url("data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="%23FFF" stroke="%23000" stroke-width="2" d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.85a.5.5 0 0 0-.85.35Z"></path></svg>")');*/
 /*}*/
+
+/* Styles for playlist action buttons */
+.sub-form-wrapper #add {
+    background-color: #A67EB1;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.sub-form-wrapper #add:hover {
+    background-color: #8B679A;
+}
+
+.sub-form-wrapper #remove {
+    background-color: #D16A8D;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.sub-form-wrapper #remove:hover {
+    background-color: #B15876;
+}
+
+/* Styles for flash messages */
+.flash-message {
+    padding: 10px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.flash-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.flash-error {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+/* Styling for the review section */
+.review-section {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.review-section ul {
+    list-style-type: none;
+    padding: 0;
+    font-size: 0.9em;
+}
+
+.review-section li {
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.review-section i {
+    font-weight: bold;
+    color: #777;
+}
+
+.review-section p {
+    color: #777;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Styling for the review form */
+.review-form-wrapper {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.review-form-wrapper form {
+    display: flex;
+    flex-direction: column;
+}
+
+.review-form-wrapper label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.review-form-wrapper input, select, textarea {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+}
+
+.review-form-wrapper button {
+    padding: 10px 20px;
+    background-color: #9b59b6;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.review-form-wrapper button:hover {
+    background-color: #5e35b1;
+}
+
+.error-messages {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+

@@ -4,7 +4,7 @@ from typing import List
 
 from podcast.adapters.datareader.csvdatareader import CSVDataReader
 from podcast.adapters.repository import AbstractRepository
-from podcast.domainmodel.model import Author, Podcast, Episode, Category, User
+from podcast.domainmodel.model import Author, Podcast, Episode, Category, User, Review
 
 
 class MemoryRepository(AbstractRepository):
@@ -15,6 +15,7 @@ class MemoryRepository(AbstractRepository):
         self.__categories = dict()
         self.__podcasts_by_id = dict()
         self.__users = list()
+        self.__reviews = list()
 
     def add_podcast(self, podcast: Podcast):
         if podcast not in self.__podcasts:
@@ -110,6 +111,44 @@ class MemoryRepository(AbstractRepository):
             if author.lower() in podcast.author.name.lower():
                 podcasts.append(podcast)
         return podcasts
+    
+    def add_to_playlist(self, username: str, episode: Episode):
+        user = self.get_user(username)
+        if not user:
+            raise ValueError(f'User {username} is not found!')
+        if user.playlist is None:
+            user.create_playlist(f"{username.title()}'s Playlist")
+        user.playlist.add_episode(episode)
+
+    def get_users_playlist(self, username: str):
+        user = self.get_user(username)
+        if not user:
+            raise ValueError(f'User {username} is not found!')
+        if user.playlist is None:
+            user.create_playlist(f"{username.title()}'s Playlist")
+        return user.playlist
+
+    def add_review(self, podcast: Podcast, user: User, rating: int, description: str):
+        for review in user.reviews:
+            if review.podcast.id == podcast.id:
+                raise ValueError(f'You already reviewed this podcast. Please try another one!')
+        new_review = Review(len(self.__reviews) + 1, podcast, user, rating, description)
+        self.__reviews.append(new_review)
+        user.add_review(new_review)
+        podcast.add_review(new_review)
+
+    def get_users_reviews(self, username: str):
+        user = self.get_user(username)
+        if not user:
+            raise ValueError(f'User {username} is not found!')
+        return sorted(user.reviews, key=lambda review: review.rating, reverse=True)
+
+    def delete_review(self, review_id: int):
+        for review in self.__reviews:
+            if review.id == review_id:
+                review.reviewer.remove_review(review)
+                review.podcast.remove_review(review)
+                self.__reviews.remove(review)
 
 
 # Populate the data into memory repository
