@@ -94,6 +94,7 @@ class MemoryRepository(AbstractRepository):
             for category in podcast.categories:
                 if category_query.lower() in category.name.lower():
                     podcasts.append(podcast)
+
         return podcasts
 
     def get_podcasts_by_title(self, title: str):

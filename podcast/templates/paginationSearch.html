@@ -1,32 +1,33 @@
-<div class="pagination">
-    {% if current_page > 1 %}
-        <a href="?q={{ query }}&field={{ field }}&page=1">First</a>
-    {% else %}
-        <span>First</span>
-    {% endif %}
+<block class="search-pagination-container">
+        <div class="pagination-two">
+            {% if current_page > 1 %}
+                <a href="?q={{ query }}&field={{ field }}&page=1">First</a>
+            {% else %}
+                <span>First</span>
+            {% endif %}
 
-    <!-- Previous Page Button -->
-    {% if has_previous %}
-        <a href="?q={{ query }}&field={{ field }}&page={{ previous_page }}">Previous</a>
-    {% else %}
-        <span>Previous</span>
-    {% endif %}
+            <!-- Previous Page -->
+            {% if has_previous %}
+                <a href="?q={{ query }}&field={{ field }}&page={{ previous_page }}">Previous</a>
+            {% else %}
+                <span>Previous</span>
+            {% endif %}
 
-    <!-- Display Current Page Number -->
-    <span>Page {{ current_page }} of {{ total_pages }}</span>
+            <!-- Display Current Page Number -->
+            <span>Page {{ current_page }} of {{ total_pages }}</span>
 
-    <!-- Next Page Button -->
-    {% if has_next %}
-        <a href="?q={{ query }}&field={{ field }}&page={{ next_page }}">Next</a>
-    {% else %}
-        <span>Next</span>
-    {% endif %}
+            <!-- Next Page -->
+            {% if has_next %}
+                <a href="?q={{ query }}&field={{ field }}&page={{ next_page }}">Next</a>
+            {% else %}
+                <span>Next</span>
+            {% endif %}
 
-    <!-- Last Page Button -->
-    {% if current_page < total_pages %}
-        <a href="?q={{ query }}&field={{ field }}&page={{ total_pages }}">Last</a>
-    {% else %}
-        <span>Last</span>
-    {% endif %}
-
-</div>
+            <!-- Last Page -->
+            {% if current_page < total_pages %}
+                <a href="?q={{ query }}&field={{ field }}&page={{ total_pages }}">Last</a>
+            {% else %}
+                <span>Last</span>
+            {% endif %}
+    </div>
+</block>

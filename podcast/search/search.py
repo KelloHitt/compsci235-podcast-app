@@ -22,7 +22,7 @@ def results():
 
 
     # Pagination
-    current_page = int(request.args.get('page', 1))# Get the current page number, default is 1
+    current_page = int(request.args.get('page', 1))
 
     num_of_podcasts_per_page = 10
     # Calculate total number of podcasts
