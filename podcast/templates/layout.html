@@ -12,7 +12,10 @@
     {% include 'navbar.html' %}
     <div id="content-2">
         <!-- Include header partial. -->
-        {% include 'header.html' %}
+         {% block header %}
+            {% include 'header.html' %}
+        {% endblock %}
+
         <!-- Show message from backend if there is any -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -23,6 +26,7 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
+
         <!-- Main content block to be supplied by page. -->
         {% block content %} {% endblock %}
     </div>
