@@ -125,8 +125,6 @@ def test_repository_does_not_retrieve_a_non_existent_user(in_memory_repo):
     assert user is None
 
 
-# TODO: test new methods added to the memory repository, from def add_user onwards
-
 def test_repository_can_add_to_preexisting_playlist(in_memory_repo):
     episode1 = in_memory_repo.get_episode(1)
     in_memory_repo.add_user('test1', 'abcdE12')
@@ -135,6 +133,7 @@ def test_repository_can_add_to_preexisting_playlist(in_memory_repo):
     in_memory_repo.add_to_playlist('test1', episode1)
     assert len(user1.playlist.episodes) == 1
 
+
 def test_repository_can_make_and_add_to_playlist(in_memory_repo):
     episode1 = in_memory_repo.get_episode(2)
     in_memory_repo.add_user('test2', 'abcdE12')
@@ -142,11 +141,13 @@ def test_repository_can_make_and_add_to_playlist(in_memory_repo):
     in_memory_repo.add_to_playlist('test2', episode1)
     assert len(user1.playlist.episodes) == 1
 
+
 def test_repository_can_get_users_preexisting_playlist(in_memory_repo):
     in_memory_repo.add_user('test3', 'abcdE12')
     user1 = in_memory_repo.get_user('test3')
     user1.create_playlist('playlist1')
     assert user1.playlist == in_memory_repo.get_users_playlist('test3')
+
 
 def test_repository_can_make_and_get_users_playlist(in_memory_repo):
     in_memory_repo.add_user('test4', 'abcdE12')
