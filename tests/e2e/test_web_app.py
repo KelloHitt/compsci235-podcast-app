@@ -78,11 +78,9 @@ def test_login_required_to_review(client):
 def test_review_valid(client, auth):
     auth.register()
     auth.login()
-
     response = client.get("/description", query_string={"podcast_id": 1})
     assert response.status_code == 200  # Check if the page loads successfully
-
-    response = client.post("/add_review", data={"description": "Who likes this game??", "rating": 1, "podcast_id": 1})
+    response = client.post("/add_review", data={"description": "Who likes this game?", "rating": 1, "podcast_id": 1})
     assert response.status_code == 302  # Check for redirection status
     assert response.headers["Location"] == "/description?podcast_id=1"  # Redirect to the same podcast description page
 
@@ -90,9 +88,9 @@ def test_review_valid(client, auth):
 @pytest.mark.parametrize(
     ("description", "rating", "messages"),
     (
-        ("fuck this game its bad?", 3, b"Your comment must not contain profanity!"),
-        (" ", 1, b"Comment is required."),
-        ("wa", 3, b"Your comment is too short."),
+            ("fuck this game its bad?", 3, b"Your comment must not contain profanity!"),
+            (" ", 1, b"Comment is required."),
+            ("wa", 3, b"Your comment is too short."),
     ),
 )
 def test_review_game_with_invalid_input(client, auth, description, rating, messages):
@@ -104,24 +102,54 @@ def test_review_game_with_invalid_input(client, auth, description, rating, messa
 
 
 def test_add_to_playlist_login_required(client, auth):
-    pass
+    response = client.post("/add_to_playlist")
+    assert response.headers["Location"] == "/authentication/login"
 
 
-def test_show_all_playlists(client, auth):
-    pass
+def test_add_all_to_playlist(client, auth):
+    auth.register()
+    auth.login()
+    response = client.post("/add_all_to_playlist", data={"podcast_id": 1})
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/description?podcast_id=1"
 
 
-def test_podcast_no_reviews(client):
-    pass
+def test_show_user_playlist(client, auth):
+    auth.register()
+    auth.login()
+    response = client.get("/user/playlist")
+    assert response.status_code == 200
+    assert b"My Playlist" in response.data
 
 
-def test_podcast_with_reviews(client):
-    pass
+def test_show_user_reviews(client, auth):
+    auth.register()
+    auth.login()
+    response = client.get("/user/reviews")
+    assert response.status_code == 200
+    assert b"My Reviews" in response.data
 
 
-def test_podcasts_by_pages(client):
-    pass
+def test_podcast_with_reviews(client, auth):
+    auth.register()
+    auth.login()
+    response = client.post("/add_review", data={"description": "Who likes this game?", "rating": 1, "podcast_id": 1})
+    assert response.status_code == 302  # Check for redirection status
+    assert response.headers["Location"] == "/description?podcast_id=1"
+    response = client.get("/description", query_string={"podcast_id": 1})
+    assert response.status_code == 200
+    assert b"Who likes this game?" in response.data
 
 
-def test_podcasts_by_categories_pages(client):
-    pass
+def test_user_delete_review(client, auth):
+    auth.register()
+    auth.login()
+    response = client.post("/user/delete_review", data={"review_id": 1})
+    assert response.status_code == 302
+
+
+def test_user_remove_all_episodes_from_playlist(client, auth):
+    auth.register()
+    auth.login()
+    response = client.post("/user/playlist/remove_all_from_playlist")
+    assert response.status_code == 302
