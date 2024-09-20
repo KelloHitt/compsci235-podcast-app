@@ -134,3 +134,9 @@ def test_repository_can_add_to_playlist(in_memory_repo):
     user1.create_playlist('playlist1')
     user1.playlist.add_episode(episode1)
     assert len(user1.playlist.episodes) == 1
+
+def test_repository_can_get_users_playlist(in_memory_repo):
+    in_memory_repo.add_user('test2', 'abcdE12')
+    user1 = in_memory_repo.get_user('test2')
+    user1.create_playlist('playlist1')
+    assert user1.playlist == in_memory_repo.get_users_playlist('test2')
