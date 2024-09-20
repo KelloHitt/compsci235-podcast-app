@@ -33,7 +33,6 @@ nav {
     text-align: center;
     color: white;
     overflow-y: auto; /* Enable vertical scrolling */
-    direction: rtl; /* Ensures scroll bar is on left side of the page */
 }
 
 nav .heading {
