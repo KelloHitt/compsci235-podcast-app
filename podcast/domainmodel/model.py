@@ -227,7 +227,7 @@ class User:
         validate_non_empty_string(username, "Username")
         validate_non_empty_string(password, "Password")
         self._id = user_id
-        self._username = username.lower().strip()
+        self._username = username.strip()
         self._password = password
         self._subscription_list = []
         self._playlist = None
