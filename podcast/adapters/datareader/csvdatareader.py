@@ -1,7 +1,7 @@
 import csv
 from pathlib import Path
 
-from podcast.domainmodel.model import Podcast, Episode, Category, Author
+from podcast.domainmodel.model import Podcast, Episode, Category, Author, Review, User
 
 
 class CSVDataReader:
@@ -10,6 +10,7 @@ class CSVDataReader:
         self.__dataset_of_episodes = list()
         self.__dataset_of_authors = dict()
         self.__dataset_of_categories = dict()
+        self.__dataset_of_reviews = list()
 
     def read_csv_file(self, filename: str):
         with open(filename, 'r', newline='', encoding='utf-8-sig') as csv_file:
@@ -66,6 +67,7 @@ class CSVDataReader:
                 podcast.add_episode(new_episode)
             self.__dataset_of_episodes.append(new_episode)
 
+
     def add_or_get_author(self, author_name) -> Author:
         if not author_name:
             author_name = "Unknown"
@@ -104,3 +106,7 @@ class CSVDataReader:
     @property
     def dataset_of_categories(self):
         return self.__dataset_of_categories
+
+    @property
+    def dataset_of_reviews(self):
+        return self.__dataset_of_reviews

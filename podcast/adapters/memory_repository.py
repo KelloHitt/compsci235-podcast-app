@@ -161,6 +161,7 @@ def populate_data(repo: AbstractRepository, data_path: Path):
     authors = reader.dataset_of_authors
     categories = reader.dataset_of_categories
     episodes = reader.dataset_of_episodes
+    reviews = reader.dataset_of_reviews
 
     for author in authors.values():
         repo.add_author(author)
@@ -173,3 +174,16 @@ def populate_data(repo: AbstractRepository, data_path: Path):
 
     for episode in episodes:
         repo.add_episode(episode)
+
+    for review in reviews:
+        repo.add_review(review.content, review.rating, review.podcast, review.reviewer)
+
+def add_review(self, description: str, rating: int, podcast: Podcast, user: User):
+    review = Review(len(self.__reviews) + 1, podcast, user, rating, description)
+    self.__reviews.append(review)
+
+def get_review(self, review_id) -> Review:
+    return next((review for review in self.__reviews if review.id == review_id), None)
+
+def get_reviews(self):
+    return self.__reviews
