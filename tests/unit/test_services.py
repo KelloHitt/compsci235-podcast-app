@@ -2,6 +2,7 @@ from podcast.browse import services as browse_services
 from podcast.description import services as description_services
 from podcast.home import services as home_services
 from podcast.utilities import services as utilities_services
+from podcast.user import services as user_services
 
 
 def test_get_podcast_by_page(in_memory_repo):
@@ -55,15 +56,23 @@ def test_get_categories(in_memory_repo):
     assert categories[1].name == "Professional"
     assert categories[2].name == "Society & Culture"
 
+def test_get_episode_by_id(in_memory_repo):
+    episode1 = in_memory_repo.get_episode(1)
+    episode2 = user_services.get_episode_by_id(in_memory_repo, 1)
+    assert episode1 == episode2
 
-# TODO: test authentication blueprint services
+def test_delete_review(in_memory_repo):
+    in_memory_repo.add_user('test1', 'abcdE12')
+    user1 = in_memory_repo.get_user('test1')
+    podcast1 = in_memory_repo.get_podcast(1)
+    in_memory_repo.add_review(podcast1, user1, 5, "Very good")
+    user_services.delete_review(in_memory_repo, 1)
+    assert len(user1.reviews) == 0
 
-
-# TODO: test user blueprint services
-
-
-# TODO: test added functions in description/services.py
-
-
-# TODO: test added methods in utilities/services.py
-
+def test_in_playlist(in_memory_repo):
+    in_memory_repo.add_user('new_user', 'passw0Rd')
+    user1 = in_memory_repo.get_user('new_user')
+    episode1 = in_memory_repo.get_episode(1)
+    in_memory_repo.add_to_playlist('new_user', episode1)
+    playlist1 = in_memory_repo.get_users_playlist('new_user')
+    assert utilities_services.in_playlist(playlist1, episode1)
