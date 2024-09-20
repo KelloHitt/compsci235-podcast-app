@@ -23,7 +23,7 @@ def test_register(client):
             ("testUser1", "testUserpassword1", b"Your username is already taken - please try another one."),
     ))
 def test_register_with_invalid_input(auth, client, username, password, message):
-    # Check that attempting to register with invalid combinations of user name and password generate appropriate error
+    # Check that attempting to register with invalid combinations of username and password generate appropriate error
     # messages.
     auth.register()  # register a user
     response = client.post(
@@ -82,19 +82,25 @@ def test_review_valid(client, auth):
     response = client.get("/description", query_string={"podcast_id": 1})
     assert response.status_code == 200  # Check if the page loads successfully
 
-    response = client.post("/add_review", data={"review_comment": "Who likes this game??", "rating": 1,"podcast_id": 1 })
-    assert response.headers["Location"] == "/description?podcast_id=1"
-    assert response.status_code == 200  # Check for the page reloads with reviews
+    response = client.post("/add_review", data={"description": "Who likes this game??", "rating": 1, "podcast_id": 1})
+    assert response.status_code == 302  # Check for redirection status
+    assert response.headers["Location"] == "/description?podcast_id=1"  # Redirect to the same podcast description page
 
 
 @pytest.mark.parametrize(
-    ("comment", "rating", "messages"),
+    ("description", "rating", "messages"),
     (
-        # TODO: set up testing parameters
+        ("fuck this game its bad?", 3, b"Your comment must not contain profanity!"),
+        (" ", 1, b"Comment is required."),
+        ("wa", 3, b"Your comment is too short."),
     ),
 )
-def test_review_with_invalid_input(client, auth, comment, rating, messages):
-    pass
+def test_review_game_with_invalid_input(client, auth, description, rating, messages):
+    auth.register()
+    auth.login()
+    response = client.post("/add_review", data={"description": description, "rating": rating, "podcast_id": 1})
+    for message in messages:
+        assert message in response.data
 
 
 def test_add_to_playlist_login_required(client, auth):
