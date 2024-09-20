@@ -1,8 +1,10 @@
+import podcast.utilities.utilities
 from podcast.browse import services as browse_services
 from podcast.description import services as description_services
 from podcast.home import services as home_services
 from podcast.utilities import services as utilities_services
 from podcast.user import services as user_services
+from unittest.mock import patch
 
 
 def test_get_podcast_by_page(in_memory_repo):
@@ -76,3 +78,34 @@ def test_in_playlist(in_memory_repo):
     in_memory_repo.add_to_playlist('new_user', episode1)
     playlist1 = in_memory_repo.get_users_playlist('new_user')
     assert utilities_services.in_playlist(playlist1, episode1)
+
+@patch('podcast.utilities.utilities.get_username')
+def test_get_users_playlist(mock_get_username, in_memory_repo):
+    mock_get_username.return_value = 'test_user'
+    in_memory_repo.add_user('test_user', 'Abcde12')
+    user_test = in_memory_repo.get_user('test_user')
+    user_test.create_playlist('test_playlist')
+    result_playlist = user_services.get_users_playlist(in_memory_repo)
+    assert result_playlist.name == 'test_playlist'
+    assert result_playlist.owner == user_test
+
+@patch('podcast.utilities.utilities.get_username')
+def test_get_and_remove_episodes_from_playlist(mock_get_username, in_memory_repo):
+    mock_get_username.return_value = 'test_user1'
+    in_memory_repo.add_user('test_user1', 'ABCDe12')
+    user_test1 = in_memory_repo.get_user('test_user1')
+    user_test1.create_playlist('test_playlist1')
+    episode1 = in_memory_repo.get_episode(1)
+    user_test1.playlist.add_episode(episode1)
+    result_playlist = user_services.get_users_playlist(in_memory_repo)
+    episodes = user_services.get_episodes_in_playlist(result_playlist)
+    assert episodes[0] == in_memory_repo.get_episode(1)
+    user_services.remove_from_playlist(in_memory_repo, episode1)
+    assert len(result_playlist.episodes) == 0
+
+@patch('podcast.utilities.utilities.get_username')
+def test_get_user_reviews(mock_get_username, in_memory_repo):
+    mock_get_username.return_value = 'test_user2'
+    in_memory_repo.add_user('test_user2', 'ABCde12')
+    user_test2 = in_memory_repo.get_user('test_user2')
+    assert user_test2.reviews == in_memory_repo.get_users_reviews('test_user2')
