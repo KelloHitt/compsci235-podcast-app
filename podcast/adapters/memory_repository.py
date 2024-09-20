@@ -156,7 +156,6 @@ def populate_data(repo: AbstractRepository, data_path: Path):
     reader = CSVDataReader()
     reader.load_podcasts_authors_categories(data_path)
     reader.load_episodes(data_path)
-    reader.load_reviews(data_path)
 
     podcasts = reader.dataset_of_podcasts
     authors = reader.dataset_of_authors

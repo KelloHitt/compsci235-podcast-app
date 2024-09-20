@@ -67,17 +67,6 @@ class CSVDataReader:
                 podcast.add_episode(new_episode)
             self.__dataset_of_episodes.append(new_episode)
 
-    def load_reviews(self, data_path: Path):
-        reviews_filename = str(data_path / "reviews.csv")
-        for data_row in self.read_csv_file(reviews_filename):
-            review_id = int(data_row[0])
-            podcast_id = int(data_row[1])
-            reviewer = User(data_row[2])
-            rating = int(data_row[3])
-            description = str(data_row[4])
-            podcast = self.get_podcast_by_id(podcast_id)
-            new_review = Review(review_id, podcast, reviewer, rating, description)
-            self.__dataset_of_reviews.append(new_review)
 
     def add_or_get_author(self, author_name) -> Author:
         if not author_name:
