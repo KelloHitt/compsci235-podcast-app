@@ -109,3 +109,6 @@ def test_get_user_reviews(mock_get_username, in_memory_repo):
     in_memory_repo.add_user('test_user2', 'ABCde12')
     user_test2 = in_memory_repo.get_user('test_user2')
     assert user_test2.reviews == in_memory_repo.get_users_reviews('test_user2')
+
+
+# TODO: fix bugs
