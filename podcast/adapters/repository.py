@@ -117,6 +117,21 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def get_podcasts_by_category(self, category_query: str) -> list:
+        "Returns a list of podcasts"
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_podcasts_by_title(self, title: str) -> list:
+        "Returns a list of podcasts"
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_podcasts_by_author(self, author: str) -> list:
+        "Returns a list of podcasts"
+        raise NotImplementedError
+        
+    @abc.abstractmethod
     def add_to_playlist(self, username: str, episode: Episode):
         """ Adds an Episode to the playlist with the given username. """
         raise NotImplementedError

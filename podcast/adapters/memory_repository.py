@@ -89,6 +89,29 @@ class MemoryRepository(AbstractRepository):
     def get_user(self, username) -> User:
         return next((user for user in self.__users if user.username == username), None)
 
+    def get_podcasts_by_category(self, category_query: str):
+        podcasts = []
+        for podcast in self.__podcasts:
+            for category in podcast.categories:
+                if category_query.lower() in category.name.lower():
+                    podcasts.append(podcast)
+
+        return podcasts
+
+    def get_podcasts_by_title(self, title: str):
+        podcasts = []
+        for podcast in self.__podcasts:
+            if title.lower() in podcast.title.lower():
+                podcasts.append(podcast)
+        return podcasts
+
+    def get_podcasts_by_author(self, author: str) -> list:
+        podcasts = []
+        for podcast in self.__podcasts:
+            if author.lower() in podcast.author.name.lower():
+                podcasts.append(podcast)
+        return podcasts
+    
     def add_to_playlist(self, username: str, episode: Episode):
         user = self.get_user(username)
         if not user:
