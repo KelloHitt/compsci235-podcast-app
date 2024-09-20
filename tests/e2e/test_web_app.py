@@ -1,6 +1,6 @@
-import pytest
 from unittest.mock import patch
 
+import pytest
 from flask import session
 
 
@@ -25,7 +25,7 @@ def test_register(client):
 def test_register_with_invalid_input(auth, client, username, password, message):
     # Check that attempting to register with invalid combinations of user name and password generate appropriate error
     # messages.
-    auth.register()  # register user with username "testUser1"
+    auth.register()  # register a user
     response = client.post(
         '/authentication/register',
         data={'username': username, 'password': password}
@@ -34,10 +34,8 @@ def test_register_with_invalid_input(auth, client, username, password, message):
 
 
 def test_login(client, auth):
-    # Mock the call to get_random_podcasts_info to avoid sampling errors
     with patch('podcast.home.services.get_random_podcasts_info') as mock_get_podcasts:
-        mock_get_podcasts.return_value = []  # Simulate an empty list of podcasts or provide mock data
-
+        mock_get_podcasts.return_value = []  # Simulate an empty list of podcasts
         # create user
         response = auth.register()
         # check if redirects to login page
@@ -56,19 +54,37 @@ def test_login(client, auth):
 
 
 def test_logout(client, auth):
-    pass
+    # Login a user.
+    auth.login()
+    with client:
+        # Check that logging out clears the user's session.
+        auth.logout()
+        assert 'user_id' not in session
 
 
 def test_index(client):
-    pass
+    with patch('podcast.home.services.get_random_podcasts_info') as mock_get_podcasts:
+        mock_get_podcasts.return_value = []  # Simulate an empty list of podcasts
+        response = client.get("/")
+        assert response.status_code == 200
+        assert b"Editor's Pick:" in response.data
 
 
 def test_login_required_to_review(client):
-    pass
+    response = client.post("/add_review")
+    assert response.headers["Location"] == "/authentication/login"
 
 
 def test_review_valid(client, auth):
-    pass
+    auth.register()
+    auth.login()
+
+    response = client.get("/description", query_string={"podcast_id": 1})
+    assert response.status_code == 200  # Check if the page loads successfully
+
+    response = client.post("/add_review", data={"review_comment": "Who likes this game??", "rating": 1,"podcast_id": 1 })
+    assert response.headers["Location"] == "/description?podcast_id=1"
+    assert response.status_code == 200  # Check for the page reloads with reviews
 
 
 @pytest.mark.parametrize(
