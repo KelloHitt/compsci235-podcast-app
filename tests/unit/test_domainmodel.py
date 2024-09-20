@@ -258,9 +258,9 @@ def test_user_initialization():
     user1 = User(1, "Shyamli", "pw12345")
     user2 = User(2, "asma", "pw67890")
     user3 = User(3, "JeNNy  ", "pw87465")
-    assert repr(user1) == "<User 1: shyamli>"
+    assert repr(user1) == "<User 1: Shyamli>"
     assert repr(user2) == "<User 2: asma>"
-    assert repr(user3) == "<User 3: jenny>"
+    assert repr(user3) == "<User 3: JeNNy>"
     assert user2.password == "pw67890"
     with pytest.raises(ValueError):
         user4 = User(4, "xyz  ", "")
@@ -305,7 +305,7 @@ def test_user_lt():
 
 def test_user_add_remove_favourite_podcasts(my_user, my_subscription):
     my_user.add_subscription(my_subscription)
-    assert repr(my_user.subscription_list) == "[<PodcastSubscription 1: Owned by shyamli>]"
+    assert repr(my_user.subscription_list) == "[<PodcastSubscription 1: Owned by Shyamli>]"
     my_user.add_subscription(my_subscription)
     assert len(my_user.subscription_list) == 1
     my_user.remove_subscription(my_subscription)
@@ -314,10 +314,10 @@ def test_user_add_remove_favourite_podcasts(my_user, my_subscription):
 
 def test_podcast_subscription_initialization(my_subscription):
     assert my_subscription.id == 1
-    assert repr(my_subscription.owner) == "<User 1: shyamli>"
+    assert repr(my_subscription.owner) == "<User 1: Shyamli>"
     assert repr(my_subscription.podcast) == "<Podcast 100: 'Joe Toste Podcast - Sales Training Expert' by Joe Toste>"
 
-    assert repr(my_subscription) == "<PodcastSubscription 1: Owned by shyamli>"
+    assert repr(my_subscription) == "<PodcastSubscription 1: Owned by Shyamli>"
 
 
 def test_podcast_subscription_set_owner(my_subscription):
@@ -495,7 +495,7 @@ def test_episode_date_setter():
 def test_review_initialisation(my_podcast, my_user):
     review1 = Review(1, my_podcast, my_user, 5, "Hello World")
     assert repr(
-        review1) == "<Review 1 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 5 and a description of Hello World>"
+        review1) == "<Review 1 made by Shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 5 and a description of Hello World>"
     assert review1.id == 1
     assert review1.reviewer == my_user
     assert review1.rating == 5
@@ -547,13 +547,13 @@ def test_review_hash(my_podcast, my_user):
 
     assert len(reviews) == 3
     assert repr(sorted(reviews)) == (
-        "[<Review 3 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 2 and a description of Bad>, "
-        "<Review 2 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 3 and a description of Good>, "
-        "<Review 1 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 5 and a description of Great>]")
+        "[<Review 3 made by Shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 2 and a description of Bad>, "
+        "<Review 2 made by Shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 3 and a description of Good>, "
+        "<Review 1 made by Shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 5 and a description of Great>]")
     reviews.discard(review1)
     assert repr(sorted(reviews)) == (
-        "[<Review 3 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 2 and a description of Bad>, "
-        "<Review 2 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 3 and a description of Good>]")
+        "[<Review 3 made by Shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 2 and a description of Bad>, "
+        "<Review 2 made by Shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 3 and a description of Good>]")
 
 
 def test_review_podcast_setter(my_podcast, my_author, my_user):
@@ -562,7 +562,7 @@ def test_review_podcast_setter(my_podcast, my_author, my_user):
         1, my_podcast, my_user, 5, "Great")
     review1.podcast = new_podcast
     assert repr(
-        review1) == "<Review 1 made by shyamli for podcast 'New Podcast' with a rating of 5 and a description of Great>"
+        review1) == "<Review 1 made by Shyamli for podcast 'New Podcast' with a rating of 5 and a description of Great>"
 
     with pytest.raises(TypeError):
         review1.podcast = "Podcast"
@@ -589,7 +589,7 @@ def test_review_rating_setter(my_podcast, my_user):
     review1 = Review(1, my_podcast, my_user, 5, "Great")
     review1.rating = 1
     assert repr(
-        review1) == "<Review 1 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 1 and a description of Great>"
+        review1) == "<Review 1 made by Shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 1 and a description of Great>"
 
     with pytest.raises(ValueError):
         review1.rating = "abc"
@@ -602,7 +602,7 @@ def test_review_description_setter(my_podcast, my_user):
     review1 = Review(1, my_podcast, my_user, 5, "Great")
     review1.content = "Bad"
     assert repr(
-        review1) == "<Review 1 made by shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 5 and a description of Bad>"
+        review1) == "<Review 1 made by Shyamli for podcast 'Joe Toste Podcast - Sales Training Expert' with a rating of 5 and a description of Bad>"
 
     with pytest.raises(ValueError):
         review1.content = 123
@@ -615,7 +615,7 @@ def test_playlist_initialization(my_user, my_author):
     assert playlist1.name == "My First Playlist"
     assert playlist1.episodes == []
 
-    assert repr(playlist1) == "<Playlist 1 'My First Playlist': Owned by shyamli>"
+    assert repr(playlist1) == "<Playlist 1 'My First Playlist': Owned by Shyamli>"
 
     with pytest.raises(ValueError):
         playlist2 = Playlist(-123, my_user, "My Second Playlist")

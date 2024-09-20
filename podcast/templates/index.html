@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+    <div class="heading" style="margin-top:25px"><h2>Editor's Pick: </h2></div>
     <hr style="border: none; border-top: 1px solid #a34b86; width: 80%; margin: 20px auto;">
-    <div class=""><h2>Editor's Pick: </h2></div>
     <div id="podcast-grid">
         {% for podcast in list_of_podcasts %}
             <div class="podcast-item">
