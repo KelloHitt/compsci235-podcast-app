@@ -1,4 +1,4 @@
-from podcast.domainmodel.model import Podcast, Author, Episode, User
+from podcast.domainmodel.model import Podcast, Author, Episode, User, Playlist
 
 
 def test_memory_repository_can_retrieve_podcasts(in_memory_repo):
@@ -126,3 +126,11 @@ def test_repository_does_not_retrieve_a_non_existent_user(in_memory_repo):
 
 
 # TODO: test new methods added to the memory repository, from def add_user onwards
+
+def test_repository_can_add_to_playlist(in_memory_repo):
+    episode1 = in_memory_repo.get_episode(1)
+    in_memory_repo.add_user('test1', 'abcdE12')
+    user1 = in_memory_repo.get_user('test1')
+    user1.create_playlist('playlist1')
+    user1.playlist.add_episode(episode1)
+    assert len(user1.playlist.episodes) == 1
