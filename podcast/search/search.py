@@ -11,7 +11,8 @@ search_blueprint = Blueprint(
 
 @search_blueprint.route('/search', methods=['GET'])
 def search():
-    return render_template('search.html')
+    categories = utilities.get_categories()['categories']
+    return render_template('search.html', categories=categories)
 
 
 @search_blueprint.route('/results', methods=['GET'])
