@@ -130,7 +130,7 @@ class AbstractRepository(abc.ABC):
     def get_podcasts_by_author(self, author: str) -> list:
         """ Returns a list of podcasts based on the author inputted """
         raise NotImplementedError
-        
+
     @abc.abstractmethod
     def add_to_playlist(self, username: str, episode: Episode):
         """ Adds an Episode to the playlist with the given username. """
@@ -157,7 +157,3 @@ class AbstractRepository(abc.ABC):
         """ Deletes a Review from the repository.
         Update User and Podcast's reviews list '"""
         raise NotImplementedError
-
-
-
-

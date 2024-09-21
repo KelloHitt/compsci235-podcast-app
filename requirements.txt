@@ -1,6 +1,8 @@
-pytest
+pytest~=8.3.2
 Flask==3.0.3
 python-dotenv==1.0.1
 better-profanity==0.7.0
 flask-wtf==1.2.1
 password-validator==1.0
+WTForms~=3.1.2
+Werkzeug~=3.0.3

@@ -155,6 +155,7 @@ def test_repository_can_make_and_get_users_playlist(in_memory_repo):
     playlist1 = in_memory_repo.get_users_playlist('test4')
     assert user1.playlist == playlist1
 
+
 def test_repository_get_podcasts_by_category(in_memory_repo):
     podcasts = in_memory_repo.get_podcasts_by_category('comedy')
     assert 2 == len(podcasts)
@@ -183,8 +184,11 @@ def test_repository_add_review(in_memory_repo):
                       "Tune in to find more", 3, "2017-12-01 13:00:05+00")
     in_memory_repo.add_review(podcast, user, 2, "sort of boring")
     assert user.reviews[0].id == 1
-    assert "<Review 1 made by Claire for podcast 'The Seven Wonders Of The World' with a rating of 2 and a description of sort of boring>" == repr(podcast.reviews[0])
-    assert "<Review 1 made by Claire for podcast 'The Seven Wonders Of The World' with a rating of 2 and a description of sort of boring>" == repr(user.reviews[0])
+    assert "<Review 1 made by Claire for podcast 'The Seven Wonders Of The World' with a rating of 2 and a description of sort of boring>" == repr(
+        podcast.reviews[0])
+    assert "<Review 1 made by Claire for podcast 'The Seven Wonders Of The World' with a rating of 2 and a description of sort of boring>" == repr(
+        user.reviews[0])
+
 
 def test_repository_get_users_reviews(in_memory_repo):
     in_memory_repo.add_user('Claire', 'nice347')
@@ -197,10 +201,11 @@ def test_repository_get_users_reviews(in_memory_repo):
                       "Tune in to find more", 3, "2017-12-01 13:00:05+00")
     in_memory_repo.add_review(podcast, user, 2, "sort of boring")
     podcast1 = Podcast(2, author, "Productivity", None, "Tune in into this great podcast",
-                      "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", "English")
+                       "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", "English")
     in_memory_repo.add_review(podcast1, user, 2, "better than the seven wondrr of the world podcast")
     reviews = in_memory_repo.get_users_reviews('Claire')
     assert len(reviews) == 2
+
 
 def test_repository_delete_review(in_memory_repo):
     in_memory_repo.add_user('Bob', 'cars23')
@@ -217,5 +222,3 @@ def test_repository_delete_review(in_memory_repo):
     in_memory_repo.delete_review(1)
     assert len(podcast.reviews) == 0
     assert len(user.reviews) == 0
-
-

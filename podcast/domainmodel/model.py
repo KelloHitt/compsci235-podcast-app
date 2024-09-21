@@ -488,7 +488,8 @@ class Review:
         self._content = new_review
 
     def __repr__(self):
-        return f"<Review {self.id} made by {self.reviewer.username} for podcast '{self.podcast.title}' with a rating of {self.rating} and a description of {self.content}>"
+        return (f"<Review {self.id} made by {self.reviewer.username} for podcast "
+                f"'{self.podcast.title}' with a rating of {self.rating} and a description of {self.content}>")
 
     def __eq__(self, other):
         if not isinstance(other, Review):

@@ -1,4 +1,3 @@
-
 from flask import Blueprint, render_template, request
 import podcast.adapters.repository as repository
 import podcast.search.services as services
@@ -22,14 +21,13 @@ def results():
     search_field_display = search_field[0].upper() + search_field[1:]
     podcasts = services.get_podcasts_filtered(repository.repo_instance, search_field.lower(), search_query)
 
-
     # Pagination
     current_page = int(request.args.get('page', 1))
 
     num_of_podcasts_per_page = 10
     # Calculate total number of podcasts
     total_podcasts = len(podcasts)
-    total_pages = math.ceil(total_podcasts/num_of_podcasts_per_page)
+    total_pages = math.ceil(total_podcasts / num_of_podcasts_per_page)
 
     start = (current_page - 1) * num_of_podcasts_per_page  # Calculate the start index
     end = start + num_of_podcasts_per_page  # Calculate the end index

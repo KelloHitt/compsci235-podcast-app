@@ -151,9 +151,6 @@ class MemoryRepository(AbstractRepository):
                 self.__reviews.remove(review)
 
 
-
-
-
 # Populate the data into memory repository
 def populate_data(repo: AbstractRepository, data_path: Path):
     reader = CSVDataReader()
@@ -180,5 +177,3 @@ def populate_data(repo: AbstractRepository, data_path: Path):
 
     for review in reviews:
         repo.add_review(review.content, review.rating, review.podcast, review.reviewer)
-
-
