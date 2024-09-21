@@ -7,7 +7,8 @@ from podcast.user import services as user_services
 from podcast.utilities import services as utilities_services
 from podcast.authentication import services as authentication_services
 from  podcast.authentication.services import AuthenticationException
-from podcast.domainmodel.model import Podcast, Author, User
+from podcast.domainmodel.model import Podcast, Author, Episode, User
+from podcast.search import services as search_services
 
 
 def test_get_podcast_by_page(in_memory_repo):
@@ -157,9 +158,68 @@ def test_authentication_with_invalid_credentials(in_memory_repo):
 
 # TODO: test added functions in description/services.py - Venus
 
+@patch('podcast.utilities.utilities.get_username')
+def test_add_to_playlist(mock_get_username, in_memory_repo):
+    mock_get_username.return_value = 'test_user3'
+    in_memory_repo.add_user('test_user3', 'AbCde75')
+    author = Author(1, "Joe")
+    podcast = Podcast(1, author, "The Seven Wonders Of The World", "Tune in into this great podcast", "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", "English")
+    episode = Episode(1, podcast, "1st wonder of the world", "http://api.spreaker.com/download/episode/13479186/comixology_runaways_and_star_trek.mp3", "Tune in to find more", 3, "2017-12-01 13:00:05+00")
+    description_services.add_to_playlist(in_memory_repo, episode)
+    assert episode == (description_services.get_playlist(in_memory_repo).episodes)[0]
+
+@patch('podcast.utilities.utilities.get_username')
+def test_remove_from_playlist(mock_get_username, in_memory_repo):
+    mock_get_username.return_value = 'test_user3'
+    in_memory_repo.add_user('test_user3', 'AbCde75')
+    author = Author(1, "Joe")
+    podcast = Podcast(1, author, "The Seven Wonders Of The World", "Tune in into this great podcast",
+                      "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", "English")
+    episode = Episode(1, podcast, "1st wonder of the world",
+                      "http://api.spreaker.com/download/episode/13479186/comixology_runaways_and_star_trek.mp3",
+                      "Tune in to find more", 3, "2017-12-01 13:00:05+00")
+    description_services.add_to_playlist(in_memory_repo, episode)
+    description_services.remove_from_playlist(in_memory_repo, episode)
+    assert "<Playlist 1 'Test_User3's Playlist': Owned by test_user3>" == repr(description_services.get_playlist(in_memory_repo))
+    assert [] == (description_services.get_playlist(in_memory_repo)).episodes
+
+
+@patch('podcast.utilities.utilities.get_username')
+def test_get_user_by_username(mock_get_username, in_memory_repo):
+    mock_get_username.return_value = 'blaire'
+    in_memory_repo.add_user('blaire', 'hijk345')
+    assert '<User 1: blaire>' == repr(description_services.get_user_by_username(in_memory_repo, 'blaire'))
+
+
+def test_add_review(in_memory_repo):
+    user = User(1, 'Jill', 'kit675')
+    author = Author(1, 'Alice')
+    podcast = Podcast(1, author, 'The rise of the phoenix', None, 'Tune in to find out more', 'https://en.wikipedia.org/wiki/Phoenix_(mythology)', None, 'English')
+    description = 'Wonderful and insightful podcast'
+    rating = 5
+    description_services.add_review(in_memory_repo, podcast, user, rating, description)
+    assert repr(user.reviews[0]) == "<Review 1 made by Jill for podcast 'The rise of the phoenix' with a rating of 5 and a description of Wonderful and insightful podcast>"
+
+def test_add_invalid_review(in_memory_repo):
+    user = None
+    author = Author(1, 'Alice')
+    podcast = Podcast(1, author, 'The rise of the phoenix', None, 'Tune in to find out more',
+                      'https://en.wikipedia.org/wiki/Phoenix_(mythology)', None, 'English')
+    description = 'Wonderful and insightful podcast'
+    rating = 5
+    with pytest.raises(ValueError):
+        description_services.add_review(in_memory_repo, podcast, user, rating, description)
 
 
 
-# TODO: test methods in search/services.py - Venus
-
-
+# # TODO: test methods in search/services.py - Venus
+# def test_get_podcasts_filtered_by_category(in_memory_repo):
+#     search_field = 'category'
+#     search_query = 'comedy'
+#     assert 2 == len(search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))
+#     assert "<Podcast 2: 'Brian Denny Radio' by Brian Denny>" == repr((search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))[0])
+#     assert "<Podcast 4: 'Tallin Messages' by Tallin Country Church>" == repr(((search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))[1]))
+#
+# def test_get_podcasts_filtered_by_title(in_memory_repo):
+#     search_field = 'category'
+#     search_query = 'comedy'
