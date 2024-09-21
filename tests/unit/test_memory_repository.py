@@ -154,3 +154,68 @@ def test_repository_can_make_and_get_users_playlist(in_memory_repo):
     user1 = in_memory_repo.get_user('test4')
     playlist1 = in_memory_repo.get_users_playlist('test4')
     assert user1.playlist == playlist1
+
+def test_repository_get_podcasts_by_category(in_memory_repo):
+    podcasts = in_memory_repo.get_podcasts_by_category('comedy')
+    assert 2 == len(podcasts)
+    assert "<Podcast 2: 'Brian Denny Radio' by Brian Denny>" == repr(podcasts[0])
+    assert "<Podcast 4: 'Tallin Messages' by Tallin Country Church>" == repr(podcasts[1])
+
+
+def test_repository_get_podcasts_by_author(in_memory_repo):
+    podcasts = in_memory_repo.get_podcasts_by_author('Brian')
+    assert "<Podcast 2: 'Brian Denny Radio' by Brian Denny>" == repr(podcasts[0])
+    assert "<Podcast 3: 'Onde Road - Radio Popolare' by Brian Denny>" == repr(podcasts[1])
+
+
+def test_repository_get_podcasts_by_title(in_memory_repo):
+    podcasts = in_memory_repo.get_podcasts_by_title('Messages')
+    assert "<Podcast 4: 'Tallin Messages' by Tallin Country Church>" == repr(podcasts[0])
+
+
+def test_repository_add_review(in_memory_repo):
+    user = User(1, 'Claire', 'nice347')
+    author = Author(1, 'Joe')
+    podcast = Podcast(1, author, "The Seven Wonders Of The World", "Tune in into this great podcast",
+                      "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", "English")
+    episode = Episode(1, podcast, "1st wonder of the world",
+                      "http://api.spreaker.com/download/episode/13479186/comixology_runaways_and_star_trek.mp3",
+                      "Tune in to find more", 3, "2017-12-01 13:00:05+00")
+    in_memory_repo.add_review(podcast, user, 2, "sort of boring")
+    assert user.reviews[0].id == 1
+    assert "<Review 1 made by Claire for podcast 'The Seven Wonders Of The World' with a rating of 2 and a description of sort of boring>" == repr(podcast.reviews[0])
+    assert "<Review 1 made by Claire for podcast 'The Seven Wonders Of The World' with a rating of 2 and a description of sort of boring>" == repr(user.reviews[0])
+
+def test_repository_get_users_reviews(in_memory_repo):
+    in_memory_repo.add_user('Claire', 'nice347')
+    user = in_memory_repo.get_user('Claire')
+    author = Author(1, 'Joe')
+    podcast = Podcast(1, author, "The Seven Wonders Of The World", None, "Tune in into this great podcast",
+                      "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", "English")
+    episode = Episode(1, podcast, "1st wonder of the world",
+                      "http://api.spreaker.com/download/episode/13479186/comixology_runaways_and_star_trek.mp3",
+                      "Tune in to find more", 3, "2017-12-01 13:00:05+00")
+    in_memory_repo.add_review(podcast, user, 2, "sort of boring")
+    podcast1 = Podcast(2, author, "Productivity", None, "Tune in into this great podcast",
+                      "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", "English")
+    in_memory_repo.add_review(podcast1, user, 2, "better than the seven wondrr of the world podcast")
+    reviews = in_memory_repo.get_users_reviews('Claire')
+    assert len(reviews) == 2
+
+def test_repository_delete_review(in_memory_repo):
+    in_memory_repo.add_user('Bob', 'cars23')
+    user = in_memory_repo.get_user('Bob')
+    author = Author(1, 'Joe')
+    podcast = Podcast(1, author, "The Seven Wonders Of The World", None, "Tune in into this great podcast",
+                      "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", "English")
+    episode = Episode(1, podcast, "1st wonder of the world",
+                      "http://api.spreaker.com/download/episode/13479186/comixology_runaways_and_star_trek.mp3",
+                      "Tune in to find more", 3, "2017-12-01 13:00:05+00")
+    in_memory_repo.add_review(podcast, user, 5, 'Intriguing!')
+    assert len(podcast.reviews) == 1
+    assert len(user.reviews) == 1
+    in_memory_repo.delete_review(1)
+    assert len(podcast.reviews) == 0
+    assert len(user.reviews) == 0
+
+
