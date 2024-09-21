@@ -1,8 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from podcast.adapters.repository import AbstractRepository
-from podcast.domainmodel.model import User, Review, Podcast
-from typing import Iterable
+from podcast.domainmodel.model import User
 
 
 class NameNotUniqueException(Exception):
@@ -16,8 +15,6 @@ class UnknownUserException(Exception):
 class AuthenticationException(Exception):
     pass
 
-class NonExistentPodcastException(Exception):
-    pass
 
 def add_user(username: str, password: str, repo: AbstractRepository):
     # Check that the given username is available.
@@ -49,24 +46,6 @@ def authenticate_user(username: str, password: str, repo: AbstractRepository):
     if not authenticated:
         raise AuthenticationException
 
-def add_review(review_id: int, podcast: Podcast, review_description: str, review_rating: int, user: User, repo: AbstractRepository):
-    podcast = repo.get_podcast(podcast.id)
-    if podcast is None:
-        raise NonExistentPodcastException
-    user = repo.get_user(user.username)
-    if user is None:
-        raise UnknownUserException
-
-    review = Review(review_id, podcast, user, review_rating, review_description)
-    repo.add_review(review)
-
-def get_reviews_for_podcast(podcast_id, repo: AbstractRepository):
-    podcast = repo.get_podcast(podcast_id)
-    if podcast is None:
-        raise NonExistentPodcastException
-
-    return reviews_to_dict(repo.get_reviews())
-
 
 # ===================================================
 # Functions to convert model entities to dictionaries
@@ -78,15 +57,3 @@ def user_to_dict(user: User):
         'password': user.password
     }
     return user_dict
-
-def review_to_dict(review: Review):
-    review_dict = {
-        'user_name': review.reviewer.username,
-        'podcast_id': review.podcast.id,
-        'review_description': review.content,
-        'review_rating': review.rating
-    }
-    return review_dict
-
-def reviews_to_dict(reviews: Iterable[Review]):
-    return [review_to_dict(review) for review in reviews]

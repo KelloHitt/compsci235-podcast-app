@@ -118,17 +118,17 @@ class AbstractRepository(abc.ABC):
 
     @abc.abstractmethod
     def get_podcasts_by_category(self, category_query: str) -> list:
-        "Returns a list of podcasts"
+        """ Returns a list of podcasts based on the category inputted """
         raise NotImplementedError
 
     @abc.abstractmethod
     def get_podcasts_by_title(self, title: str) -> list:
-        "Returns a list of podcasts"
+        """ Returns a list of podcasts based on the title inputted """
         raise NotImplementedError
 
     @abc.abstractmethod
     def get_podcasts_by_author(self, author: str) -> list:
-        "Returns a list of podcasts"
+        """ Returns a list of podcasts based on the author inputted """
         raise NotImplementedError
         
     @abc.abstractmethod
@@ -157,3 +157,7 @@ class AbstractRepository(abc.ABC):
         """ Deletes a Review from the repository.
         Update User and Podcast's reviews list '"""
         raise NotImplementedError
+
+
+
+

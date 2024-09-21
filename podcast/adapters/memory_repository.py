@@ -111,7 +111,7 @@ class MemoryRepository(AbstractRepository):
             if author.lower() in podcast.author.name.lower():
                 podcasts.append(podcast)
         return podcasts
-    
+
     def add_to_playlist(self, username: str, episode: Episode):
         user = self.get_user(username)
         if not user:
@@ -151,6 +151,9 @@ class MemoryRepository(AbstractRepository):
                 self.__reviews.remove(review)
 
 
+
+
+
 # Populate the data into memory repository
 def populate_data(repo: AbstractRepository, data_path: Path):
     reader = CSVDataReader()
@@ -178,12 +181,4 @@ def populate_data(repo: AbstractRepository, data_path: Path):
     for review in reviews:
         repo.add_review(review.content, review.rating, review.podcast, review.reviewer)
 
-def add_review(self, description: str, rating: int, podcast: Podcast, user: User):
-    review = Review(len(self.__reviews) + 1, podcast, user, rating, description)
-    self.__reviews.append(review)
 
-def get_review(self, review_id) -> Review:
-    return next((review for review in self.__reviews if review.id == review_id), None)
-
-def get_reviews(self):
-    return self.__reviews

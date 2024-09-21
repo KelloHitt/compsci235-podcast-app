@@ -1,10 +1,13 @@
 from unittest.mock import patch
-
+import pytest
 from podcast.browse import services as browse_services
 from podcast.description import services as description_services
 from podcast.home import services as home_services
 from podcast.user import services as user_services
 from podcast.utilities import services as utilities_services
+from podcast.authentication import services as authentication_services
+from  podcast.authentication.services import AuthenticationException
+from podcast.domainmodel.model import Podcast, Author, User
 
 
 def test_get_podcast_by_page(in_memory_repo):
@@ -115,3 +118,48 @@ def test_get_user_reviews(mock_get_username, in_memory_repo):
     in_memory_repo.add_user('test_user2', 'ABCde12')
     user_test2 = in_memory_repo.get_user('test_user2')
     assert user_test2.reviews == in_memory_repo.get_users_reviews('test_user2')
+
+
+# TODO: test authentication blueprint services - Venus
+
+def test_add_valid_user(in_memory_repo):
+    user_name1 = 'Cool'
+    password1 = 'ahjke45'
+    authentication_services.add_user(user_name1, password1, in_memory_repo)
+    user_as_dict = authentication_services.get_user(user_name1, in_memory_repo)
+    assert user_as_dict['username'] == user_name1
+    assert user_as_dict['password'].startswith('scrypt:32768')
+
+def test_add_invalid_user_with_existing_username(in_memory_repo):
+    user_name1 = 'Cool'
+    password1 = 'ahjke45'
+    user_name2 = 'Cool'
+    password2 = 'ahjke45'
+    authentication_services.add_user(user_name1, password1, in_memory_repo)
+    with pytest.raises(authentication_services.NameNotUniqueException):
+        authentication_services.add_user(user_name2, password2, in_memory_repo)
+
+def test_authentication_of_valid_user(in_memory_repo):
+    user_name = 'blikeCole'
+    password = '45hjdidh'
+    authentication_services.add_user(user_name, password, in_memory_repo)
+    try:
+        authentication_services.authenticate_user(user_name, password, in_memory_repo)
+    except AuthenticationException:
+        assert False
+
+def test_authentication_with_invalid_credentials(in_memory_repo):
+    user_name = 'blikeCole'
+    password = '45hjdidh'
+    authentication_services.add_user(user_name, password, in_memory_repo)
+    with pytest.raises(authentication_services.AuthenticationException):
+        authentication_services.authenticate_user(user_name, 'jdidh45', in_memory_repo)
+
+# TODO: test added functions in description/services.py - Venus
+
+
+
+
+# TODO: test methods in search/services.py - Venus
+
+
