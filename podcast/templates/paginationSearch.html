@@ -1,4 +1,5 @@
-<block class="search-pagination-container">
+{% if total_pages != 1 %}
+    <block class="search-pagination-container">
         <div class="pagination-two">
             {% if current_page > 1 %}
                 <a href="?q={{ query }}&field={{ field }}&page=1">First</a>
@@ -29,5 +30,6 @@
             {% else %}
                 <span>Last</span>
             {% endif %}
-    </div>
-</block>
+        </div>
+    </block>
+{% endif %}

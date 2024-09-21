@@ -9,7 +9,7 @@
     </thead>
     <tbody>
     {% for podcast in results %}
-        <tr>
+        <tr class="hover-feature">
             <td style="text-align: center;"> {{ podcast.id }}</td>
             <td style="text-align: center;">
                 <a href="{{ url_for('description_bp.show_description', podcast_id=podcast.id) }}">{{ podcast.title }}</a>

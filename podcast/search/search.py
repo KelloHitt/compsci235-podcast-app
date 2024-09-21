@@ -2,6 +2,7 @@
 from flask import Blueprint, render_template, request
 import podcast.adapters.repository as repository
 import podcast.search.services as services
+import podcast.utilities.utilities as utilities
 import math
 
 search_blueprint = Blueprint(
@@ -40,8 +41,7 @@ def results():
     next_page = current_page + 1 if has_next else None
     previous_page = current_page - 1 if has_previous else None
 
-
-
+    categories = utilities.get_categories()['categories']
 
     return render_template('search.html', results=paginated_podcasts, query=search_query, field=search_field_display,
                            current_page=current_page,
@@ -49,5 +49,6 @@ def results():
                            has_next=has_next,
                            has_previous=has_previous,
                            next_page=next_page,
-                           previous_page=previous_page
+                           previous_page=previous_page,
+                           categories=categories
                            )
