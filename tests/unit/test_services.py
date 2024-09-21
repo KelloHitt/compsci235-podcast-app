@@ -121,8 +121,6 @@ def test_get_user_reviews(mock_get_username, in_memory_repo):
     assert user_test2.reviews == in_memory_repo.get_users_reviews('test_user2')
 
 
-# TODO: test authentication blueprint services - Venus
-
 def test_add_valid_user(in_memory_repo):
     user_name1 = 'Cool'
     password1 = 'ahjke45'
@@ -155,8 +153,6 @@ def test_authentication_with_invalid_credentials(in_memory_repo):
     authentication_services.add_user(user_name, password, in_memory_repo)
     with pytest.raises(authentication_services.AuthenticationException):
         authentication_services.authenticate_user(user_name, 'jdidh45', in_memory_repo)
-
-# TODO: test added functions in description/services.py - Venus
 
 @patch('podcast.utilities.utilities.get_username')
 def test_add_to_playlist(mock_get_username, in_memory_repo):
@@ -210,16 +206,25 @@ def test_add_invalid_review(in_memory_repo):
     with pytest.raises(ValueError):
         description_services.add_review(in_memory_repo, podcast, user, rating, description)
 
+def test_get_podcasts_filtered_by_category(in_memory_repo):
+    search_field = 'category'
+    search_query = 'comedy'
+    assert 2 == len(search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))
+    assert "<Podcast 2: 'Brian Denny Radio' by Brian Denny>" == repr((search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))[0])
+    assert "<Podcast 4: 'Tallin Messages' by Tallin Country Church>" == repr(((search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))[1]))
+
+def test_get_podcasts_filtered_by_title(in_memory_repo):
+    search_field = 'title'
+    search_query = 'radio'
+    assert 3 == len(search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))
+
+def test_get_podcasts_filtered_by_author(in_memory_repo):
+    search_field = 'author'
+    search_query = 'BriAn DeNNY'
+    assert 2 == len(search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))
+    assert "<Podcast 2: 'Brian Denny Radio' by Brian Denny>" == repr(
+        (search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))[0])
+    assert "<Podcast 3: 'Onde Road - Radio Popolare' by Brian Denny>" == repr(
+        ((search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))[1]))
 
 
-# # TODO: test methods in search/services.py - Venus
-# def test_get_podcasts_filtered_by_category(in_memory_repo):
-#     search_field = 'category'
-#     search_query = 'comedy'
-#     assert 2 == len(search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))
-#     assert "<Podcast 2: 'Brian Denny Radio' by Brian Denny>" == repr((search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))[0])
-#     assert "<Podcast 4: 'Tallin Messages' by Tallin Country Church>" == repr(((search_services.get_podcasts_filtered(in_memory_repo, search_field, search_query))[1]))
-#
-# def test_get_podcasts_filtered_by_title(in_memory_repo):
-#     search_field = 'category'
-#     search_query = 'comedy'
