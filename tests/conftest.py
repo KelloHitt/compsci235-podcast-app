@@ -5,7 +5,8 @@ import pytest
 import podcast.adapters.repository as repo
 from podcast import create_app
 from podcast.adapters.datareader.csvdatareader import CSVDataReader
-from podcast.adapters.memory_repository import MemoryRepository, populate_data
+from podcast.adapters.memory_repository import MemoryRepository
+from podcast.adapters.repository_populate import populate_data
 
 TEST_DATA_PATH = Path(__file__).parent / "data"
 
@@ -35,7 +36,7 @@ def client():
             "TESTING": True,
             "TEST_DATA_PATH": TEST_DATA_PATH,
             "WTF_CSRF_ENABLED": False,
-            # "REPOSITORY": "memory",
+            "REPOSITORY": "memory",
         }
     )
     return my_app.test_client()
