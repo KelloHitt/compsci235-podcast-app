@@ -125,13 +125,24 @@ class SqlAlchemyRepository(AbstractRepository):
         return categories
 
     def add_episode(self, episode: Episode):
-        pass
+        with self._session_cm as scm:
+            scm.session.merge(episode)
+            scm.commit()
 
     def get_number_of_episodes(self) -> int:
-        pass
+        episodes = self._session_cm.session.query(Episode).all()
+        return len(episodes)
 
     def get_episode(self, episode_id: int) -> Episode:
-        pass
+        episode = None
+        try:
+            query = self._session_cm.session.query(Episode).filter(Episode._id == episode_id)
+            episode = query.one()
+        except NoResultFound:
+            print(f"Episode {episode_id} was not found.")
+
+        return episode
+
 
     def add_author(self, author: Author):
         pass
