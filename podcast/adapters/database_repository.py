@@ -145,7 +145,9 @@ class SqlAlchemyRepository(AbstractRepository):
 
 
     def add_author(self, author: Author):
-        pass
+        with self._session_cm as scm:
+            scm.session.merge(author)
+            scm.commit()
 
     def add_category(self, category: Category):
         with self._session_cm as scm:
@@ -153,10 +155,21 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.commit()
 
     def add_user(self, username: str, password: str):
-        pass
+        users = self._session_cm.session.query(User).all()
+        new_user = User(len(users)+1, username, password)
+        with self._session_cm as scm:
+            scm.session.merge(new_user)
+            scm.commit()
 
     def get_user(self, username: str) -> User:
-        pass
+        user = None
+        try:
+            query = self._session_cm.session.query(User).filter(User._username == username)
+            user = query.one()
+        except NoResultFound:
+            print(f"User {username} was not found.")
+
+        return user
 
     def get_podcasts_by_category(self, category_query: str) -> list:
         category_podcasts = []
@@ -170,10 +183,22 @@ class SqlAlchemyRepository(AbstractRepository):
 
 
     def get_podcasts_by_title(self, title: str) -> list:
-        pass
+        title_podcasts = []
+        podcasts = self._session_cm.session.query(Podcast).all()
+        for podcast in podcasts:
+            if podcast.title == title:
+                title_podcasts.append(podcast)
+
+        return title_podcasts
 
     def get_podcasts_by_author(self, author: str) -> list:
-        pass
+        author_podcasts = []
+        podcasts = self._session_cm.session.query(Podcast).all()
+        for podcast in podcasts:
+            if podcast.author.name == author:
+                author_podcasts.append(podcast)
+
+        return author_podcasts
 
     def add_to_playlist(self, username: str, episode: Episode):
         pass
