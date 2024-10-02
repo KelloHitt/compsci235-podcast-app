@@ -1,6 +1,7 @@
 from typing import List
 
 from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm.exc import NoResultFound
 
 from podcast.adapters.repository import AbstractRepository
 from podcast.domainmodel.model import Review, Podcast, User, Playlist, Episode, Category, Author
@@ -51,22 +52,56 @@ class SqlAlchemyRepository(AbstractRepository):
         self._session_cm.reset_session()
 
     def add_podcast(self, podcast: Podcast):
-        pass
+        with self._session_cm as scm:
+            scm.session.merge(podcast)
+            scm.commit()
+
 
     def get_podcast(self, podcast_id: int) -> Podcast:
-        pass
+        podcast = None
+        try:
+            query = self._session_cm.session.query(Podcast).filter(Podcast._id == podcast_id)
+            podcast = query.one()
+        except NoResultFound:
+            print(f"Podcast {podcast_id} was not found.")
+
+        return podcast
+
 
     def get_podcasts_by_id(self, id_list: list) -> List[Podcast]:
-        pass
+        podcast_list = []
+        for podcast_id in id_list:
+            podcast = None
+            try:
+                query = self._session_cm.session.query(Podcast).filter(Podcast._id == podcast_id)
+                podcast = query.one()
+            except NoResultFound:
+                print(f"Podcast {podcast_id} was not found.")
+            podcast_list.append(podcast)
+
+        return podcast_list
+
 
     def get_podcasts_by_page(self, page: int, page_size: int) -> List[Podcast]:
-        pass
+        podcasts = self._session_cm.session.query(Podcast).all()
+        start_index = (page - 1) * page_size
+        end_index = start_index + page_size
+        return podcasts[start_index:end_index]
+
 
     def get_number_of_podcasts(self) -> int:
-        pass
+        podcasts = self._session_cm.session.query(Podcast).all()
+        return len(podcasts)
 
     def get_podcasts_ids_for_category(self, category_name: str) -> List[int]:
-        pass
+        podcasts = self._session_cm.session.query(Podcast).all()
+        category_podcast_ids = []
+        for podcast in podcasts:
+            for category in podcast.categories
+                if category_name == category.name:
+                    category_podcast_ids.append(podcast.id)
+
+        return category_podcast_ids
 
     def has_next_page(self, current_page: int, page_size: int) -> bool:
         pass
