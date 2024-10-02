@@ -121,7 +121,8 @@ class SqlAlchemyRepository(AbstractRepository):
         return current_page
 
     def get_categories(self) -> List[Category]:
-        pass
+        categories = self._session_cm.session.query(Category).all()
+        return categories
 
     def add_episode(self, episode: Episode):
         pass
@@ -136,7 +137,9 @@ class SqlAlchemyRepository(AbstractRepository):
         pass
 
     def add_category(self, category: Category):
-        pass
+        with self._session_cm as scm:
+            scm.session.merge(category)
+            scm.commit()
 
     def add_user(self, username: str, password: str):
         pass
@@ -145,7 +148,15 @@ class SqlAlchemyRepository(AbstractRepository):
         pass
 
     def get_podcasts_by_category(self, category_query: str) -> list:
-        pass
+        category_podcasts = []
+        podcasts = self._session_cm.session.query(Podcast).all()
+        for podcast in podcasts:
+            for category in podcast.categories:
+                if category.name == category_query:
+                    category_podcasts.append(podcast)
+
+        return category_podcasts
+
 
     def get_podcasts_by_title(self, title: str) -> list:
         pass
