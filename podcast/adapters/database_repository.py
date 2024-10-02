@@ -104,16 +104,21 @@ class SqlAlchemyRepository(AbstractRepository):
         return category_podcast_ids
 
     def has_next_page(self, current_page: int, page_size: int) -> bool:
-        pass
+        number_of_podcasts = self.get_number_of_podcasts()
+        return current_page * page_size < number_of_podcasts
 
     def has_previous_page(self, current_page: int) -> bool:
-        pass
+        return current_page > 1
 
     def get_next_page(self, current_page: int, page_size: int) -> int:
-        pass
+        if self.has_next_page(current_page, page_size):
+            return current_page + 1
+        return current_page
 
     def get_previous_page(self, current_page: int) -> int:
-        pass
+        if self.has_previous_page(current_page):
+            return current_page - 1
+        return current_page
 
     def get_categories(self) -> List[Category]:
         pass
