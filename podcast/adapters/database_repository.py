@@ -207,10 +207,20 @@ class SqlAlchemyRepository(AbstractRepository):
         pass
 
     def add_review(self, podcast: Podcast, user: User, rating: int, description: str):
-        pass
+        reviews = self._session_cm.session.query(Review).all()
+        new_review = Review(len(reviews)+1, podcast, user, rating, description)
+        with self._session_cm as scm:
+            scm.session.merge(new_review)
+            scm.commit()
 
     def get_users_reviews(self, username: str) -> List[Review]:
-        pass
+        users_reviews = []
+        reviews = self._session_cm.session.query(Review).all()
+        for review in reviews:
+            if review.reviewer == username:
+                users_reviews.append(review)
+
+        return users_reviews
 
     def delete_review(self, review_id: int):
         pass
