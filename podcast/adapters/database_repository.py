@@ -97,7 +97,7 @@ class SqlAlchemyRepository(AbstractRepository):
         podcasts = self._session_cm.session.query(Podcast).all()
         category_podcast_ids = []
         for podcast in podcasts:
-            for category in podcast.categories
+            for category in podcast.categories:
                 if category_name == category.name:
                     category_podcast_ids.append(podcast.id)
 
