@@ -5,6 +5,7 @@
         <th >Title</th>
         <th>Category(s)</th>
         <th>Author(s)</th>
+        <th>Language</th>
     </tr>
     </thead>
     <tbody>
@@ -22,6 +23,7 @@
                 </ul>
             </td>
             <td style="text-align: center;">{{ podcast.author.name }}</td>
+        <td style="text-align: center;">{{ podcast.language }}</td>
         </tr>
     {% endfor %}
     </tbody>
