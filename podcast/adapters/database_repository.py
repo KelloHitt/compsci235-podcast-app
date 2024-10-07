@@ -1,12 +1,12 @@
 from datetime import date
-from typing import List
+from typing import List, Type
 
-from sqlalchemy import desc, asc
+from sqlalchemy import desc, asc, func
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 from sqlalchemy.orm import scoped_session
 
-from podcast.domainmodel.model import User, Podcast, Comment, Tag
+from podcast.domainmodel.model import User, Podcast, Category, Episode, Author, Review, Playlist
 from podcast.adapters.repository import AbstractRepository
 
 
@@ -53,122 +53,196 @@ class SqlAlchemyRepository(AbstractRepository):
     def reset_session(self):
         self._session_cm.reset_session()
 
-    def add_user(self, user: User):
-        with self._session_cm as scm:
-            scm.session.add(user)
-            scm.commit()
-
+    # Functions for Podcast
     def add_podcast(self, podcast: Podcast):
         with self._session_cm as scm:
             scm.session.merge(podcast)
             scm.commit()
 
     def get_podcast(self, podcast_id: int) -> Podcast:
-        podcast = self._session_cm.session.query(Podcast).filter(Podcast._id == )
+        podcast = None
+        try:
+            query = self._session_cm.session.query(Podcast).filter(
+                Podcast._id == podcast_id)
+            podcast = query.one()
+        except NoResultFound:
+            print(f'Podcast {podcast_id} was not found')
 
-    def get_user(self, user_name: str) -> User:
+        return podcast
+    def get_podcasts_by_id(self, id_list: list) -> List[Podcast]:
+        podcasts = self._session_cm.session.query(Podcast).filter(Podcast._id in id_list)
+        return podcasts
+
+    def get_podcasts_by_page(self, page_number: int, page_size: int) -> List[Podcast]:
+        start_index = (page_number - 1) * page_size
+        end_index = start_index + page_size
+        return self._session_cm.session.query(Podcast).all()[start_index:end_index]
+
+    def get_number_of_podcasts(self) -> int:
+        num_podcasts = self._session_cm.session.query(Podcast).count()
+        return num_podcasts
+
+    #HOW TO SIMPLIFY THIS USING FILTERING FUNCTION???
+    def get_podcasts_ids_for_category(self, category_name: str) -> List[int]:
+        podcasts = self._session_cm.session.query(Podcast).all()
+        matching_podcast_ids = []
+        for podcast in podcasts:
+            if any(category.name == category_name for category in podcast.categories):
+                matching_podcast_ids.append(podcast.id)
+        return matching_podcast_ids
+
+    # Functions for pagination
+    def has_next_page(self, current_page: int, page_size: int) -> bool:
+        total_podcasts = self.get_number_of_podcasts()
+        return current_page * page_size < total_podcasts
+
+    def has_previous_page(self, current_page: int) -> bool:
+        return current_page > 1
+
+    def get_next_page(self, current_page: int, page_size: int) -> int:
+        if self.has_next_page(current_page, page_size):
+            return current_page + 1
+        return current_page
+
+    def get_previous_page(self, current_page: int) -> int:
+        if self.has_previous_page(current_page):
+            return current_page - 1
+        return current_page
+
+    # Functions for Category
+    def get_categories(self) -> list[Type[Category]]:
+        categories = self._session_cm.session.query(Category).order_by(asc(Category._name)).all()
+        return categories
+
+    def add_category(self, category: Category):
+        with self._session_cm as scm:
+            scm.session.merge(category)
+            scm.commit()
+
+    # Functions for Episode
+    def add_episode(self, episode: Episode):
+        with self._session_cm as scm:
+            scm.session.merge(episode)
+            scm.commit()
+
+    def get_number_of_episodes(self) -> int:
+        return self._session.cm.session.query(Episode).count()
+
+    def get_episode(self, episode_id: int) -> Episode:
+        if episode_id <= len(self.get_number_of_episodes()):
+            return self._session.cm.session.query(Episode).filter(Episode.__Episode__id == episode_id)
+        return None
+
+    # Functions for Author
+    def add_author(self, author: Author):
+        with self._session_cm as scm:
+            scm.session.merge(author)
+            scm.commit()
+
+
+    # Functions for User
+    def add_user(self, user: User):
+        with self._session_cm as scm:
+            scm.session.add(user)
+            scm.commit()
+
+    def get_user(self, username: str) -> User:
         user = None
         try:
-            user = self._session_cm.session.query(User).filter(User._User__user_name == user_name).one()
+            user = self._session_cm.session.query(User).filter(User._username == username).one()
         except NoResultFound:
             # Ignore any exception and return None.
             pass
-
         return user
 
-    def add_article(self, article: Article):
-        with self._session_cm as scm:
-            scm.session.add(article)
-            scm.commit()
 
-    def get_article(self, id: int) -> Article:
-        article = None
+    # Functions for Playlist
+    def add_to_playlist(self, username: str, episode: Episode):
+        user = self.get_user(username)
+        if not user:
+            raise ValueError(f'User {username} is not found!')
+        if user.playlist is None:
+            user.create_playlist(f"{username.title()}'s Playlist")
+        user.playlist.add_episode(episode)
+
+    def get_users_playlist(self, username: str):
+        user = self.get_user(username)
+        if not user:
+            raise ValueError(f'User {username} is not found!')
+        if user.playlist is None:
+            user.create_playlist(f"{username.title()}'s Playlist")
+        return user.playlist
+
+    # Functions for Review
+    def add_review(self, podcast: Podcast, user: User, rating: int, description: str):
+        for review in user.reviews:
+            if review.podcast.id == podcast.id:
+                raise ValueError(f'You already reviewed this podcast. Please try another one!')
+                new_review = Review(len(self.__reviews) + 1, podcast, user, rating, description)
+                self.__reviews.append(new_review)
+                user.add_review(new_review)
+                podcast.add_review(new_review)
+
+    def get_users_reviews(self, username: str):
+        user = self.get_user(username)
+        if not user:
+            raise ValueError(f'User {username} is not found!')
+        return sorted(user.reviews, key=lambda review: review.rating, reverse=True)
+
+    def delete_review(self, review_id: int):
+        for review in self.__reviews:
+            if review.id == review_id:
+                review.reviewer.remove_review(review)
+                review.podcast.remove_review(review)
+                self.__reviews.remove(review)
+
+
+    # Functions for search - get podcasts by title, author, lanugage or category
+
+    def get_podcasts_by_title(self, title_string: str) -> List[Podcast]:
         try:
-            article = self._session_cm.session.query(Article).filter(Article._Article__id == id).one()
+            searched_podcasts = self._session_cm.session.query(Podcast). \
+                filter(func.lower(Podcast._title).like(f"%{title_string.lower()}%")).all()
         except NoResultFound:
-            # Ignore any exception and return None.
-            pass
+            print(f'Title {title_string} was not found')
+            return []
+        return searched_podcasts
 
-        return article
+    def get_podcasts_by_author(self, author_name: str) -> List[Podcast]:
+        try:
+            searched_podcasts = self._session_cm.session.query(Podcast).join(Author). \
+                filter(func.lower(Author._name).like(f"%{author_name.lower()}%")).all()
+        except NoResultFound:
+            return []
+        return searched_podcasts
 
-    def get_articles_by_date(self, target_date: date) -> List[Article]:
-        if target_date is None:
-            articles = self._session_cm.session.query(Article).all()
-            return articles
-        else:
-            # Return articles matching target_date; return an empty list if there are no matches.
-            articles = self._session_cm.session.query(Article).filter(Article._Article__date == target_date).all()
-            return articles
+    def get_podcasts_by_category(self, category_string: str) -> List[Podcast]:
+        try:
+            searched_podcasts = self._session_cm.session.query(Podcast).join(Podcast._categories).all()
+            podcasts = []
+            for podcast in searched_podcasts:
+                for category in podcast.categories:
+                    if category_string.lower() in category.name.lower():
+                        podcasts.append(podcast)
+        except NoResultFound:
+            return []
+        return podcasts
 
-    def get_number_of_articles(self):
-        number_of_articles = self._session_cm.session.query(Article).count()
-        return number_of_articles
+    def get_podcasts_by_language(self, language_string: str) -> List[Podcast]:
+        try:
+            searched_podcasts = self._session_cm.session.query(Podcast). \
+                filter(func.lower(Podcast._language).like(f"%{language_string.lower()}%")).all()
 
-    def get_first_article(self):
-        article = self._session_cm.session.query(Article).first()
-        return article
+        except NoResultFound:
+            return []
+        return searched_podcasts
 
-    def get_last_article(self):
-        article = self._session_cm.session.query(Article).order_by(desc(Article._Article__id)).first()
-        return article
 
-    def get_articles_by_id(self, id_list: List[int]):
-        articles = self._session_cm.session.query(Article).filter(Article._Article__id.in_(id_list)).all()
-        return articles
 
-    def get_article_ids_for_tag(self, tag_name: str):
-        article_ids = []
 
-        # Use native SQL to retrieve article ids, since there is no mapped class for the article_tags table.
-        row = self._session_cm.session.execute('SELECT id FROM tags WHERE tag_name = :tag_name', {'tag_name': tag_name}).fetchone()
 
-        if row is None:
-            # No tag with the name tag_name - create an empty list.
-            article_ids = list()
-        else:
-            tag_id = row[0]
-            # Retrieve article ids of articles associated with the tag.
-            article_ids = self._session_cm.session.execute(
-                    'SELECT article_id FROM article_tags WHERE tag_id = :tag_id ORDER BY article_id ASC',
-                    {'tag_id': tag_id}
-            ).fetchall()
-            article_ids = [id[0] for id in article_ids]
 
-        return article_ids
 
-    def get_date_of_previous_article(self, article: Article):
-        result = None
-        prev_article = self._session_cm.session.query(Article).filter(Article._Article__date < article.date).order_by(desc(Article._Article__date)).first()
 
-        if prev_article is not None:
-            result = prev_article.date
 
-        return result
 
-    def get_date_of_next_article(self, article: Article):
-        result = None
-        next_article = self._session_cm.session.query(Article).filter(Article._Article__date > article.date).order_by(asc(Article._Article__date)).first()
-
-        if next_article is not None:
-            result = next_article.date
-
-        return result
-
-    def get_tags(self) -> List[Tag]:
-        tags = self._session_cm.session.query(Tag).all()
-        return tags
-
-    def add_tag(self, tag: Tag):
-        with self._session_cm as scm:
-            scm.session.add(tag)
-            scm.commit()
-
-    def get_comments(self) -> List[Comment]:
-        comments = self._session_cm.session.query(Comment).all()
-        return comments
-
-    def add_comment(self, comment: Comment):
-        super().add_comment(comment)
-        with self._session_cm as scm:
-            scm.session.add(comment)
-            scm.commit()
