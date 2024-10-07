@@ -1,6 +1,5 @@
 import csv
 from pathlib import Path
-
 from podcast.domainmodel.model import Podcast, Episode, Category, Author, Review, User
 
 
