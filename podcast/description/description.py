@@ -155,7 +155,7 @@ class ProfanityFree:
 class ReviewForm(FlaskForm):
     description = TextAreaField('description', [
         DataRequired(message='Comment is required.'),
-        Length(min=2, message='Your comment is too short.'),
+        Length(min=3, message='Your comment is too short.'),
         ProfanityFree(message='Your comment must not contain profanity!')])
     rating = SelectField('rating', choices=[(i, str(i)) for i in range(5, 0, -1)], coerce=int,
                          validators=[DataRequired()])

@@ -9,8 +9,8 @@ from sqlalchemy.pool import NullPool
 
 import podcast.adapters.repository as repo
 from podcast.adapters.datareader.csvdatareader import CSVDataReader
-from podcast.adapters import memory_repository
-from podcast.adapters.memory_repository import MemoryRepository, populate_data
+from podcast.adapters import memory_repository, database_repository, repository_populate
+from podcast.adapters.memory_repository import MemoryRepository
 from podcast.adapters.orm import mapper_registry, map_model_to_tables
 from podcast.adapters.database_repository import SqlAlchemyRepository
 
@@ -38,7 +38,7 @@ def create_app(test_config=None):
         repo.repo_instance = memory_repository.MemoryRepository()
         # fill the content of the repository from the provided csv files (has to be done every time we start app!)
         database_mode = False
-        repository_populate.populate(data_path, repo.repo_instance, database_mode)
+        repository_populate.populate_data(repo.repo_instance, data_path)
 
     elif app.config['REPOSITORY'] == 'database':
         # Configure database.
@@ -62,8 +62,8 @@ def create_app(test_config=None):
             print("REPOPULATING DATABASE...")
             # For testing, or first-time use of the web application, reinitialise the database.
             clear_mappers()
-            metadata.create_all(database_engine)  # Conditionally create database tables.
-            for table in reversed(metadata.sorted_tables):  # Remove any data from the tables.
+            mapper_registry.metadata.create_all(database_engine)  # Conditionally create database tables.
+            for table in reversed(mapper_registry.metadata.sorted_tables):  # Remove any data from the tables.
                 database_engine.execute(table.delete())
 
             # Generate mappings that map domain model classes to the database tables.
@@ -90,12 +90,24 @@ def create_app(test_config=None):
 
         from .authentication import authentication
         app.register_blueprint(authentication.authentication_blueprint)
-        
+
         from .user import user
         app.register_blueprint(user.user_blueprint)
-        
+
         from .search import search
         app.register_blueprint(search.search_blueprint)
 
+        # Register a callback the makes sure that database sessions are associated with http requests
+        # We reset the session inside the database repository before a new flask request is generated
+        @app.before_request
+        def before_flask_http_request_function():
+            if isinstance(repo.repo_instance, database_repository.SqlAlchemyRepository):
+                repo.repo_instance.reset_session()
+
+        # Register a tear-down method that will be called after each request has been processed.
+        @app.teardown_appcontext
+        def shutdown_session(exception=None):
+            if isinstance(repo.repo_instance, database_repository.SqlAlchemyRepository):
+                repo.repo_instance.close_session()
 
     return app
