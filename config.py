@@ -24,5 +24,5 @@ class Config:
 
     echo_string = environ.get('SQLALCHEMY_ECHO')
     SQLALCHEMY_ECHO = False
-    if echo_string.lower().strip() == "true":
+    if echo_string.lower().strip() == 'true':
         SQLALCHEMY_ECHO = True

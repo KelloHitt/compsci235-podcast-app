@@ -131,6 +131,10 @@ class AbstractRepository(abc.ABC):
         """ Returns a list of podcasts based on the author inputted """
         raise NotImplementedError
 
+    def get_podcasts_by_language(self, language: str) -> list:
+        """Returns a list of podcast based on the language inputted"""
+        raise NotImplementedError
+
     @abc.abstractmethod
     def add_to_playlist(self, username: str, episode: Episode):
         """ Adds an Episode to the playlist with the given username. """
