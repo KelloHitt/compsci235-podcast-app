@@ -84,11 +84,13 @@ def show_user_reviews():
     start = (page - 1) * reviews_per_page
     end = start + reviews_per_page
     paginated_reviews = user_reviews[start:end]
+    categories = utilities.get_categories()['categories']
     return render_template(
         'user/profile.html',
         user_reviews=paginated_reviews,
         current_page=page,
-        pages_count=pages_count
+        pages_count=pages_count,
+        categories=categories
     )
 
 
