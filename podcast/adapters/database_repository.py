@@ -80,7 +80,6 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def get_number_of_podcasts(self) -> int:
         num_podcasts = self._session_cm.session.query(Podcast).count()
-        print("HIII from db repository")
         return num_podcasts
 
     #HOW TO SIMPLIFY THIS USING FILTERING FUNCTION???
@@ -189,15 +188,16 @@ class SqlAlchemyRepository(AbstractRepository):
     # Functions for Review
     def add_review(self, podcast: Podcast, user: User, rating: int, description: str):
         user = self.get_user(user._username)
-        print("User IDDD", user._id)
-        user_reviews = self._session_cm.session.query(Review).filter(user._id == Review._reviewer._id).all()
         reviews = self._session_cm.session.query(Review).all()
+        user_reviews = []
+        for review in reviews:
+            if (review._reviewer._id == user._id):
+                user_reviews.append(review)
         if reviews == []:
             review_id = 1
         else:
             review_id = len(reviews) + 1
         for review in user_reviews:
-            print("REVIEWWW", user_reviews)
             if review.podcast.id == podcast.id:
                 raise ValueError(f'You already reviewed this podcast. Please try another one!')  # Olivia's code from database repository
         new_review = Review(review_id, podcast, user, rating, description)
@@ -212,7 +212,12 @@ class SqlAlchemyRepository(AbstractRepository):
         user = self.get_user(username)
         if not user:
             raise ValueError(f'User {username} is not found!')
-        return sorted(user.reviews, key=lambda review: review.rating, reverse=True)
+        reviews = self._session_cm.session.query(Review).all()
+        user_reviews = []
+        for review in reviews:
+            if (review._reviewer._id == user._id):
+                user_reviews.append(review)
+        return sorted(user_reviews, key=lambda review: review.rating, reverse=True)
 
     def delete_review(self, review_id: int):
         for review in self.__reviews:
