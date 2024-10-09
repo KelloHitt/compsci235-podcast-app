@@ -220,11 +220,10 @@ class SqlAlchemyRepository(AbstractRepository):
         return sorted(user_reviews, key=lambda review: review.rating, reverse=True)
 
     def delete_review(self, review_id: int):
-        for review in self.__reviews:
-            if review.id == review_id:
-                review.reviewer.remove_review(review)
-                review.podcast.remove_review(review)
-                self.__reviews.remove(review)
+        review_to_be_deleted = self._session_cm.session.query(Review).filter(Review._id == review_id).one()
+        with self._session_cm as scm:
+            scm.session.delete(review_to_be_deleted)
+            scm.commit()
 
 
     # Functions for search - get podcasts by title, author, lanugage or category

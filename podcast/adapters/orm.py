@@ -67,8 +67,9 @@ users_table = Table(
 # Reviews should have links to its podcast and user through its foreign keys
 reviews_table = Table(
     'reviews', mapper_registry.metadata,
-    Column('user_id', ForeignKey('users.user_id'), primary_key=True),
-    Column('podcast_id', ForeignKey('podcasts.podcast_id'), primary_key=True),
+    Column('review_id', Integer, primary_key=True, autoincrement=True),
+    Column('user_id', ForeignKey('users.user_id')),
+    Column('podcast_id', ForeignKey('podcasts.podcast_id')),
     Column('rating', Integer, nullable=False),
     Column('comment', String(225), nullable=True),
 )
@@ -132,6 +133,7 @@ def map_model_to_tables():
     })
 
     mapper_registry.map_imperatively(Review, reviews_table, properties={
+        '_id': reviews_table.c.review_id,
         '_reviewer': relationship(User, back_populates='_reviews'),
         '_podcast': relationship(Podcast, back_populates='reviews'),
         '_rating': reviews_table.c.rating,
