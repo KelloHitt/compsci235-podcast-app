@@ -1,18 +1,17 @@
 """Initialize Flask app."""
-import os
 from pathlib import Path
-from flask import Flask
 
+from flask import Flask
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker, clear_mappers
 from sqlalchemy.pool import NullPool
 
 import podcast.adapters.repository as repo
-from podcast.adapters.datareader.csvdatareader import CSVDataReader
 from podcast.adapters import memory_repository, database_repository, repository_populate
+from podcast.adapters.database_repository import SqlAlchemyRepository
+from podcast.adapters.datareader.csvdatareader import CSVDataReader
 from podcast.adapters.memory_repository import MemoryRepository
 from podcast.adapters.orm import mapper_registry, map_model_to_tables
-from podcast.adapters.database_repository import SqlAlchemyRepository
 
 
 def create_app(test_config=None):
@@ -36,8 +35,7 @@ def create_app(test_config=None):
     if app.config['REPOSITORY'] == 'memory':
         # Create the MemoryRepository implementation for a memory-based repository.
         repo.repo_instance = memory_repository.MemoryRepository()
-        # fill the content of the repository from the provided csv files (has to be done every time we start app!)
-        database_mode = False
+        # Fill the content with the repository from the provided csv files (has to be done every time we start app!)
         repository_populate.populate_data(repo.repo_instance, data_path)
 
     elif app.config['REPOSITORY'] == 'database':
@@ -55,7 +53,7 @@ def create_app(test_config=None):
 
         # Create the database session factory using sessionmaker (this has to be done once, in a global manner)
         session_factory = sessionmaker(autocommit=False, autoflush=True, bind=database_engine)
-        # Create the SQLAlchemy DatabaseRepository instance for an sqlite3-based repository.
+        # Create the SQLAlchemy DatabaseRepository instance for a sqlite3-based repository.
         repo.repo_instance = database_repository.SqlAlchemyRepository(session_factory)
 
         if app.config['TESTING'] == 'True' or len(inspect(database_engine).get_table_names()) == 0:
