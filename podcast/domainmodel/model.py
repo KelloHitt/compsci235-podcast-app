@@ -230,7 +230,7 @@ class User:
         self._username = username.strip()
         self._password = password
         self._subscription_list = []
-        self._playlist = None
+        self._playlist = []
         self._reviews = []
 
     @property
