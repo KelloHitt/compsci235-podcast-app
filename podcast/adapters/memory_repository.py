@@ -33,6 +33,7 @@ class MemoryRepository(AbstractRepository):
         return self.__podcasts[start_index:end_index]
 
     def get_number_of_podcasts(self) -> int:
+        print("HIII from memory repository")
         return len(self.__podcasts)
 
     def get_podcasts_ids_for_category(self, category_name: str) -> List[int]:
