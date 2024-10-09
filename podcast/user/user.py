@@ -11,12 +11,12 @@ user_blueprint = Blueprint('user_bp', __name__)
 @user_blueprint.route('/user/playlist', methods=['GET', 'POST'])
 @login_required
 def show_user_playlist():
-    playlist = None
     episodes_in_playlist = []
     try:
         playlist = services.get_users_playlist(repository.repo_instance)
-        episodes_in_playlist = sorted(services.get_episodes_in_playlist(playlist),
-                                      key=lambda episode: episode.podcast.title)
+        if playlist:
+            episodes_in_playlist = sorted(services.get_episodes_in_playlist(playlist),
+                                          key=lambda episode: episode.podcast.title)
     except ValueError as e:
         flash(str(e), 'error')
     episode_page = request.args.get('episode_page', default=1, type=int)

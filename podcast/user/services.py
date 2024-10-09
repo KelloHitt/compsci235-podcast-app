@@ -10,7 +10,7 @@ def get_users_playlist(repository: AbstractRepository):
 
 
 def get_episodes_in_playlist(playlist: Playlist):
-    return playlist.episodes
+    return playlist.episodes if playlist else None
 
 
 def remove_from_playlist(repository: AbstractRepository, episode: Episode):

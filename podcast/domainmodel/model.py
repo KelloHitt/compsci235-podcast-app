@@ -268,7 +268,7 @@ class User:
             self._subscription_list.remove(subscription)
 
     def create_playlist(self, playlist_name: str):
-        if self._playlist is None:
+        if not self._playlist:
             self._playlist = Playlist(self.id, self, playlist_name)
 
     def add_review(self, review: Review):
