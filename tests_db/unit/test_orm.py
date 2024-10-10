@@ -118,3 +118,34 @@ def insert_categories(empty_session):
 def make_category():
     category = Category(1, "Sport")
     return category
+
+def insert_podcast_category_associations(empty_session, podcast_key, category_keys):
+    pass
+
+def insert_playlist_episode_associations(empty_session, playlist_key, episode_keys):
+    pass
+
+def insert_reviewed_podcast(empty_session):
+    pass
+
+def test_loading_of_podcast(empty_session):
+    pass
+
+def test_loading_of_categorised_podcast(empty_session):
+    pass
+
+def test_loading_of_reviewed_podcast(empty_session):
+    pass
+
+def test_saving_of_review(empty_session):
+    pass
+
+def test_saving_of_podcast(empty_session):
+    pass
+
+def test_saving_of_categorised_podcast(empty_session):
+    pass
+
+def test_save_reviewed_podcast(empty_session):
+    pass
+
