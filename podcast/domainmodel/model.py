@@ -230,7 +230,7 @@ class User:
         self._username = username.strip()
         self._password = password
         self._subscription_list = []
-        self._playlist = []
+        self._playlist = None
         self._reviews = []
 
     @property
@@ -268,7 +268,7 @@ class User:
             self._subscription_list.remove(subscription)
 
     def create_playlist(self, playlist_name: str):
-        if not self._playlist:
+        if self._playlist is None:
             self._playlist = Playlist(self.id, self, playlist_name)
 
     def add_review(self, review: Review):
