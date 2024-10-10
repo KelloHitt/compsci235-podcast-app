@@ -141,6 +141,11 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def remove_from_playlist(self, username: str, episode: Episode):
+        """ Removes an Episode from the playlist with the given username. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def get_users_playlist(self, username: str) -> Playlist:
         """ Returns user's playlist with the given username. """
         raise NotImplementedError
