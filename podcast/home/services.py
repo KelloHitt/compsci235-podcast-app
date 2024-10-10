@@ -6,7 +6,6 @@ from podcast.adapters.repository import AbstractRepository
 def get_random_podcasts_info(repository: AbstractRepository, number_of_podcasts: int = 12):
     """ Randomly choose 12 podcasts to display on the home page """
     total_podcasts = repository.get_number_of_podcasts()
-
     # Randomly select podcast IDs
     podcast_ids = random.sample(range(1, total_podcasts + 1), number_of_podcasts)
 

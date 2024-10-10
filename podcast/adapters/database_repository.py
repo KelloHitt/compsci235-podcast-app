@@ -1,13 +1,11 @@
-from datetime import date
 from typing import List, Type
 
-from sqlalchemy import desc, asc, func
-from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
-
+from sqlalchemy import asc, func
 from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm.exc import NoResultFound
 
-from podcast.domainmodel.model import User, Podcast, Category, Episode, Author, Review, Playlist
 from podcast.adapters.repository import AbstractRepository
+from podcast.domainmodel.model import User, Podcast, Category, Episode, Author, Review, Playlist
 
 
 class SessionContextManager:
@@ -38,7 +36,7 @@ class SessionContextManager:
         self.__session = scoped_session(self.__session_factory)
 
     def close_current_session(self):
-        if not self.__session is None:
+        if self.__session is not None:
             self.__session.close()
 
 
@@ -67,8 +65,8 @@ class SqlAlchemyRepository(AbstractRepository):
             podcast = query.one()
         except NoResultFound:
             print(f'Podcast {podcast_id} was not found')
-
         return podcast
+
     def get_podcasts_by_id(self, id_list: list) -> List[Podcast]:
         podcasts = self._session_cm.session.query(Podcast).filter(Podcast._id in id_list)
         return podcasts
@@ -82,7 +80,6 @@ class SqlAlchemyRepository(AbstractRepository):
         num_podcasts = self._session_cm.session.query(Podcast).count()
         return num_podcasts
 
-    #HOW TO SIMPLIFY THIS USING FILTERING FUNCTION???
     def get_podcasts_ids_for_category(self, category_name: str) -> List[int]:
         podcasts = self._session_cm.session.query(Podcast).all()
         matching_podcast_ids = []
@@ -126,11 +123,11 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.commit()
 
     def get_number_of_episodes(self) -> int:
-        return self._session.cm.session.query(Episode).count()
+        return self._session_cm.session.query(Episode).count()
 
     def get_episode(self, episode_id: int) -> Episode:
-        if episode_id <= len(self.get_number_of_episodes()):
-            return self._session.cm.session.query(Episode).filter(Episode.__Episode__id == episode_id)
+        if episode_id <= self.get_number_of_episodes():
+            return self._session_cm.session.query(Episode).filter(Episode._id == episode_id).one()
         return None
 
     # Functions for Author
@@ -139,11 +136,12 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.session.merge(author)
             scm.commit()
 
-
     # Functions for User
-    def add_user(self, user: User):
+    def add_user(self, username: str, password: str):
+        users = self._session_cm.session.query(User).all()
+        new_user = User(len(users) + 1, username, password)
         with self._session_cm as scm:
-            scm.session.add(user)
+            scm.session.merge(new_user)
             scm.commit()
 
     def get_user(self, username: str) -> User:
@@ -155,50 +153,83 @@ class SqlAlchemyRepository(AbstractRepository):
             pass
         return user
 
-
     # Functions for Playlist
     def add_to_playlist(self, username: str, episode: Episode):
+        # Fetch the user by username
         user = self.get_user(username)
-        if not user:
-            raise ValueError(f'User {username} is not found!')
+
+        # If user has no playlist, create a new one
         if user.playlist is None:
-            user.create_playlist(f"{username.title()}'s Playlist")
+            user.create_playlist("My Playlist")
+            with self._session_cm as scm:
+                scm.session.add(user)  # Add the user with the playlist relationship
+                scm.commit()  # Commit both the user and the playlist
+
+        # Add the episode to the playlist
         user.playlist.add_episode(episode)
+
+        # Commit the changes using SQLAlchemy's session management
+        with self._session_cm as scm:
+            scm.session.add(user.playlist)  # Add the playlist explicitly
+            scm.commit()
+
+    def remove_from_playlist(self, username: str, episode: Episode):
+        # Retrieve the user by their username
+        user = self.get_user(username)
+        # Check if user and playlist exist
+        if user is not None and user.playlist is not None:
+            # Remove the episode from the playlist
+            user.playlist.delete_episode(episode)
+            # Persist the changes in the database
+            with self._session_cm as scm:
+                scm.session.merge(user.playlist)  # Merge to update the playlist in the database
+                scm.commit()
 
     def get_users_playlist(self, username: str):
         user = self.get_user(username)
-        if not user:
-            raise ValueError(f'User {username} is not found!')
-        if user.playlist is None:
-            user.create_playlist(f"{username.title()}'s Playlist")
         return user.playlist
 
     # Functions for Review
     def add_review(self, podcast: Podcast, user: User, rating: int, description: str):
-        for review in user.reviews:
+        user = self.get_user(user._username)
+        reviews = self._session_cm.session.query(Review).all()
+        user_reviews = []
+        for review in reviews:
+            if (review._reviewer._id == user._id):
+                user_reviews.append(review)
+        if reviews == []:
+            review_id = 1
+        else:
+            review_id = len(reviews) + 1
+        for review in user_reviews:
             if review.podcast.id == podcast.id:
-                raise ValueError(f'You already reviewed this podcast. Please try another one!')
-                new_review = Review(len(self.__reviews) + 1, podcast, user, rating, description)
-                self.__reviews.append(new_review)
-                user.add_review(new_review)
-                podcast.add_review(new_review)
+                raise ValueError(
+                    f'You already reviewed this podcast. Please try another one!')  # Olivia's code from database repository
+        new_review = Review(review_id, podcast, user, rating, description)
+        with self._session_cm as scm:
+            scm.session.add(new_review)
+            scm.commit()
+        user.add_review(new_review)
+        podcast.add_review(new_review)
 
     def get_users_reviews(self, username: str):
         user = self.get_user(username)
         if not user:
             raise ValueError(f'User {username} is not found!')
-        return sorted(user.reviews, key=lambda review: review.rating, reverse=True)
+        reviews = self._session_cm.session.query(Review).all()
+        user_reviews = []
+        for review in reviews:
+            if (review._reviewer._id == user._id):
+                user_reviews.append(review)
+        return sorted(user_reviews, key=lambda review: review.rating, reverse=True)
 
     def delete_review(self, review_id: int):
-        for review in self.__reviews:
-            if review.id == review_id:
-                review.reviewer.remove_review(review)
-                review.podcast.remove_review(review)
-                self.__reviews.remove(review)
+        review_to_be_deleted = self._session_cm.session.query(Review).filter(Review._id == review_id).one()
+        with self._session_cm as scm:
+            scm.session.delete(review_to_be_deleted)
+            scm.commit()
 
-
-    # Functions for search - get podcasts by title, author, lanugage or category
-
+    # Functions for search - get podcasts by title, author, language or category
     def get_podcasts_by_title(self, title_string: str) -> List[Podcast]:
         try:
             searched_podcasts = self._session_cm.session.query(Podcast). \
@@ -218,7 +249,7 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def get_podcasts_by_category(self, category_string: str) -> List[Podcast]:
         try:
-            searched_podcasts = self._session_cm.session.query(Podcast).join(Podcast._categories).all()
+            searched_podcasts = self._session_cm.session.query(Podcast).all()
             podcasts = []
             for podcast in searched_podcasts:
                 for category in podcast.categories:
@@ -236,13 +267,3 @@ class SqlAlchemyRepository(AbstractRepository):
         except NoResultFound:
             return []
         return searched_podcasts
-
-
-
-
-
-
-
-
-
-

@@ -11,12 +11,12 @@ user_blueprint = Blueprint('user_bp', __name__)
 @user_blueprint.route('/user/playlist', methods=['GET', 'POST'])
 @login_required
 def show_user_playlist():
-    playlist = None
     episodes_in_playlist = []
     try:
         playlist = services.get_users_playlist(repository.repo_instance)
-        episodes_in_playlist = sorted(services.get_episodes_in_playlist(playlist),
-                                      key=lambda episode: episode.podcast.title)
+        if playlist:
+            episodes_in_playlist = sorted(services.get_episodes_in_playlist(playlist),
+                                          key=lambda episode: episode.podcast.title)
     except ValueError as e:
         flash(str(e), 'error')
     episode_page = request.args.get('episode_page', default=1, type=int)
@@ -84,11 +84,13 @@ def show_user_reviews():
     start = (page - 1) * reviews_per_page
     end = start + reviews_per_page
     paginated_reviews = user_reviews[start:end]
+    categories = utilities.get_categories()['categories']
     return render_template(
         'user/profile.html',
         user_reviews=paginated_reviews,
         current_page=page,
-        pages_count=pages_count
+        pages_count=pages_count,
+        categories=categories
     )
 
 

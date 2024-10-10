@@ -93,7 +93,6 @@ class MemoryRepository(AbstractRepository):
             for category in podcast.categories:
                 if category_query.lower() in category.name.lower():
                     podcasts.append(podcast)
-
         return podcasts
 
     def get_podcasts_by_title(self, title: str):
@@ -121,9 +120,17 @@ class MemoryRepository(AbstractRepository):
         user = self.get_user(username)
         if not user:
             raise ValueError(f'User {username} is not found!')
-        if user.playlist is None:
+        if not user.playlist:
             user.create_playlist(f"{username.title()}'s Playlist")
         user.playlist.add_episode(episode)
+
+    def remove_from_playlist(self, username: str, episode: Episode):
+        user = self.get_user(username)
+        if not user:
+            raise ValueError(f"User {username} is not found!")
+        elif user.playlist is None:
+            raise ValueError("Playlist does not exist!")
+        user.playlist.delete_episode(episode)
 
     def get_users_playlist(self, username: str):
         user = self.get_user(username)

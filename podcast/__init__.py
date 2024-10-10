@@ -1,18 +1,17 @@
 """Initialize Flask app."""
-import os
 from pathlib import Path
-from flask import Flask
 
+from flask import Flask
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker, clear_mappers
 from sqlalchemy.pool import NullPool
 
 import podcast.adapters.repository as repo
-from podcast.adapters.datareader.csvdatareader import CSVDataReader
 from podcast.adapters import memory_repository, database_repository, repository_populate
+from podcast.adapters.database_repository import SqlAlchemyRepository
+from podcast.adapters.datareader.csvdatareader import CSVDataReader
 from podcast.adapters.memory_repository import MemoryRepository
 from podcast.adapters.orm import mapper_registry, map_model_to_tables
-from podcast.adapters.database_repository import SqlAlchemyRepository
 
 
 def create_app(test_config=None):
@@ -36,8 +35,7 @@ def create_app(test_config=None):
     if app.config['REPOSITORY'] == 'memory':
         # Create the MemoryRepository implementation for a memory-based repository.
         repo.repo_instance = memory_repository.MemoryRepository()
-        # fill the content of the repository from the provided csv files (has to be done every time we start app!)
-        database_mode = False
+        # Fill the content with the repository from the provided csv files (has to be done every time we start app!)
         repository_populate.populate_data(repo.repo_instance, data_path)
 
     elif app.config['REPOSITORY'] == 'database':
@@ -45,8 +43,7 @@ def create_app(test_config=None):
         database_uri = app.config['SQLALCHEMY_DATABASE_URI']
 
         # We create a comparatively simple SQLite database, which is based on a single file (see .env for URI).
-        # For example the file database could be located locally and relative to the application in covid-19.db,
-        # leading to a URI of "sqlite:///covid-19.db".
+        # leading to a URI of "sqlite:///podcasts.db".
         # Note that create_engine does not establish any actual DB connection directly!
         database_echo = app.config['SQLALCHEMY_ECHO']
         # Please do not change the settings for connect_args and poolclass!
@@ -55,22 +52,22 @@ def create_app(test_config=None):
 
         # Create the database session factory using sessionmaker (this has to be done once, in a global manner)
         session_factory = sessionmaker(autocommit=False, autoflush=True, bind=database_engine)
-        # Create the SQLAlchemy DatabaseRepository instance for an sqlite3-based repository.
+        # Create the SQLAlchemy DatabaseRepository instance for a sqlite3-based repository.
         repo.repo_instance = database_repository.SqlAlchemyRepository(session_factory)
 
-        if app.config['TESTING'] == 'True' or len(database_engine.table_names()) == 0:
+        if app.config['TESTING'] == 'True' or len(inspect(database_engine).get_table_names()) == 0:
             print("REPOPULATING DATABASE...")
             # For testing, or first-time use of the web application, reinitialise the database.
             clear_mappers()
             mapper_registry.metadata.create_all(database_engine)  # Conditionally create database tables.
             for table in reversed(mapper_registry.metadata.sorted_tables):  # Remove any data from the tables.
-                database_engine.execute(table.delete())
+                with database_engine.connect() as conn:
+                    conn.execute(table.delete())
 
             # Generate mappings that map domain model classes to the database tables.
             map_model_to_tables()
 
-            database_mode = True
-            repository_populate.populate(data_path, repo.repo_instance, database_mode)
+            repository_populate.populate_data(repo.repo_instance, data_path)
             print("REPOPULATING DATABASE... FINISHED")
 
         else:
