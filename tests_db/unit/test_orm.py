@@ -1,4 +1,7 @@
 from podcast.domainmodel.model import User, Podcast, Episode, Author, Review, Category
+from sqlalchemy.sql import text
+import pytest
+from sqlalchemy.exc import IntegrityError
 
 def insert_user(empty_session, values=None):
     new_username = "John"
@@ -8,18 +11,18 @@ def insert_user(empty_session, values=None):
         new_username = values[0]
         new_password = values[1]
 
-    empty_session.execute('INSERT INTO users (username, password) VALUES (:username, :password',
-                          {'username': new_username, 'password': new_password})
+    empty_session.execute(text('INSERT INTO users (user_name, password) VALUES (:user_name, :password)'),
+                          {'user_name': new_username, 'password': new_password})
 
-    row = empty_session.execute('SELECT id from users where username = :username',
-                                {'username': new_username}).fetchone()
+    row = empty_session.execute(text('SELECT user_id from users where user_name = :user_name'),
+                                {'user_name': new_username}).fetchone()
     return row[0]
 
 def insert_users(empty_session, values):
     for value in values:
-        empty_session.execute('INSERT INTO users (username, password) VALUES (:username, :password)',
-                              {'username': value[0], 'passsword': value[1]})
-    row = list(empty_session.execute('SELECT id from users'))
+        empty_session.execute(text('INSERT INTO users (user_name, password) VALUES (:user_name, :password)'),
+                              {'user_name': value[0], 'password': value[1]})
+    rows = list(empty_session.execute(text('SELECT user_id from users')))
     keys = tuple(row[0] for row in rows)
     return keys
 
@@ -29,13 +32,13 @@ def make_user():
 
 def test_loading_of_users(empty_session):
     users = list()
-    users.append(("John", "Passw0rd"))
-    users.append(("Dan", "123456Ab"))
+    users.append((1, "John", "Passw0rd"))
+    users.append((2, "Dan", "123456Ab"))
     insert_users(empty_session, users)
 
     expected = [
-        User("John", "Passw0rd"),
-        User("Dan", "123456Ab")
+        User(1, "John", "Passw0rd"),
+        User(2, "Dan", "123456Ab")
     ]
     assert empty_session.query(User).all() == expected
 
@@ -44,15 +47,15 @@ def test_saving_of_users(empty_session):
     empty_session.add(user)
     empty_session.commit()
 
-    rows = list(empty_session.execute('SELECT user_name, password FROM users'))
+    rows = list(empty_session.execute(text('SELECT user_name, password FROM users')))
     assert rows == [("John", "Passw0rd")]
 
 def test_saving_of_users_with_common_username(empty_session):
-    insert_user(empty_session, ("John", "Passw0rd"))
+    insert_user(empty_session, (1, "John", "Passw0rd"))
     empty_session.commit()
 
     with pytest.raises(IntegrityError):
-        user = User("John", "123456Ab")
+        user = User(1, "John", "123456Ab")
         empty_session.add(user)
         empty_session.commit()
 
@@ -72,7 +75,7 @@ def make_podcast():
     author = make_author()
     podcast = Podcast(1, author, "Podcast 1", "image", "Description 1", "Website 1", 1234, "English")
     return podcast
-,
+
 def insert_episode(empty_session):
     pass
 
@@ -97,6 +100,9 @@ def make_review():
 
 def insert_categories(empty_session):
     empty_session.execute('INSERT INTO categories (category_name) VALUES ("Sports") ("News")')
+    rows = list(empty_session.execute(text('SELECT id from categories')))
+    keys = tuple(row[0] for row in rows)
+    return keys
 
 def make_category():
     category = Category(1, "Sport")
