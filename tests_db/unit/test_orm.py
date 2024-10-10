@@ -77,20 +77,31 @@ def make_podcast():
     return podcast
 
 def insert_episode(empty_session):
-    pass
+    empty_session.execute(text('INSERT INTO episodes (episode_id, podcast_id, title, audio_url, description, pub_date) '
+                               'VALUES (1) (1) ("Podcast 1") ("Audio URL 1") ("A podcast") ("8/10/2024")'))
+    rows = list(empty_session.execute(text('SELECT episode_id from episodes')))
+    keys = tuple(row[0] for row in rows)
+    return keys
 
 def make_episode():
     podcast = make_podcast()
     episode = Episode(1, podcast, "Title", "Website", "Description", 123, "8/10/2024")
 
 def insert_author(empty_session):
-    pass
+    empty_session.execute(text('INSERT INTO authors (author_id, name) VALUES (1) ("Author 1")'))
+    rows = list(empty_session.execute(text('SELECT author_id from authors')))
+    keys = tuple(row[0] for row in rows)
+    return keys
+
 def make_author():
     author = Author(1, "Author 1")
     return author
 
 def insert_review(empty_session):
-    pass
+    empty_session.execute(text('INSERT INTO reviews (user_id, podcast_id, rating, comment) VALUES (1) (1) (5) ("Good")'))
+    rows = list(empty_session.execute(text('SELECT review_id from reviews')))
+    keys = tuple(row[0] for row in rows)
+    return keys
 
 def make_review():
     podcast = make_podcast()
