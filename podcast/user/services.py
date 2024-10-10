@@ -17,7 +17,7 @@ def remove_from_playlist(repository: AbstractRepository, episode: Episode):
     username = utilities.get_username()
     user = repository.get_user(username)
     if user is not None:
-        user.playlist.delete_episode(episode)
+        repository.remove_from_playlist(username, episode)
 
 
 def get_episode_by_id(repository: AbstractRepository, episode_id: int):
