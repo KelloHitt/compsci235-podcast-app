@@ -60,15 +60,17 @@ def test_saving_of_users_with_common_username(empty_session):
         empty_session.commit()
 
 def insert_podcast(empty_session):
-    empty_session.execute(text('INSERT INTO podcasts (title, image_url, description, language, website_url, author_id, itunes_id) VALUES'
-                          '("D-Hour Radio Network",'
-                          '"http://is3.mzstatic.com/image/thumb/Music118/v4/b9/ed/86/b9ed8603-d94b-28c5-5f95-8b7061bf22fa/source/600x600bb.jpg", '
-                          '"The D-Hour Radio Network is the home of real entertainment radio and ""THE"" premiere online radio network. We showcase dynamically dynamite radio shows for the sole purpose of entertaining your listening ear. Here on the D-hour Show Radio network we take pride in providing an outlet for Celebrity Artists, Underground Artists, Indie Artists, Producers, Entertainers, Entrepreneurs, Internet Stars and future business owners. We discuss topics of all forms and have a great time while doing so. We play all your favorite hits in the forms of Celebrity, Indie, Hip Hop, Soul/R&B, Pop, and everything else you want and consider popular. If you would like yourself and or your music to be showcased on our radio network submit email requests for music airplay, interviews and etc.. to:  dhourshow@gmail.com and we will get back to you promptly. Here at the D-Hour Radio Network we are Family and all of our guests, listeners and loyal fans are family too.  So tune into the D-Hour Radio Network and join the Family! ", '
-                          '"English", '
-                          '"http://www.blogtalkradio.com/dhourshow", '
-                          '1, '
-                          '538283940,'))
-    row = empty_session.execute('SELECT id from podcasts').fetchone()
+    author_id = insert_author(empty_session)
+    empty_session.execute(text('INSERT INTO podcasts (title, image_url, description, language, website_url, author_id, itunes_id) VALUES '
+                               '(:title, :image_url, :description, :language, :website_url, :author_id, :itunes_id)'),
+                          {'title': "D-Hour Radio Network",
+                           'image_url': "http://is3.mzstatic.com/image/thumb/Music118/v4/b9/ed/86/b9ed8603-d94b-28c5-5f95-8b7061bf22fa/source/600x600bb.jpg",
+                           'description': "The D-Hour Radio Network is the home of real entertainment radio and ""THE"" premiere online radio network. We showcase dynamically dynamite radio shows for the sole purpose of entertaining your listening ear. Here on the D-hour Show Radio network we take pride in providing an outlet for Celebrity Artists, Underground Artists, Indie Artists, Producers, Entertainers, Entrepreneurs, Internet Stars and future business owners. We discuss topics of all forms and have a great time while doing so. We play all your favorite hits in the forms of Celebrity, Indie, Hip Hop, Soul/R&B, Pop, and everything else you want and consider popular. If you would like yourself and or your music to be showcased on our radio network submit email requests for music airplay, interviews and etc.. to:  dhourshow@gmail.com and we will get back to you promptly. Here at the D-Hour Radio Network we are Family and all of our guests, listeners and loyal fans are family too.  So tune into the D-Hour Radio Network and join the Family! ",
+                           'language': "English",
+                           'website_url': "http://www.blogtalkradio.com/dhourshow",
+                           'author_id': author_id,
+                           'itunes_id': 538283940})
+    row = empty_session.execute(text('SELECT id from podcasts')).fetchone()
     return row[0]
 
 def make_podcast():
@@ -78,17 +80,20 @@ def make_podcast():
 
 def insert_episode(empty_session):
     empty_session.execute(text('INSERT INTO episodes (episode_id, podcast_id, title, audio_url, description, pub_date) '
-                               'VALUES (1) (1) ("Podcast 1") ("Audio URL 1") ("A podcast") ("8/10/2024")'))
+                               'VALUES (:episode_id, :podcast_id, :title, :audio_url, :description, :pub_date)'),
+                          {'episode_id': 1, 'podcast_id': 1, 'title': "Podcast 1", 'audio_url': "Audio URL 1", 'description': "Description 1", 'pub_date': "8/10/2024"})
     rows = list(empty_session.execute(text('SELECT episode_id from episodes')))
     keys = tuple(row[0] for row in rows)
-    return keys
+    return keys[0]
 
 def make_episode():
     podcast = make_podcast()
     episode = Episode(1, podcast, "Title", "Website", "Description", 123, "8/10/2024")
+    return episode
 
 def insert_author(empty_session):
-    empty_session.execute(text('INSERT INTO authors (author_id, name) VALUES (1) ("Author 1")'))
+    empty_session.execute(text('INSERT INTO authors (author_id, name) VALUES (:author_id, :name)'),
+                          {'author_id': 1, 'name': "Author 1"})
     rows = list(empty_session.execute(text('SELECT author_id from authors')))
     keys = tuple(row[0] for row in rows)
     return keys
@@ -98,7 +103,8 @@ def make_author():
     return author
 
 def insert_review(empty_session):
-    empty_session.execute(text('INSERT INTO reviews (user_id, podcast_id, rating, comment) VALUES (1) (1) (5) ("Good")'))
+    empty_session.execute(text('INSERT INTO reviews (user_id, podcast_id, rating, comment) VALUES (:user_id, :podcast_id, :rating, :comment)'),
+                          {'user_id': 1, 'podcast_id': 1, 'rating': 5, 'comment': "Good Podcast"})
     rows = list(empty_session.execute(text('SELECT review_id from reviews')))
     keys = tuple(row[0] for row in rows)
     return keys
@@ -132,9 +138,9 @@ def insert_playlist_episode_associations(empty_session, playlist_key, episode_ke
 def insert_reviewed_podcast(empty_session):
     podcast_key = insert_podcast(empty_session)
     user_key = insert_user(empty_session)
-    empty_session.execute(text('INSERT INTO reviews VALUES'
-        '(:user_id, :podcast_id, 3, "Review Comment")',
-        {'user_id': user_key, 'podcast_id': podcast_key}))
+    empty_session.execute(text('INSERT INTO reviews (user_id, podcast_id, rating, comment) VALUES'
+        '(:user_id, :podcast_id, :rating, :comment)'),
+        {'user_id': user_key, 'podcast_id': podcast_key, 'rating': 3, 'comment': "Review Comment"})
     row = empty_session.execute(text('SELECT id from podcasts')).fetchone()
     return row[0]
 
@@ -155,11 +161,11 @@ def test_loading_of_categorised_podcast(empty_session):
         assert category in podcast.categories
 
 def test_loading_of_reviewed_podcast(empty_session):
-    insert_reviewed_podcast(empty_session)
-    rows = empty_session.query(Podcast).all()
-    podcast = rows[0]
-    for review in podcast.reviews:
-        assert podcast.review is review
+    podcast_key = insert_reviewed_podcast(empty_session)
+    podcast = empty_session.query(Podcast).get(podcast_key)
+    reviews = podcast.reviews
+    assert len(reviews) > 0
+    assert reviews[0].comment == "Review Comment"
 
 def test_saving_of_review(empty_session):
     review = make_review()
@@ -193,17 +199,18 @@ def test_multiple_episodes_in_podcast(empty_session):
     podcast_key = insert_podcast(empty_session)
     insert_episode(empty_session)
     empty_session.execute(text('INSERT INTO episodes (episode_id, podcast_id, title, audio_url, description, pub_date) VALUES '
-                               '(2, :podcast_id, "Title 2", "Audio URL 2", "Description 2", "12/12/2024")',
-                               {'podcast_id': podcast_key}))
-    episodes = empty_session.query(Episode).filter_by(_podcast_id=podcast_key).all()
+                               '(:episode_id, :podcast_id, :title, :audio_url, :description, :pub_date)'),
+                               {'episode_id': 2, 'podcast_id': podcast_key, 'title': "Title 2", 'audio_url': "Audio URL 2", 'description': "Description 2", 'pub_date': "12/12/2024"})
+    episodes = empty_session.query(Episode).filter_by(podcast_id=podcast_key).all()
     assert len(episodes) == 2
     assert episodes[0]._title == "Podcast 1"
     assert episodes[1]._title == "Title 2"
 
 def test_add_episode_to_playlist(empty_session):
     user_key = insert_user(empty_session)
-    playlist_key = empty_session.execute(text('INSERT INTO playlists (name, owner_id) VALUES ("My Playlist", :owner_id'),
+    result = empty_session.execute(text('INSERT INTO playlists (name, owner_id) VALUES ("My Playlist", :owner_id)'),
                                               {'owner_id': user_key})
+    playlist_key = result.fetchone()[0]
     episode_key = insert_episode(empty_session)
     empty_session.execute(text('INSERT INTO playlist_episodes (playlist_id, episode_id) VALUES (:playlist_id, :episode_id)'),
                                {'playlist_id': playlist_key, 'episode_id': episode_key})
