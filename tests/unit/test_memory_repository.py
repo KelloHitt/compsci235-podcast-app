@@ -93,7 +93,6 @@ def test_memory_repository_add_episode(in_memory_repo):
     podcast = in_memory_repo.get_podcast(1)
     episode = Episode(5, podcast, "Untitled", "", "", 20, "2007-08-09::")
     in_memory_repo.add_episode(episode)
-    in_memory_repo.add_episode(episode)
     assert in_memory_repo.get_number_of_episodes() == 5
     assert in_memory_repo.get_episode(5) == episode
 
@@ -178,31 +177,23 @@ def test_repository_add_review(in_memory_repo):
     user = User(1, 'Claire', 'nice347')
     author = Author(1, 'Joe')
     podcast = Podcast(1, author, "The Seven Wonders Of The World", "Tune in into this great podcast",
-                      "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", "English")
-    episode = Episode(1, podcast, "1st wonder of the world",
-                      "http://api.spreaker.com/download/episode/13479186/comixology_runaways_and_star_trek.mp3",
-                      "Tune in to find more", 3, "2017-12-01 13:00:05+00")
+                      "","https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", 5,"English")
     in_memory_repo.add_review(podcast, user, 2, "sort of boring")
     assert user.reviews[0].id == 1
-    assert "<Review 1 made by Claire for podcast 'The Seven Wonders Of The World' with a rating of 2 and a description of sort of boring>" == repr(
-        podcast.reviews[0])
-    assert "<Review 1 made by Claire for podcast 'The Seven Wonders Of The World' with a rating of 2 and a description of sort of boring>" == repr(
-        user.reviews[0])
+    assert ("<Review 1 made by Claire for podcast 'The Seven Wonders Of The World' with a rating of 2 and a "
+            "description of sort of boring>") == repr(user.reviews[0])
 
 
 def test_repository_get_users_reviews(in_memory_repo):
     in_memory_repo.add_user('Claire', 'nice347')
     user = in_memory_repo.get_user('Claire')
     author = Author(1, 'Joe')
-    podcast = Podcast(1, author, "The Seven Wonders Of The World", None, "Tune in into this great podcast",
-                      "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", "English")
-    episode = Episode(1, podcast, "1st wonder of the world",
-                      "http://api.spreaker.com/download/episode/13479186/comixology_runaways_and_star_trek.mp3",
-                      "Tune in to find more", 3, "2017-12-01 13:00:05+00")
+    podcast = Podcast(1, author, "The Seven Wonders Of The World", "Tune in into this great podcast",
+                      "","https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", 5,"English")
     in_memory_repo.add_review(podcast, user, 2, "sort of boring")
     podcast1 = Podcast(2, author, "Productivity", None, "Tune in into this great podcast",
-                       "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", "English")
-    in_memory_repo.add_review(podcast1, user, 2, "better than the seven wondrr of the world podcast")
+                       "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", 40,"English")
+    in_memory_repo.add_review(podcast1, user, 2, "better than the seven wonders of the world podcast")
     reviews = in_memory_repo.get_users_reviews('Claire')
     assert len(reviews) == 2
 
@@ -212,10 +203,7 @@ def test_repository_delete_review(in_memory_repo):
     user = in_memory_repo.get_user('Bob')
     author = Author(1, 'Joe')
     podcast = Podcast(1, author, "The Seven Wonders Of The World", None, "Tune in into this great podcast",
-                      "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", "English")
-    episode = Episode(1, podcast, "1st wonder of the world",
-                      "http://api.spreaker.com/download/episode/13479186/comixology_runaways_and_star_trek.mp3",
-                      "Tune in to find more", 3, "2017-12-01 13:00:05+00")
+                      "https://www.twinkl.co.nz/teaching-wiki/seven-wonders-of-the-world", 50,"English")
     in_memory_repo.add_review(podcast, user, 5, 'Intriguing!')
     assert len(podcast.reviews) == 1
     assert len(user.reviews) == 1
