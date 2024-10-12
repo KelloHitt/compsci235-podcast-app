@@ -107,7 +107,7 @@ def test_get_and_remove_episodes_from_playlist(mock_get_username, in_memory_repo
     episode1 = in_memory_repo.get_episode(1)
     user_test1.playlist.add_episode(episode1)
     result_playlist = user_services.get_users_playlist(in_memory_repo)
-    episodes = user_services.get_episodes_in_playlist(result_playlist)
+    episodes = user_services.get_episodes_in_playlist(in_memory_repo, result_playlist)
     assert episodes[0] == in_memory_repo.get_episode(1)
     user_services.remove_from_playlist(in_memory_repo, episode1)
     assert len(result_playlist.episodes) == 0
