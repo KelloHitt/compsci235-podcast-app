@@ -2,7 +2,7 @@ import bisect
 from typing import List
 
 from podcast.adapters.repository import AbstractRepository
-from podcast.domainmodel.model import Author, Podcast, Episode, Category, User, Review
+from podcast.domainmodel.model import Author, Podcast, Episode, Category, User, Review, Playlist
 
 
 class MemoryRepository(AbstractRepository):
@@ -139,6 +139,11 @@ class MemoryRepository(AbstractRepository):
         if user.playlist is None:
             user.create_playlist(f"{username.title()}'s Playlist")
         return user.playlist
+
+    def get_episodes_in_playlist(self, playlist: Playlist):
+        if not playlist:
+            return None
+        return playlist.episodes
 
     def add_review(self, podcast: Podcast, user: User, rating: int, description: str):
         for review in user.reviews:

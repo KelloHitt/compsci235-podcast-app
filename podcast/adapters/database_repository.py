@@ -189,6 +189,14 @@ class SqlAlchemyRepository(AbstractRepository):
         user = self.get_user(username)
         return user.playlist
 
+    def get_episodes_in_playlist(self, playlist: Playlist):
+        if playlist is None:
+            return None
+        with self._session_cm as scm:
+            scm.session.refresh(playlist)  # Refresh the state of the playlist from the database
+            episodes = playlist._episodes
+            return episodes
+
     # Functions for Review
     def add_review(self, podcast: Podcast, user: User, rating: int, description: str):
         user = self.get_user(user._username)

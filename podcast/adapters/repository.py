@@ -146,6 +146,11 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def get_episodes_in_playlist(self, playlist: Playlist):
+        """ Returns all Episodes in the given playlist. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def get_users_playlist(self, username: str) -> Playlist:
         """ Returns user's playlist with the given username. """
         raise NotImplementedError
