@@ -6,7 +6,7 @@ from podcast.domainmodel.model import Episode, Playlist
 def get_users_playlist(repository: AbstractRepository):
     username = utilities.get_username()
     playlist = repository.get_users_playlist(username)
-    return playlist
+    return [playlist, username]
 
 
 def get_episodes_in_playlist(repository: AbstractRepository, playlist: Playlist):

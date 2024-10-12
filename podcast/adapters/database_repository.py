@@ -160,7 +160,7 @@ class SqlAlchemyRepository(AbstractRepository):
 
         # If user has no playlist, create a new one
         if user.playlist is None:
-            user.create_playlist("My Playlist")
+            user.create_playlist(f"{username}'s Playlist")
             with self._session_cm as scm:
                 scm.session.add(user)  # Add the user with the playlist relationship
                 scm.commit()  # Commit both the user and the playlist
