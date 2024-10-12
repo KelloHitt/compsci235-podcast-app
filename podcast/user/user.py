@@ -15,7 +15,7 @@ def show_user_playlist():
     try:
         playlist = services.get_users_playlist(repository.repo_instance)
         if playlist:
-            episodes_in_playlist = sorted(services.get_episodes_in_playlist(playlist),
+            episodes_in_playlist = sorted(services.get_episodes_in_playlist(repository.repo_instance, playlist),
                                           key=lambda episode: episode.podcast.title)
     except ValueError as e:
         flash(str(e), 'error')
