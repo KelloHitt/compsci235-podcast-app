@@ -68,8 +68,9 @@ class SqlAlchemyRepository(AbstractRepository):
         return podcast
 
     def get_podcasts_by_id(self, id_list: list) -> List[Podcast]:
-        podcasts = self._session_cm.session.query(Podcast).filter(Podcast._id in id_list)
-        return podcasts
+        with self._session_cm as scm:
+            podcasts = scm.session.query(Podcast).filter(Podcast._id.in_(id_list)).all()
+            return podcasts
 
     def get_podcasts_by_page(self, page_number: int, page_size: int) -> List[Podcast]:
         start_index = (page_number - 1) * page_size
