@@ -29,6 +29,7 @@ def test_database_populate_select_all_authors(database_engine):
     assert author_names[1] == 'Brian Denny'
     assert author_names[2] == 'Tallin Country Church'
 
+
 def test_database_populate_select_all_categories(database_engine):
     # Get table information
     inspector = inspect(database_engine)
@@ -63,13 +64,16 @@ def test_database_populate_select_all_episodes(database_engine):
         for row in result:
             all_episodes.append((row[1], row[2], row[4], row[5]))
 
-
         assert len(all_episodes) == 4
         assert all_episodes[0] == (None, 'Choir', 'Choir', '2017-12-01 10:03:18')
         assert all_episodes[1] == (2, '#05: Comixology, Runaways, and Star Trek',
-                                   "We're back for a spiritually exhausting episode of the Meandercast! We cover Comixology, Hulu's Marvel's Runaways, and Star Trek: Discovery. This one got a little away from us this time. Forthcoming episodes will probably not be this long.",
+                                   "We're back for a spiritually exhausting episode of the Meandercast! We cover "
+                                   "Comixology, Hulu's Marvel's Runaways, and Star Trek: Discovery. This one got a "
+                                   "little away from us this time. Forthcoming episodes will probably not be this "
+                                   "long.",
                                    '2017-12-01 13:00:05')
-        assert all_episodes[-1] == (3, 'Caller Of The Week Part 1.', 'The best of Greg & The Morning Buzz. Listen weekdays 5:30am to 10am.',
+        assert all_episodes[-1] == (3, 'Caller Of The Week Part 1.', 'The best of Greg & The Morning Buzz. Listen '
+                                                                     'weekdays 5:30am to 10am.',
                                     '2017-12-01 14:29:35')
 
 
@@ -141,21 +145,25 @@ def test_database_populate_select_all_podcasts(database_engine):
         all_podcasts = []
         for row in result:
             all_podcasts.append((row[0], row[1], row[2], row[3],
-                                row[4], row[5], row[6], row[7]))
+                                 row[4], row[5], row[6], row[7]))
 
         assert len(all_podcasts) == 4
         assert all_podcasts[0] == (1, 'D-Hour Radio Network',
-                                   'http://is3.mzstatic.com/image/thumb/Music118/v4/b9/ed/86/b9ed8603-d94b-28c5-5f95-8b7061bf22fa/source/600x600bb.jpg',
-                                   'The D-Hour Radio Network is the home of real entertainment radio and the premiere online radio network.',
+                                   'http://is3.mzstatic.com/image/thumb/Music118/v4/b9/ed/86/b9ed8603-d94b-28c5-5f95'
+                                   '-8b7061bf22fa/source/600x600bb.jpg',
+                                   'The D-Hour Radio Network is the home of real entertainment radio and the premiere '
+                                   'online radio network.',
                                    'English', 'http://www.blogtalkradio.com/dhourshow', 1, 538283940)
         assert all_podcasts[1] == (2, 'Brian Denny Radio',
-                                     'http://is5.mzstatic.com/image/thumb/Music111/v4/49/c8/19/49c8190a-ca0f-f32c-c089-d7ae502d2cb8/source/600x600bb.jpg',
-                                     '5-in-1: Brian Denny Radio is the fastest podcast in all the land.', 'English',
+                                   'http://is5.mzstatic.com/image/thumb/Music111/v4/49/c8/19/49c8190a-ca0f-f32c-c089'
+                                   '-d7ae502d2cb8/source/600x600bb.jpg',
+                                   '5-in-1: Brian Denny Radio is the fastest podcast in all the land.', 'English',
                                    'http://thebdshow.libsyn.com/podcast', 2, 1132261215)
         assert all_podcasts[-1] == (4, 'Tallin Messages',
-                                    'http://is3.mzstatic.com/image/thumb/Music71/v4/d6/7a/a2/d67aa202-4c97-70d3-e629-b830567cff78/source/600x600bb.jpg',
+                                    'http://is3.mzstatic.com/image/thumb/Music71/v4/d6/7a/a2/d67aa202-4c97-70d3-e629'
+                                    '-b830567cff78/source/600x600bb.jpg',
                                     'Podcast by Tallin Country Church', 'English',
-                                    'http://soundcloud.com/tallin-church', 3,  1165994461)
+                                    'http://soundcloud.com/tallin-church', 3, 1165994461)
 
 
 def test_database_populate_select_all_reviews(database_engine):
