@@ -160,7 +160,7 @@ class SqlAlchemyRepository(AbstractRepository):
 
         # If user has no playlist, create a new one
         if user.playlist is None:
-            user.create_playlist(f"{username}'s Playlist")
+            user.create_playlist("My Playlist")
             with self._session_cm as scm:
                 scm.session.add(user)  # Add the user with the playlist relationship
                 scm.commit()  # Commit both the user and the playlist
@@ -200,7 +200,7 @@ class SqlAlchemyRepository(AbstractRepository):
     # Functions for Review
     def add_review(self, podcast: Podcast, user: User, rating: int, description: str):
         user = self.get_user(user._username)
-        reviews = self._session_cm.session.query(Review).all()
+        reviews = self._session_cm.session.query(Review).join(User).filter(User.id == user.id).all()
         user_reviews = []
         for review in reviews:
             if (review._reviewer._id == user._id):
