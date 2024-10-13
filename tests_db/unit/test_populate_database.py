@@ -55,7 +55,7 @@ def test_database_populate_select_all_episodes(database_engine):
     name_of_episodes_table = inspector.get_table_names()[2]
 
     with database_engine.connect() as connection:
-        # query for records in table category
+        # query for records in table episodes
         select_statement = select(mapper_registry.metadata.tables[name_of_episodes_table])
         result = connection.execute(select_statement)
 
@@ -79,7 +79,7 @@ def test_database_populate_select_all_playlist_episodes(database_engine):
     name_of_playlist_episodes_table = inspector.get_table_names()[3]
 
     with database_engine.connect() as connection:
-        # query for records in table category
+        # query for records in table playlist_episodes
         select_statement = select(mapper_registry.metadata.tables[name_of_playlist_episodes_table])
         result = connection.execute(select_statement)
 
@@ -96,7 +96,7 @@ def test_database_populate_select_all_playlists(database_engine):
     name_of_playlist_table = inspector.get_table_names()[4]
 
     with database_engine.connect() as connection:
-        # query for records in table category
+        # query for records in table playlist
         select_statement = select(mapper_registry.metadata.tables[name_of_playlist_table])
         result = connection.execute(select_statement)
 
@@ -113,7 +113,7 @@ def test_database_populate_select_all_podcast_categories(database_engine):
     name_of_podcasts_categories_table = inspector.get_table_names()[5]
 
     with database_engine.connect() as connection:
-        # query for records in table category
+        # query for records in table podcast_category
         select_statement = select(mapper_registry.metadata.tables[name_of_podcasts_categories_table])
         result = connection.execute(select_statement)
 
@@ -134,7 +134,7 @@ def test_database_populate_select_all_podcasts(database_engine):
     name_of_podcasts_table = inspector.get_table_names()[6]
 
     with database_engine.connect() as connection:
-        # query for records in table category
+        # query for records in table podcasts
         select_statement = select(mapper_registry.metadata.tables[name_of_podcasts_table])
         result = connection.execute(select_statement)
 
@@ -164,7 +164,7 @@ def test_database_populate_select_all_reviews(database_engine):
     name_of_reviews_table = inspector.get_table_names()[7]
 
     with database_engine.connect() as connection:
-        # query for records in table category
+        # query for records in table reviews
         select_statement = select(mapper_registry.metadata.tables[name_of_reviews_table])
         result = connection.execute(select_statement)
 
@@ -181,7 +181,7 @@ def test_database_populate_select_all_users(database_engine):
     name_of_users_table = inspector.get_table_names()[8]
 
     with database_engine.connect() as connection:
-        # query for records in table category
+        # query for records in table users
         select_statement = select(mapper_registry.metadata.tables[name_of_users_table])
         result = connection.execute(select_statement)
 
