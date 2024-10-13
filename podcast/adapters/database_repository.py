@@ -205,10 +205,7 @@ class SqlAlchemyRepository(AbstractRepository):
         for review in reviews:
             if (review._reviewer._id == user._id):
                 user_reviews.append(review)
-        if reviews == []:
-            review_id = 1
-        else:
-            review_id = len(reviews) + 1
+        review_id = len(reviews) + 1
         for review in user_reviews:
             if review.podcast.id == podcast.id:
                 raise ValueError(

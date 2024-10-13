@@ -13,10 +13,7 @@ user_blueprint = Blueprint('user_bp', __name__)
 def show_user_playlist():
     episodes_in_playlist = []
     try:
-        playlist_and_username = services.get_users_playlist(repository.repo_instance)
-        playlist = playlist_and_username[0]
-        username = playlist_and_username[1]
-        playlist_name = f"{username}'s Playlist"
+        playlist = services.get_users_playlist(repository.repo_instance)
         if playlist:
             episodes_in_playlist = sorted(services.get_episodes_in_playlist(repository.repo_instance, playlist),
                                           key=lambda episode: episode.podcast.title)
@@ -35,8 +32,7 @@ def show_user_playlist():
         prev_episode_page=prev_episode_page,
         total_pages=total_pages,
         episodes_in_playlist=episodes_in_playlist,
-        playlist=playlist,
-        playlist_name=playlist_name
+        playlist=playlist
     )
 
 
