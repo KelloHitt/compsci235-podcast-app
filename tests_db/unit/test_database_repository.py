@@ -20,6 +20,12 @@ def test_database_repository_can_add_and_get_podcast(session_factory):
     assert repo.get_number_of_podcasts() == 6
 
 
+def test_database_repository_can_get_podcasts_by_id_list(session_factory):
+    repo = SqlAlchemyRepository(session_factory)
+    podcasts_by_id = repo.get_podcasts_by_id([1, 2, 3, 4])
+    assert len(podcasts_by_id) == 4
+
+
 def test_database_repository_can_get_podcasts_by_page(session_factory):
     repo = SqlAlchemyRepository(session_factory)
     page_number_one = 1
