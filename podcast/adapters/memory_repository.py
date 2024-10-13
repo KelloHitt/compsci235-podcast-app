@@ -109,7 +109,7 @@ class MemoryRepository(AbstractRepository):
                 podcasts.append(podcast)
         return podcasts
 
-    def get_podcasts_by_language(self, language: str) -> List:
+    def get_podcasts_by_language(self, language: str) -> list:
         podcasts = []
         for podcast in self.__podcasts:
             if language.lower() in podcast.language.lower():
