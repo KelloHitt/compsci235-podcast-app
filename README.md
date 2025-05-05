@@ -1,5 +1,5 @@
 # COMPSCI 235 - Starter Repository for the CS235 Pod Library
-This is a starter repository for the podcasts webapp project of CompSci 235 in Semester 2, 2024.
+This is a starter repository for the podcasts webapp project of CompSci 235 in Semester 2, 2024. I contributed to this repository using my university GitHub account (vcha-uni) and later uploaded it to my personal GitHub account (KelloHitt).
 
 ## Description
 
